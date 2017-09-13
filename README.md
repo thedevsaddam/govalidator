@@ -1,0 +1,198 @@
+Package validator
+=========================
+![Project status](https://img.shields.io/badge/version-0.1-green.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/govalidator/validator)](https://goreportcard.com/report/github.com/govalidator/validator)
+[![GoDoc](https://godoc.org/github.com/govalidator/validator?status.svg)](https://godoc.org/github.com/govalidator/validator)
+![License](https://img.shields.io/dub/l/vibe-d.svg)
+
+Validate golang request data with simple rules. Highly encouraged by Laravel's request validation.
+
+
+### Installation
+
+Install the package using
+```go
+$ go get github.com/govalidator/validator
+```
+
+### Usage
+
+To use the package import it in your `*.go` code
+```go
+import "github.com/govalidator/validator"
+```
+
+### Example
+
+***Validate `form-data`, `x-www-form-urlencoded` and `query params`***
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"github.com/govalidator/validator"
+)
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	rules := validator.MapData{
+		"username": []string{"required", "between:3,8"},
+		"email":    []string{"required", "min:4", "max:20", "email"},
+		"web":      []string{"url"},
+		"age":      []string{"numeric_between:18,56"},
+		"zip":      []string{"numeric"},
+		"phone":    []string{"digits:11"},
+		"roles":    []string{"in:admin,manager,rider"},
+		"names":    []string{"not_in:john,jane,mila"},
+		"agree":    []string{"bool"},
+		"dob":      []string{"date"},
+	}
+
+	messages := validator.MapData{
+		"username": []string{"required:আপনাকে অবশ্যই ইউজারনেম দিতে হবে", "between:ইউজারনেম অবশ্যই ৩-৮ অক্ষর হতে হবে।"},
+		"zip":      []string{"numeric:জিপ কোড অবশ্যই নাম্বার হবে"},
+	}
+
+	opts := validator.Options{
+		Request:  r, // request object
+		Rules:    rules, // rules map
+		Messages: messages, // custom message map (Optional)
+		RequiredDefault: true, // all the field to be required
+	}
+	v := validator.New(opts)
+	e := v.Validate()
+	err := map[string]interface{}{"validationError": e}
+	w.Header().Set("Content-type", "applciation/json")
+	json.NewEncoder(w).Encode(err)
+}
+
+func main() {
+	http.HandleFunc("/", handler)
+	fmt.Println("Listening on port: 9000")
+	http.ListenAndServe(":9000", nil)
+}
+
+```
+
+Send request to the server using curl or postman: `curl GET "http://localhost:9000?web=&age=&zip=&dob=&agree="`
+
+
+***Response***
+```json
+{
+    "validationError": {
+        "agree": [
+            "The agree may only contain 0, 1, true, false"
+        ],
+        "dob": [
+            "The dob field must be a valid date format. e.g: yyyy-mm-dd, yyyy/mm/dd etc."
+        ],
+        "email": [
+            "The email field is required",
+            "The email field must be minimum 4 characters",
+            "The email field must be a valid email address"
+        ],
+        "roles": [
+            "The roles field must contain one of these values admin,manager,rider"
+        ],
+        "username": [
+            "আপনাকে অবশ্যই ইউজারনেম দিতে হবে",
+            "ইউজারনেম অবশ্যই ৩-৮ অক্ষর হতে হবে।"
+        ],
+        "web": [
+            "The web field format is invalid"
+        ]
+    }
+}
+```
+### More Examples
+* [Validate JSON to Struct](doc/STRUCT_VALIDATION.md)
+* [Validate JSON to Map](doc/MAP_VALIDATION.md)
+
+### Validation Rules
+* `alpha` The field under validation must be entirely alphabetic characters.
+* `alpha_dash` The field under validation may have alpha-numeric characters, as well as dashes and underscores.
+* `alpha_num` The field under validation must be entirely alpha-numeric characters.
+* `numeric` The field under validation must be entirely numeric characters.
+* `numeric_between:int,int` The field under validation must be a numeric value between the range.
+   e.g: `numeric_between:18,65` may contains numeric value like `35`, `55`
+* `bool` The field under validation must be able to be cast as a boolean. Accepted input are `true, false, 1, 0, "1" and "0"`.
+* `credit_card` The field under validation must have a valid credit card number. Accepted cards are `Visa, MasterCard, American Express, Diners Club, Discover and JCB card`
+* `coordinate` The field under validation must have a value of valid coordinate.
+* `css_color` The field under validation must have a value of valid CSS color. Accepted colors are `hex, rgb, rgba, hsl, hsla` like `#909, #00aaff, rgb(255,122,122)`
+* `date` The field under validation must have a valid date of format yyyy-mm-dd or yyyy/mm/dd.
+* `date:dd-mm-yyyy` The field under validation must have a valid date of format dd-mm-yyyy.
+* `digits:int` The field under validation must be numeric and must have an exact length of value.
+* `digits_between:int,int` The field under validation must be numeric and must have length between the range.
+   e.g: `digits_between:3,5` may contains digits like `2323`, `12435`
+* `email` The field under validation must have a valid email.
+* `float` The field under validation must have a valid float number.
+* `in:foo,bar` The field under validation must have one of the values. e.g: `in:admin,manager,user` must contain the values (admin or manager or user)
+* `min:int` The field under validation must have a min length of characters.
+   e.g: `min:3` may contains characters minimum length of 3 like `"john", "jane", "jane321"` but not `"mr", "xy"`
+* `max:int` The field under validation must have a max length of characters.
+   e.g: `max:6` may contains characters maximum length of 6 like `"john doe", "jane doe"` but not `"john", "jane"`
+* `not_in:foo,bar` The field under validation must have one value except foo,bar. e.g: `not_in:admin,manager,user` must not contain the values (admin or manager or user)
+* `len:int` The field under validation must have an exact length of characters.
+   e.g: `len:4` may contains characters exact length of 4 like `Food, Mood, Good`
+* `ip` The field under validation must be a valid IP address.
+* `ip_v4` The field under validation must be a valid IP V4 address.
+* `ip_v6` The field under validation must be a valid IP V6 address.
+* `json` The field under validation must be a valid JSON string.
+* `lat` The field under validation must be a valid latitude.
+* `lon` The field under validation must be a valid longitude.
+* `regex:regurlar expression` The field under validation validate against the regex. e.g: `regex:^[a-zA-Z]+$` validate the letters.
+* `required` The field under validation must be present in the input data and not empty. A field is considered "empty" if one of the following conditions are true: 1) The value is null. 2)The value is an empty string.
+* `url` The field under validation must be a valid URL.
+* `uuid` The field under validation must be a valid UUID.
+* `uuid_v3` The field under validation must be a valid UUID V3.
+* `uuid_v4` The field under validation must be a valid UUID V4.
+* `uuid_v5` The field under validation must be a valid UUID V5.
+
+### Add Custom Rules
+
+```go
+func init() {
+	// simple example
+	validator.AddCustomRule("must_john", func(field string, value interface{}, rule string) error {
+		val := value.(string)
+		if val != "john" || val != "John" {
+			return fmt.Errorf("The %s field must be John or john", field)
+		}
+		return nil
+	})
+
+	// custom rules to take fixed length word.
+	// e.g: word:5 will throw error if the field does not contain exact 5 word
+	validator.AddCustomRule("word", func(field string, value interface{}, rule string) error {
+		valSlice := strings.Fields(value.(string))
+		l, _ := strconv.Atoi(strings.TrimPrefix(rule, "word:")) //handle other error
+		if len(valSlice) != l {
+			return fmt.Errorf("The %s field must be %d word", field, l)
+		}
+		return nil
+	})
+
+}
+```
+Note: Array, map, slice can be validated by adding custom rules.
+
+### Contribution
+There are many tasks that need to be done. I have tried to make a minimal setup, need more code refactoring, review, bug fixing and adding features.
+If you are interested to make the package better please send pull requests.
+Though I am working on another solution, do not use it in production.
+
+### Roadmap
+* Validate array, map, slice
+* Check all builtin rules
+* Code review
+* Code improvement
+
+### See [Benchmark](doc/BENCHMARK.md)
+### See [GoDoc](https://godoc.org/github.com/govalidator/validator)
+
+### **License**
+The **validator** is an open-source software licensed under the [MIT License](LICENSE.md).
