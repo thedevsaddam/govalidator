@@ -53,7 +53,7 @@ func (v *Validator) ValidateStructJSON() url.Values {
 }
 
 // SetUniqueKey represents struct field name with prefix of struct name
-// helps to stop collission between same field name in embeded struct
+// helps to stop collisions between same field name in embeded struct
 func (v *Validator) SetUniqueKey(unique bool) {
 	v.Opts.RequiredDefault = unique
 }
