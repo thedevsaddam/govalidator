@@ -86,7 +86,7 @@ func deepFields(iface interface{}, tagIdentifier, tagSeparator string, UniqueKey
 	return fields
 }
 
-// keepRequiredFields remove the rules which does not contain requried field if SetDefaultRequired is false
+// keepRequiredFields remove the rules which does not contain required field if SetDefaultRequired is false
 func keepRequiredFields(dfs []dField) []dField {
 	fields := make([]dField, 0)
 	for _, f := range dfs {
