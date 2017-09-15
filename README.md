@@ -183,7 +183,6 @@ Note: Array, map, slice can be validated by adding custom rules.
 ### Contribution
 There are many tasks that need to be done. I have tried to make a minimal setup, need more code refactoring, review, bug fixing and adding features.
 If you are interested to make the package better please send pull requests.
-Though I am working on another solution, do not use it in production.
 
 ### Roadmap
 * Validate array, map, slice
