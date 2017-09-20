@@ -5,7 +5,7 @@ Package validator
 [![GoDoc](https://godoc.org/github.com/govalidator/validator?status.svg)](https://godoc.org/github.com/govalidator/validator)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
 
-Validate golang request data with simple rules. Highly encouraged by Laravel's request validation.
+Validate golang request data with simple rules. Highly inspired by Laravel's request validation.
 
 
 ### Installation
