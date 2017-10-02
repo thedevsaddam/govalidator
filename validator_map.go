@@ -36,7 +36,7 @@ func (v *Validator) ValidateMapJSON() url.Values {
 		reqVal := strings.TrimSpace(v.parseAndGetMapVal(field))
 		for _, rule := range rules {
 			if !isRuleExist(rule) {
-				panic(fmt.Errorf("validator: %s is not a valid rule", rule))
+				panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
 			}
 			v := fieldValidator{
 				errsBag: errsBag,

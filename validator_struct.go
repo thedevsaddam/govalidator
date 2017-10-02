@@ -34,7 +34,7 @@ func (v *Validator) ValidateStructJSON() url.Values {
 	for _, d := range df {
 		for _, rule := range d.rules {
 			if !isRuleExist(rule) {
-				panic(fmt.Errorf("validator: %s is not a valid rule", rule))
+				panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
 			}
 			fv := fieldValidator{
 				errsBag: errsBag,

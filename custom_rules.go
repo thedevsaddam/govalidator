@@ -14,7 +14,7 @@ var customRules = make(map[string]func(string, interface{}, string) error, 0)
 // fn func(fieldName string, fieldValue string, rule string) error
 func AddCustomRule(name string, fn func(field string, value interface{}, rule string) error) {
 	if isRuleExist(name) {
-		panic(fmt.Errorf("validator: %s is already defined in rules", name))
+		panic(fmt.Errorf("govalidator: %s is already defined in rules", name))
 	}
 	customRules[name] = fn
 }
