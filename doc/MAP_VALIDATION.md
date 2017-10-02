@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/govalidator/validator"
+	"github.com/thedevsaddam/govalidator"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	rules := validator.MapData{
+	rules := govalidator.MapData{
 		"username": []string{"required", "between:3,5"},
 		"email":    []string{"required", "min:4", "max:20", "email"},
 		"web":      []string{"url"},
@@ -23,13 +23,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	data := make(map[string]interface{}, 0)
 
-	opts := validator.Options{
+	opts := govalidator.Options{
 		Request: r,
 		Rules:   rules,
 		Data:    &data,
 	}
 
-	vd := validator.New(opts)
+	vd := govalidator.New(opts)
 	e := vd.ValidateMapJSON()
 	fmt.Println(data)
 	err := map[string]interface{}{"validation error": e}

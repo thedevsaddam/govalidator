@@ -1,8 +1,8 @@
-Package validator
+Package govalidator
 =========================
 ![Project status](https://img.shields.io/badge/version-0.1-green.svg)
-[![Go Report Card](https://goreportcard.com/badge/github.com/govalidator/validator)](https://goreportcard.com/report/github.com/govalidator/validator)
-[![GoDoc](https://godoc.org/github.com/govalidator/validator?status.svg)](https://godoc.org/github.com/govalidator/validator)
+[![Go Report Card](https://goreportcard.com/badge/github.com/thedevsaddam/govalidator)](https://goreportcard.com/report/github.com/thedevsaddam/govalidator)
+[![GoDoc](https://godoc.org/github.com/thedevsaddam/govalidator?status.svg)](https://godoc.org/github.com/thedevsaddam/govalidator)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
 
 Validate golang request data with simple rules. Highly inspired by Laravel's request validation.
@@ -12,14 +12,14 @@ Validate golang request data with simple rules. Highly inspired by Laravel's req
 
 Install the package using
 ```go
-$ go get github.com/govalidator/validator
+$ go get github.com/thedevsaddam/govalidator
 ```
 
 ### Usage
 
 To use the package import it in your `*.go` code
 ```go
-import "github.com/govalidator/validator"
+import "github.com/thedevsaddam/govalidator"
 ```
 
 ### Example
@@ -34,11 +34,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/govalidator/validator"
+	"github.com/thedevsaddam/govalidator"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	rules := validator.MapData{
+	rules := govalidator.MapData{
 		"username": []string{"required", "between:3,8"},
 		"email":    []string{"required", "min:4", "max:20", "email"},
 		"web":      []string{"url"},
@@ -51,7 +51,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		"dob":      []string{"date"},
 	}
 
-	messages := validator.MapData{
+	messages := govalidator.MapData{
 		"username": []string{"required:আপনাকে অবশ্যই ইউজারনেম দিতে হবে", "between:ইউজারনেম অবশ্যই ৩-৮ অক্ষর হতে হবে।"},
 		"zip":      []string{"numeric:জিপ কোড অবশ্যই নাম্বার হবে"},
 	}
@@ -62,7 +62,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		Messages: messages, // custom message map (Optional)
 		RequiredDefault: true, // all the field to be required
 	}
-	v := validator.New(opts)
+	v := govalidator.New(opts)
 	e := v.Validate()
 	err := map[string]interface{}{"validationError": e}
 	w.Header().Set("Content-type", "applciation/json")
@@ -108,9 +108,6 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
     }
 }
 ```
-### More Examples
-* [Validate JSON to Struct](doc/STRUCT_VALIDATION.md)
-* [Validate JSON to Map](doc/MAP_VALIDATION.md)
 
 ### Validation Rules
 * `alpha` The field under validation must be entirely alphabetic characters.
@@ -157,7 +154,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 ```go
 func init() {
 	// simple example
-	validator.AddCustomRule("must_john", func(field string, value interface{}, rule string) error {
+	govalidator.AddCustomRule("must_john", func(field string, value interface{}, rule string) error {
 		val := value.(string)
 		if val != "john" || val != "John" {
 			return fmt.Errorf("The %s field must be John or john", field)
@@ -167,7 +164,7 @@ func init() {
 
 	// custom rules to take fixed length word.
 	// e.g: word:5 will throw error if the field does not contain exact 5 word
-	validator.AddCustomRule("word", func(field string, value interface{}, rule string) error {
+	govalidator.AddCustomRule("word", func(field string, value interface{}, rule string) error {
 		valSlice := strings.Fields(value.(string))
 		l, _ := strconv.Atoi(strings.TrimPrefix(rule, "word:")) //handle other error
 		if len(valSlice) != l {
@@ -191,7 +188,7 @@ If you are interested to make the package better please send pull requests.
 * Code improvement
 
 ### See [Benchmark](doc/BENCHMARK.md)
-### See [GoDoc](https://godoc.org/github.com/govalidator/validator)
+### See [GoDoc](https://godoc.org/github.com/thedevsaddam/govalidator)
 
 ### **License**
-The **validator** is an open-source software licensed under the [MIT License](LICENSE.md).
+The **govalidator** is an open-source software licensed under the [MIT License](LICENSE.md).

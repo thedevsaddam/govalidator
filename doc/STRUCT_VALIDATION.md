@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/govalidator/validator"
+	"github.com/thedevsaddam/govalidator"
 )
 
 type user struct {
@@ -23,19 +23,19 @@ type user struct {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	var user user
-	messages := validator.MapData{
+	messages := govalidator.MapData{
 		"user.username": []string{"required:You must provide username", "between:username must be between 3 to 8 chars"},
 		"user.web":      []string{"url:You must provide a valid url"},
 	}
 
-	opts := validator.Options{
+	opts := govalidator.Options{
 		Request:         r,
 		Data:            &user,
 		Messages:        messages,
 		UniqueKey:       true, // this will add prefix for field name using type (In this case field name will be like: user.username. user.email, user.web, user.age)
 	}
 
-	v := validator.New(opts)
+	v := govalidator.New(opts)
 	e := v.ValidateStructJSON()
 	fmt.Println(user) // your incoming JSON data in Go data struct
 	err := map[string]interface{}{"validationError": e}
