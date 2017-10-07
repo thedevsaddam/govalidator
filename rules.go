@@ -799,6 +799,36 @@ func init() {
 		return nil
 	})
 
+	// NumericBetween check if the value field numeric value range
+	// e.g: numeric_between:18, 65 means number value must be in between a numeric value 18 & 65
+	AddCustomRule("numeric_between", func(field string, rule string, message string, value interface{}) error {
+		rng := strings.Split(strings.TrimPrefix(rule, "numeric_between:"), ",")
+		if len(rng) != 2 {
+			panic(errInvalidArgument)
+		}
+		min, err := strconv.Atoi(rng[0])
+		if err != nil {
+			panic(errStringToInt)
+		}
+		max, err := strconv.Atoi(rng[1])
+		if err != nil {
+			panic(errStringToInt)
+		}
+		errMsg := fmt.Errorf("The %s field must be numeric value between %d and %d", field)
+		if message != "" {
+			errMsg = errors.New(message)
+		}
+		val := toString(value)
+		digit, err := strconv.Atoi(val)
+		if err != nil {
+			return errMsg
+		}
+		if !(digit >= min && digit <= max) {
+			return errMsg
+		}
+		return nil
+	})
+
 	// ValidateURL check if provided field is valid URL
 	AddCustomRule("url", func(field string, rule string, message string, value interface{}) error {
 		str := toString(value)
