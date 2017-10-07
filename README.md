@@ -43,7 +43,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		"username": []string{"required", "between:3,8"},
 		"email":    []string{"required", "min:4", "max:20", "email"},
 		"web":      []string{"url"},
-		"age":      []string{"between:18,56"},
 		"phone":    []string{"digits:11"},
 		"agree":    []string{"bool"},
 		"dob":      []string{"date"},
@@ -83,9 +82,6 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 ```json
 {
     "validationError": {
-        "age": [
-            "The age field must be between 18 and 56"
-        ],
         "agree": [
             "The agree may only contain boolean value, string or int 0, 1"
         ],
