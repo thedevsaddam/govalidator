@@ -120,8 +120,8 @@ func (v *Validator) keepRequiredField() {
 // ValidateJSON validate request data from JSON body to Go struct
 // see example in README.md file
 func (v *Validator) ValidateJSON() url.Values {
-	if v.Opts.Request == nil {
-		panic(errValidateJSONArgsMismatch)
+	if len(v.Opts.Rules) == 0 || v.Opts.Request == nil {
+		panic(errValidateArgsMismatch)
 	}
 	if reflect.TypeOf(v.Opts.Data).Kind() != reflect.Ptr {
 		panic(errRequirePtr)
