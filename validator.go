@@ -1,15 +1,17 @@
 package govalidator
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strings"
 )
 
 const (
-	tagIdentifier = "validate" //tagName idetify the struct tag for govalidator
-	tagSeparator  = "|"        //tagSeparator use to separate tags in struct
+	tagIdentifier = "json" //tagName idetify the struct tag for govalidator
+	tagSeparator  = "|"    //tagSeparator use to separate tags in struct
 )
 
 type (
@@ -78,16 +80,9 @@ func (v *Validator) Validate() url.Values {
 			if !isRuleExist(rule) {
 				panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
 			}
-			v := fieldValidator{
-				errsBag: errsBag,
-				field:   field,
-				value:   reqVal,
-				rule:    rule,
-				message: v.getCustomMessage(field, rule),
-			}
-			v.run()
+			msg := ""
 			// validate if custom rules exist
-			validateCustomRules(field, reqVal, rule, errsBag)
+			validateCustomRules(field, rule, msg, reqVal, errsBag)
 		}
 	}
 
@@ -115,4 +110,39 @@ func (v *Validator) keepRequiredField() {
 			}
 		}
 	}
+}
+
+// ValidateJSON validate request data from JSON body to Go struct
+// see example in README.md file
+func (v *Validator) ValidateJSON() url.Values {
+	if v.Opts.Request == nil {
+		panic(errValidateJSONArgsMismatch)
+	}
+	if reflect.TypeOf(v.Opts.Data).Kind() != reflect.Ptr {
+		panic(errRequirePtr)
+	}
+	errsBag := url.Values{}
+
+	defer v.Opts.Request.Body.Close()
+	err := json.NewDecoder(v.Opts.Request.Body).Decode(v.Opts.Data)
+	if err != nil {
+		errsBag.Add("_error", err.Error())
+		return errsBag
+	}
+	r := roller{}
+	r.setTagIdentifier(tagIdentifier)
+	r.setTagSeparator(tagSeparator)
+	r.start(v.Opts.Data)
+	for field, rules := range v.Opts.Rules {
+		value, _ := r.getFlatVal(field)
+		for _, rule := range rules {
+			if !isRuleExist(rule) {
+				panic(fmt.Errorf("validator: %s is not a valid rule", rule))
+			}
+			msg := ""
+			validateCustomRules(field, rule, msg, value, errsBag)
+		}
+	}
+
+	return errsBag
 }

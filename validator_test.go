@@ -1,6 +1,8 @@
 package govalidator
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/url"
 	"testing"
@@ -19,14 +21,14 @@ func TestValidator_Validate(t *testing.T) {
 	URL, _ = url.Parse("http://www.example.com")
 	params := url.Values{}
 	params.Add("name", "John Doe")
-	params.Add("age", "27")
+	params.Add("username", "jhondoe")
 	params.Add("email", "john@mail.com")
 	params.Add("zip", "8233")
 	URL.RawQuery = params.Encode()
 	r, _ := http.NewRequest("GET", URL.String(), nil)
 	rulesList := MapData{
 		"name":  []string{"required"},
-		"age":   []string{"numeric_between:18,60"},
+		"age":   []string{"between:5,16"},
 		"email": []string{"email"},
 		"zip":   []string{"digits:4"},
 	}
@@ -36,7 +38,8 @@ func TestValidator_Validate(t *testing.T) {
 		Rules:   rulesList,
 	}
 	v := New(opts)
-	if err := v.Validate(); len(err) > 0 {
+	validationError := v.Validate()
+	if len(validationError) > 0 {
 		t.Error("Validate failed to validate correct inputs!")
 	}
 
@@ -75,4 +78,53 @@ func Benchmark_Validate(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		v.Validate()
 	}
+}
+
+//============ validate json test ====================
+
+func TestValidator_ValidateJSON(t *testing.T) {
+	type User struct {
+		Name    string `json:"name"`
+		Email   string `json:"email"`
+		Address string `json:"address"`
+		Age     int    `json:"age"`
+		Zip     string `json:"zip"`
+		Color   int    `json:"color"`
+	}
+
+	postUser := User{
+		Name:    "",
+		Email:   "inalid email",
+		Address: "",
+		Age:     1,
+		Zip:     "122",
+		Color:   40,
+	}
+
+	rules := MapData{
+		"name":    []string{"required"},
+		"email":   []string{"email"},
+		"address": []string{"required", "between:3,5"},
+		"age":     []string{"bool"},
+		"zip":     []string{"len:4"},
+		"color":   []string{"min:10"},
+	}
+
+	var user User
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	opts := Options{
+		Request: req,
+		Data:    &user,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	vd.ValidateJSON()
+	// fmt.Println("validationErr: ", validationErr)
+	// if len(validationErr) != 5 {
+	// 	t.Error("ValidateStructJSON failed")
+	// }
 }
