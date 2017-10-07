@@ -154,7 +154,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 ```go
 func init() {
 	// simple example
-	govalidator.AddCustomRule("must_john", func(field string, value interface{}, rule string) error {
+	govalidator.AddCustomRule("must_john", func(field string, rule string, message string, value interface{}) error {
 		val := value.(string)
 		if val != "john" || val != "John" {
 			return fmt.Errorf("The %s field must be John or john", field)
@@ -164,7 +164,7 @@ func init() {
 
 	// custom rules to take fixed length word.
 	// e.g: word:5 will throw error if the field does not contain exact 5 word
-	govalidator.AddCustomRule("word", func(field string, value interface{}, rule string) error {
+	govalidator.AddCustomRule("word", func(field string, rule string, message string, value interface{}) error {
 		valSlice := strings.Fields(value.(string))
 		l, _ := strconv.Atoi(strings.TrimPrefix(rule, "word:")) //handle other error
 		if len(valSlice) != l {

@@ -14,7 +14,8 @@ var rulesFuncMap = make(map[string]func(string, string, string, interface{}) err
 // AddCustomRule help to add custom rules for validator
 // First argument it takes the rule name and second arg a func
 // Second arg must have this signature below
-// fn func(fieldName string, fieldValue string, rule string) error
+// fn func(name string, fn func(field string, rule string, message string, value interface{}) error
+// see example in readme: https://github.com/thedevsaddam/govalidator#add-custom-rules
 func AddCustomRule(name string, fn func(field string, rule string, message string, value interface{}) error) {
 	if isRuleExist(name) {
 		panic(fmt.Errorf("validator: %s is already defined in rules", name))
