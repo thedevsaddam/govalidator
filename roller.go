@@ -21,7 +21,7 @@ type roller struct {
 	tagSeparator  string
 }
 
-// start start traversing throught the tree
+// start start traversing through the tree
 func (r *roller) start(iface interface{}) {
 	//initialize the Tree
 	r.root = make(map[string]interface{}, 0)
@@ -48,7 +48,7 @@ func (r *roller) setTagIdentifier(i string) {
 	r.tagIdentifier = i
 }
 
-// setTagSeparator set the struct tag seperator. e.g: pipe (|) or comma (,)
+// setTagSeparator set the struct tag separator. e.g: pipe (|) or comma (,)
 func (r *roller) setTagSeparator(s string) {
 	r.tagSeparator = s
 }
