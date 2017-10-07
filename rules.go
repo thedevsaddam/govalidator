@@ -814,7 +814,7 @@ func init() {
 		if err != nil {
 			panic(errStringToInt)
 		}
-		errMsg := fmt.Errorf("The %s field must be numeric value between %d and %d", field)
+		errMsg := fmt.Errorf("The %s field must be numeric value between %d and %d", field, min, max)
 		if message != "" {
 			errMsg = errors.New(message)
 		}
