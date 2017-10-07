@@ -27,6 +27,7 @@ import "github.com/thedevsaddam/govalidator"
 ***Validate `form-data`, `x-www-form-urlencoded` and `query params`***
 
 ```go
+
 package main
 
 import (
@@ -42,11 +43,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		"username": []string{"required", "between:3,8"},
 		"email":    []string{"required", "min:4", "max:20", "email"},
 		"web":      []string{"url"},
-		"age":      []string{"numeric_between:18,56"},
-		"zip":      []string{"numeric"},
+		"age":      []string{"between:18,56"},
 		"phone":    []string{"digits:11"},
-		"roles":    []string{"in:admin,manager,rider"},
-		"names":    []string{"not_in:john,jane,mila"},
 		"agree":    []string{"bool"},
 		"dob":      []string{"date"},
 	}
@@ -56,11 +54,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		"zip":      []string{"numeric:জিপ কোড অবশ্যই নাম্বার হবে"},
 	}
 
-	opts := validator.Options{
-		Request:  r, // request object
-		Rules:    rules, // rules map
-		Messages: messages, // custom message map (Optional)
-		RequiredDefault: true, // all the field to be required
+	opts := govalidator.Options{
+		Request:         r,        // request object
+		Rules:           rules,    // rules map
+		Messages:        messages, // custom message map (Optional)
+		RequiredDefault: true,     // all the field to be required
 	}
 	v := govalidator.New(opts)
 	e := v.Validate()
@@ -75,6 +73,7 @@ func main() {
 	http.ListenAndServe(":9000", nil)
 }
 
+
 ```
 
 Send request to the server using curl or postman: `curl GET "http://localhost:9000?web=&age=&zip=&dob=&agree="`
@@ -84,23 +83,20 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 ```json
 {
     "validationError": {
+        "age": [
+            "The age field must be between 18 and 56"
+        ],
         "agree": [
-            "The agree may only contain 0, 1, true, false"
+            "The agree may only contain boolean value, string or int 0, 1"
         ],
         "dob": [
-            "The dob field must be a valid date format. e.g: yyyy-mm-dd, yyyy/mm/dd etc."
+            "The dob field must be a valid date format. e.g: yyyy-mm-dd, yyyy/mm/dd etc"
         ],
         "email": [
-            "The email field is required",
-            "The email field must be minimum 4 characters",
-            "The email field must be a valid email address"
+            "The email field must be minimum 4 char"
         ],
-        "roles": [
-            "The roles field must contain one of these values admin,manager,rider"
-        ],
-        "username": [
-            "আপনাকে অবশ্যই ইউজারনেম দিতে হবে",
-            "ইউজারনেম অবশ্যই ৩-৮ অক্ষর হতে হবে।"
+        "phone": [
+            "The phone field must be 11 digits"
         ],
         "web": [
             "The web field format is invalid"
