@@ -23,9 +23,9 @@ type (
 		Data            interface{} // Data represents structure for JSON body
 		Request         *http.Request
 		RequiredDefault bool    // RequiredDefault represents if all the fields are by default required or not
-		UniqueKey       bool    // UniqueKey set prefix (type name) in  field name for ValidateJSON
 		Rules           MapData // Rules represents rules for form-data/x-url-encoded/query params data
 		Messages        MapData // Messages represents custom/localize message for rules
+		TagIdentifier   string  //TagIdentifier represents struct tag identifier, e.g: json or validate etc
 	}
 
 	// Validator represents a validator with options
@@ -61,6 +61,11 @@ func (v *Validator) getCustomMessage(field, rule string) string {
 // If SetDefaultRequired set to true then it will mark all the field in the rules list as required
 func (v *Validator) SetDefaultRequired(required bool) {
 	v.Opts.RequiredDefault = required
+}
+
+// SetTagIdentifier change the default tag identifier (json) to your custom tag.
+func (v *Validator) SetTagIdentifier(identifier string) {
+	v.Opts.TagIdentifier = identifier
 }
 
 // Validate validate request data like form-data, x-www-form-urlencoded and query params
@@ -131,6 +136,9 @@ func (v *Validator) ValidateJSON() url.Values {
 	}
 	r := roller{}
 	r.setTagIdentifier(tagIdentifier)
+	if v.Opts.TagIdentifier != "" {
+		r.setTagIdentifier(v.Opts.TagIdentifier)
+	}
 	r.setTagSeparator(tagSeparator)
 	r.start(v.Opts.Data)
 	for field, rules := range v.Opts.Rules {
