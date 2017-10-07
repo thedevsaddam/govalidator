@@ -22,9 +22,8 @@ func isRuleExist(rule string) bool {
 	}
 	if _, ok := rulesFuncMap[rule]; ok {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 // toString force data to be string
