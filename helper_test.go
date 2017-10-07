@@ -120,7 +120,7 @@ var (
 
 func Test_IsAlpha(t *testing.T) {
 	for a, s := range _alpha {
-		if IsAlpha(a) != s {
+		if isAlpha(a) != s {
 			t.Error("IsAlpha failed to determine alpha!")
 		}
 	}
@@ -128,13 +128,13 @@ func Test_IsAlpha(t *testing.T) {
 
 func Benchmark_IsAlpha(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsAlpha("abcdAXZY")
+		isAlpha("abcdAXZY")
 	}
 }
 
 func Test_IsAlphaDash(t *testing.T) {
 	for a, s := range _alphaDash {
-		if IsAlphaDash(a) != s {
+		if isAlphaDash(a) != s {
 			t.Error("IsAlphaDash failed to determine alpha dash!")
 		}
 	}
@@ -142,13 +142,13 @@ func Test_IsAlphaDash(t *testing.T) {
 
 func Benchmark_IsAlphaDash(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsAlphaDash("John_Do-E")
+		isAlphaDash("John_Do-E")
 	}
 }
 
 func Test_IsAlphaNumeric(t *testing.T) {
 	for a, s := range _alphaNumeric {
-		if IsAlphaNumeric(a) != s {
+		if isAlphaNumeric(a) != s {
 			t.Error("IsAlphaNumeric failed to determine alpha numeric!")
 		}
 	}
@@ -156,13 +156,13 @@ func Test_IsAlphaNumeric(t *testing.T) {
 
 func Benchmark_IsAlphaNumeric(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsAlphaNumeric("abc12AZ")
+		isAlphaNumeric("abc12AZ")
 	}
 }
 
 func Test_IsBoolean(t *testing.T) {
 	for b, s := range _boolStringsList {
-		if IsBoolean(b) != s {
+		if isBoolean(b) != s {
 			t.Error("IsBoolean failed to determine boolean!")
 		}
 	}
@@ -170,13 +170,13 @@ func Test_IsBoolean(t *testing.T) {
 
 func Benchmark_IsBoolean(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsBoolean("true")
+		isBoolean("true")
 	}
 }
 
 func Test_IsCreditCard(t *testing.T) {
 	for card, state := range _creditCardList {
-		if IsCreditCard(card) != state {
+		if isCreditCard(card) != state {
 			t.Error("IsCreditCard failed to determine credit card!")
 		}
 	}
@@ -184,13 +184,13 @@ func Test_IsCreditCard(t *testing.T) {
 
 func Benchmark_IsCreditCard(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsCreditCard("2221005631780408")
+		isCreditCard("2221005631780408")
 	}
 }
 
 func Test_IsCoordinate(t *testing.T) {
 	for c, s := range _coordinateList {
-		if IsCoordinate(c) != s {
+		if isCoordinate(c) != s {
 			t.Error("IsCoordinate failed to determine coordinate!")
 		}
 	}
@@ -198,13 +198,13 @@ func Test_IsCoordinate(t *testing.T) {
 
 func Benchmark_IsCoordinate(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsCoordinate("30.297018,-78.486328")
+		isCoordinate("30.297018,-78.486328")
 	}
 }
 
 func Test_IsCSSColor(t *testing.T) {
 	for c, s := range _cssColorList {
-		if IsCSSColor(c) != s {
+		if isCSSColor(c) != s {
 			t.Error("IsCSSColor failed to determine css color code!")
 		}
 	}
@@ -212,13 +212,13 @@ func Test_IsCSSColor(t *testing.T) {
 
 func Benchmark_IsCSSColor(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsCSSColor("#00aaff")
+		isCSSColor("#00aaff")
 	}
 }
 
 func Test_IsDate(t *testing.T) {
 	for d, s := range _dateList {
-		if IsDate(d) != s {
+		if isDate(d) != s {
 			t.Error("IsDate failed to determine date!")
 		}
 	}
@@ -226,13 +226,13 @@ func Test_IsDate(t *testing.T) {
 
 func Benchmark_IsDate(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsDate("2016-10-14")
+		isDate("2016-10-14")
 	}
 }
 
 func Test_IsDateDDMMYY(t *testing.T) {
 	for d, s := range _dateDDMMYYList {
-		if IsDateDDMMYY(d) != s {
+		if isDateDDMMYY(d) != s {
 			t.Error("IsDateDDMMYY failed to determine date!")
 		}
 	}
@@ -240,13 +240,13 @@ func Test_IsDateDDMMYY(t *testing.T) {
 
 func Benchmark_IsDateDDMMYY(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsDateDDMMYY("23-10-2014")
+		isDateDDMMYY("23-10-2014")
 	}
 }
 
 func Test_IsEmail(t *testing.T) {
 	for e, s := range _emailList {
-		if IsEmail(e) != s {
+		if isEmail(e) != s {
 			t.Error("IsEmail failed to determine email!")
 		}
 	}
@@ -254,13 +254,13 @@ func Test_IsEmail(t *testing.T) {
 
 func Benchmark_IsEmail(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsEmail("thedevsaddam@gmail.com")
+		isEmail("thedevsaddam@gmail.com")
 	}
 }
 
 func Test_IsFloat(t *testing.T) {
 	for f, s := range _floatList {
-		if IsFloat(f) != s {
+		if isFloat(f) != s {
 			t.Error("IsFloat failed to determine float value!")
 		}
 	}
@@ -268,7 +268,7 @@ func Test_IsFloat(t *testing.T) {
 
 func Benchmark_IsFloat(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsFloat("123.001")
+		isFloat("123.001")
 	}
 }
 
@@ -285,23 +285,23 @@ func Benchmark_IsIn(b *testing.B) {
 }
 
 func Test_IsJSON(t *testing.T) {
-	if !IsJSON(_validJSONString) {
+	if !isJSON(_validJSONString) {
 		t.Error("IsJSON failed!")
 	}
-	if IsJSON(_invalidJSONString) {
+	if isJSON(_invalidJSONString) {
 		t.Error("IsJSON unable to detect invalid json!")
 	}
 }
 
 func Benchmark_IsJSON(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsJSON(_validJSONString)
+		isJSON(_validJSONString)
 	}
 }
 
 func Test_IsNumeric(t *testing.T) {
 	for n, s := range _numericStringList {
-		if IsNumeric(n) != s {
+		if isNumeric(n) != s {
 			t.Error("IsNumeric failed!")
 		}
 	}
@@ -309,13 +309,13 @@ func Test_IsNumeric(t *testing.T) {
 
 func Benchmark_IsNumeric(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsNumeric("123")
+		isNumeric("123")
 	}
 }
 
 func Test_IsLatitude(t *testing.T) {
 	for n, s := range _latList {
-		if IsLatitude(n) != s {
+		if isLatitude(n) != s {
 			t.Error("IsLatitude failed!")
 		}
 	}
@@ -323,13 +323,13 @@ func Test_IsLatitude(t *testing.T) {
 
 func Benchmark_IsLatitude(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsLatitude("30.297018")
+		isLatitude("30.297018")
 	}
 }
 
 func Test_IsLongitude(t *testing.T) {
 	for n, s := range _lonList {
-		if IsLongitude(n) != s {
+		if isLongitude(n) != s {
 			t.Error("IsLongitude failed!")
 		}
 	}
@@ -337,13 +337,13 @@ func Test_IsLongitude(t *testing.T) {
 
 func Benchmark_IsLongitude(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsLongitude("-78.486328")
+		isLongitude("-78.486328")
 	}
 }
 
 func Test_IsIP(t *testing.T) {
 	for i, s := range _ipList {
-		if IsIP(i) != s {
+		if isIP(i) != s {
 			t.Error("IsIP failed!")
 		}
 	}
@@ -351,13 +351,13 @@ func Test_IsIP(t *testing.T) {
 
 func Benchmark_IsIP(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsIP("10.255.255.255")
+		isIP("10.255.255.255")
 	}
 }
 
 func Test_IsIPV4(t *testing.T) {
 	for i, s := range _ipList {
-		if IsIPV4(i) != s {
+		if isIPV4(i) != s {
 			t.Error("IsIPV4 failed!")
 		}
 	}
@@ -365,13 +365,13 @@ func Test_IsIPV4(t *testing.T) {
 
 func Benchmark_IsIPV4(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsIPV4("10.255.255.255")
+		isIPV4("10.255.255.255")
 	}
 }
 
 func Test_IsIPV6(t *testing.T) {
 	for i, s := range _ipV6List {
-		if IsIPV6(i) != s {
+		if isIPV6(i) != s {
 			t.Error("IsIPV4 failed!")
 		}
 	}
@@ -379,25 +379,25 @@ func Test_IsIPV6(t *testing.T) {
 
 func Benchmark_IsIPV6(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsIPV6("10.255.255.255")
+		isIPV6("10.255.255.255")
 	}
 }
 
 func Test_IsMatchedRegex(t *testing.T) {
-	if !IsMatchedRegex("^(name|age)$", "name") {
+	if !isMatchedRegex("^(name|age)$", "name") {
 		t.Error("IsMatchedRegex failed!")
 	}
 }
 
 func Benchmark_IsMatchedRegex(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsMatchedRegex("^(name|age)$", "name")
+		isMatchedRegex("^(name|age)$", "name")
 	}
 }
 
 func Test_IsURL(t *testing.T) {
 	for u, s := range _urlList {
-		if IsURL(u) != s {
+		if isURL(u) != s {
 			t.Error("IsURL failed!")
 		}
 	}
@@ -405,13 +405,13 @@ func Test_IsURL(t *testing.T) {
 
 func Benchmark_IsURL(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsURL("https://www.facebook.com")
+		isURL("https://www.facebook.com")
 	}
 }
 
 func Test_IsUUID(t *testing.T) {
 	for u, s := range _uuidList {
-		if IsUUID(u) != s {
+		if isUUID(u) != s {
 			t.Error("IsUUID failed!")
 		}
 	}
@@ -419,13 +419,13 @@ func Test_IsUUID(t *testing.T) {
 
 func Benchmark_IsUUID(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsUUID("ee7cf0a0-1922-401b-a1ae-6ec9261484c0")
+		isUUID("ee7cf0a0-1922-401b-a1ae-6ec9261484c0")
 	}
 }
 
 func Test_IsUUID3(t *testing.T) {
 	for u, s := range _uuidV3List {
-		if IsUUID3(u) != s {
+		if isUUID3(u) != s {
 			t.Error("IsUUID3 failed!")
 		}
 	}
@@ -433,13 +433,13 @@ func Test_IsUUID3(t *testing.T) {
 
 func Benchmark_IsUUID3(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsUUID3("a987fbc9-4bed-3078-cf07-9141ba07c9f3")
+		isUUID3("a987fbc9-4bed-3078-cf07-9141ba07c9f3")
 	}
 }
 
 func Test_IsUUID4(t *testing.T) {
 	for u, s := range _uuidV4List {
-		if IsUUID4(u) != s {
+		if isUUID4(u) != s {
 			t.Error("IsUUID4 failed!")
 		}
 	}
@@ -447,13 +447,13 @@ func Test_IsUUID4(t *testing.T) {
 
 func Benchmark_IsUUID4(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsUUID4("57b73598-8764-4ad0-a76a-679bb6640eb1")
+		isUUID4("57b73598-8764-4ad0-a76a-679bb6640eb1")
 	}
 }
 
 func Test_IsUUID5(t *testing.T) {
 	for u, s := range _uuidV5List {
-		if IsUUID5(u) != s {
+		if isUUID5(u) != s {
 			t.Error("IsUUID5 failed!")
 		}
 	}
@@ -461,6 +461,6 @@ func Test_IsUUID5(t *testing.T) {
 
 func Benchmark_IsUUID5(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsUUID5("987fbc97-4bed-5078-9f07-9141ba07c9f3")
+		isUUID5("987fbc97-4bed-5078-9f07-9141ba07c9f3")
 	}
 }

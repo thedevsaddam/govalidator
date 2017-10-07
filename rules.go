@@ -117,7 +117,7 @@ func init() {
 			err = errors.New(message)
 		}
 		rxStr := strings.TrimPrefix(rule, "regex:")
-		if !IsMatchedRegex(rxStr, str) {
+		if !isMatchedRegex(rxStr, str) {
 			return err
 		}
 		return nil
@@ -130,7 +130,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsAlpha(str) {
+		if !isAlpha(str) {
 			return err
 		}
 		return nil
@@ -143,7 +143,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsAlphaDash(str) {
+		if !isAlphaDash(str) {
 			return err
 		}
 		return nil
@@ -156,7 +156,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsAlphaNumeric(str) {
+		if !isAlphaNumeric(str) {
 			return err
 		}
 		return nil
@@ -173,7 +173,7 @@ func init() {
 		case bool:
 			//if value is boolean then pass
 		case string:
-			if !IsBoolean(value.(string)) {
+			if !isBoolean(value.(string)) {
 				return err
 			}
 		case int:
@@ -335,7 +335,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsCreditCard(str) {
+		if !isCreditCard(str) {
 			return err
 		}
 		return nil
@@ -348,7 +348,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsCoordinate(str) {
+		if !isCoordinate(str) {
 			return err
 		}
 		return nil
@@ -361,7 +361,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsCSSColor(str) {
+		if !isCSSColor(str) {
 			return err
 		}
 		return nil
@@ -383,7 +383,7 @@ func init() {
 			err = errors.New(message)
 		}
 		str := toString(value)
-		if len(str) != l || !IsNumeric(str) {
+		if len(str) != l || !isNumeric(str) {
 			return err
 		}
 
@@ -410,7 +410,7 @@ func init() {
 			err = errors.New(message)
 		}
 		str := toString(value)
-		if !IsNumeric(str) || !(len(str) >= min && len(str) <= max) {
+		if !isNumeric(str) || !(len(str) >= min && len(str) <= max) {
 			return err
 		}
 
@@ -421,14 +421,14 @@ func init() {
 	AddCustomRule("date", func(field string, rule string, message string, value interface{}) error {
 		str := toString(value)
 		if rule == "date:dd-mm-yyyy" {
-			if !IsDateDDMMYY(str) {
+			if !isDateDDMMYY(str) {
 				if message != "" {
 					return errors.New(message)
 				}
 				return fmt.Errorf("The %s field must be a valid date format. e.g: dd-mm-yyyy, dd/mm/yyyy etc", field)
 			}
 		}
-		if !IsDate(str) {
+		if !isDate(str) {
 			if message != "" {
 				return errors.New(message)
 			}
@@ -444,7 +444,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsEmail(str) {
+		if !isEmail(str) {
 			return err
 		}
 		return nil
@@ -457,7 +457,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsFloat(str) {
+		if !isFloat(str) {
 			return err
 		}
 		return nil
@@ -470,7 +470,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsIP(str) {
+		if !isIP(str) {
 			return err
 		}
 		return nil
@@ -483,7 +483,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsIPV4(str) {
+		if !isIPV4(str) {
 			return err
 		}
 		return nil
@@ -496,7 +496,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsIPV6(str) {
+		if !isIPV6(str) {
 			return err
 		}
 		return nil
@@ -509,7 +509,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsJSON(str) {
+		if !isJSON(str) {
 			return err
 		}
 		return nil
@@ -522,7 +522,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsLatitude(str) {
+		if !isLatitude(str) {
 			return err
 		}
 		return nil
@@ -535,7 +535,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsLongitude(str) {
+		if !isLongitude(str) {
 			return err
 		}
 		return nil
@@ -792,7 +792,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsNumeric(str) {
+		if !isNumeric(str) {
 			return err
 		}
 		return nil
@@ -805,7 +805,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsURL(str) {
+		if !isURL(str) {
 			return err
 		}
 		return nil
@@ -818,7 +818,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsUUID(str) {
+		if !isUUID(str) {
 			return err
 		}
 		return nil
@@ -831,7 +831,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsUUID3(str) {
+		if !isUUID3(str) {
 			return err
 		}
 		return nil
@@ -844,7 +844,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsUUID4(str) {
+		if !isUUID4(str) {
 			return err
 		}
 		return nil
@@ -857,7 +857,7 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		if !IsUUID5(str) {
+		if !isUUID5(str) {
 			return err
 		}
 		return nil
