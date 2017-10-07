@@ -80,7 +80,7 @@ func (v *Validator) Validate() url.Values {
 			if !isRuleExist(rule) {
 				panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
 			}
-			msg := ""
+			msg := v.getCustomMessage(field, rule)
 			// validate if custom rules exist
 			validateCustomRules(field, rule, msg, reqVal, errsBag)
 		}
@@ -139,7 +139,7 @@ func (v *Validator) ValidateJSON() url.Values {
 			if !isRuleExist(rule) {
 				panic(fmt.Errorf("validator: %s is not a valid rule", rule))
 			}
-			msg := ""
+			msg := v.getCustomMessage(field, rule)
 			validateCustomRules(field, rule, msg, value, errsBag)
 		}
 	}
