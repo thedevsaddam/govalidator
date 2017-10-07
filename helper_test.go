@@ -273,14 +273,14 @@ func Benchmark_IsFloat(b *testing.B) {
 }
 
 func Test_IsIn(t *testing.T) {
-	if !IsIn(_roleList, "admin") {
+	if !isIn(_roleList, "admin") {
 		t.Error("IsIn failed!")
 	}
 }
 
 func Benchmark_IsIn(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		IsIn(_roleList, "maager")
+		isIn(_roleList, "maager")
 	}
 }
 

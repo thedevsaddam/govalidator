@@ -68,8 +68,8 @@ func isFloat(str string) bool {
 	return regexFloat.MatchString(str)
 }
 
-// IsIn check if the niddle exist in the haystack
-func IsIn(haystack []string, niddle string) bool {
+// isIn check if the niddle exist in the haystack
+func isIn(haystack []string, niddle string) bool {
 	for _, h := range haystack {
 		if h == niddle {
 			return true
