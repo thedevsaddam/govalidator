@@ -806,24 +806,50 @@ func init() {
 		if len(rng) != 2 {
 			panic(errInvalidArgument)
 		}
-		min, err := strconv.ParseFloat(rng[0], 64)
+		// check for integer value
+		min, err := strconv.Atoi(rng[0])
 		if err != nil {
-			panic(errStringToFloat)
+			panic(errStringToInt)
 		}
-		max, err := strconv.ParseFloat(rng[1], 64)
+		max, err := strconv.Atoi(rng[1])
 		if err != nil {
-			panic(errStringToFloat)
+			panic(errStringToInt)
 		}
-		errMsg := fmt.Errorf("The %s field must be numeric value between %f and %f", field, min, max)
+		errMsg := fmt.Errorf("The %s field must be numeric value between %d and %d", field, min, max)
 		if message != "" {
 			errMsg = errors.New(message)
 		}
+
 		val := toString(value)
+
+		if !strings.Contains(rng[0], ".") || !strings.Contains(rng[1], ".") {
+			digit, err := strconv.Atoi(val)
+			if err != nil {
+				return errMsg
+			}
+			if !(digit >= min && digit <= max) {
+				return errMsg
+			}
+		}
+		// check for float value
+		minFloat, err := strconv.ParseFloat(rng[0], 64)
+		if err != nil {
+			panic(errStringToFloat)
+		}
+		maxFloat, err := strconv.ParseFloat(rng[1], 64)
+		if err != nil {
+			panic(errStringToFloat)
+		}
+		errMsg = fmt.Errorf("The %s field must be numeric value between %f and %f", field, minFloat, maxFloat)
+		if message != "" {
+			errMsg = errors.New(message)
+		}
+
 		digit, err := strconv.ParseFloat(val, 64)
 		if err != nil {
 			return errMsg
 		}
-		if !(digit >= min && digit <= max) {
+		if !(digit >= minFloat && digit <= maxFloat) {
 			return errMsg
 		}
 		return nil
