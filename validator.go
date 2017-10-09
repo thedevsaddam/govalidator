@@ -70,12 +70,14 @@ func (v *Validator) SetTagIdentifier(identifier string) {
 
 // Validate validate request data like form-data, x-www-form-urlencoded and query params
 // see example in README.md file
+// ref: https://github.com/thedevsaddam/govalidator#example
 func (v *Validator) Validate() url.Values {
 	// if request object and rules not passed rise a panic
 	if len(v.Opts.Rules) == 0 || v.Opts.Request == nil {
 		panic(errValidateArgsMismatch)
 	}
 	errsBag := url.Values{}
+
 	// clean rules
 	v.keepRequiredField()
 
@@ -102,6 +104,7 @@ func (v *Validator) parseAndGetVal(key string) string {
 }
 
 // keepRequiredField remove non required rules field from rules if requiredDefault field is false
+// and if the input data is empty for this field
 func (v *Validator) keepRequiredField() {
 	v.Opts.Request.ParseMultipartForm(1024)
 	//r.ParseForm()
@@ -141,6 +144,10 @@ func (v *Validator) ValidateJSON() url.Values {
 	}
 	r.setTagSeparator(tagSeparator)
 	r.start(v.Opts.Data)
+
+	//clean if the key is not exist or value is empty or zero value
+	v.keepJSONRequiredField(r.getFlatMap())
+
 	for field, rules := range v.Opts.Rules {
 		value, _ := r.getFlatVal(field)
 		for _, rule := range rules {
@@ -153,4 +160,18 @@ func (v *Validator) ValidateJSON() url.Values {
 	}
 
 	return errsBag
+}
+
+// keepJSONRequiredField remove non required rules field from rules if requiredDefault field is false
+// and if the input data is empty for this field
+func (v *Validator) keepJSONRequiredField(inputs map[string]interface{}) {
+	if !v.Opts.RequiredDefault {
+		for k, r := range v.Opts.Rules {
+			if val, _ := inputs[k]; isEmpty(val) { // TODO: need to write test to check it working fine
+				if !isContainRequiredField(r) {
+					delete(v.Opts.Rules, k)
+				}
+			}
+		}
+	}
 }

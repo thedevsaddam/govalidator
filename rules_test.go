@@ -316,6 +316,7 @@ func Test_Between(t *testing.T) {
 	}
 
 	vd := New(opts)
+	vd.SetDefaultRequired(true)
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 15 {
 		t.Error("between validation failed!")
