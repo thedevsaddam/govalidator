@@ -823,8 +823,8 @@ func init() {
 		val := toString(value)
 
 		if !strings.Contains(rng[0], ".") || !strings.Contains(rng[1], ".") {
-			digit, err := strconv.Atoi(val)
-			if err != nil {
+			digit, errs := strconv.Atoi(val)
+			if errs != nil {
 				return errMsg
 			}
 			if !(digit >= min && digit <= max) {
