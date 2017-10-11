@@ -55,17 +55,17 @@ func Test_isEmpty(t *testing.T) {
 	var Int8 int
 	var Float32 float32
 	var Str string
-	var Array [4]int
+	var Slice []int
 	list := map[string]interface{}{
 		"_int":     Int,
 		"_int8":    Int8,
 		"_float32": Float32,
 		"_str":     Str,
-		"_array":   Array,
+		"_slice":   Slice,
 	}
 	for k, v := range list {
 		if !isEmpty(v) {
-			t.Errorf("%s failed", k)
+			t.Errorf("%v failed", k)
 		}
 	}
 }
