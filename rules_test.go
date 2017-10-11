@@ -230,14 +230,13 @@ func Test_Boolean(t *testing.T) {
 		Bool        bool    `json:"_bool"`
 	}
 
-	postBools := Bools{BoolStr: "abc", BoolInt: 90}
+	postBools := Bools{BoolStr: "abc", BoolInt: 90, BoolInt8: 10, BoolInt16: 22, BoolInt32: 76, BoolInt64: 9, BoolUint: 5, BoolUint8: 9, BoolUint16: 9, BoolUint32: 9, BoolUint64: 8, BoolUintptr: 9}
 	var boolObj Bools
 
 	body, _ := json.Marshal(postBools)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
 	rules := MapData{
-		"_bools":      []string{"bool"},
 		"boolStr":     []string{"bool"},
 		"boolInt":     []string{"bool"},
 		"boolInt8":    []string{"bool"},
@@ -260,7 +259,8 @@ func Test_Boolean(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if len(validationErr) != 2 {
+	fmt.Println(len(validationErr)) // TODO: Need to fix the test
+	if len(validationErr) != 12 {
 		t.Log(validationErr)
 		t.Error("bool validation failed!")
 	}
