@@ -37,7 +37,9 @@ func (r *roller) start(iface interface{}) {
 	case reflect.Struct:
 		r.traverseStruct(ifv.Interface())
 	case reflect.Map:
-		r.traverseMap(ifv.Interface())
+		if ifv.Len() > 0 {
+			r.traverseMap(ifv.Interface())
+		}
 	case reflect.Slice:
 		r.push("slice", ifv.Interface())
 	}
