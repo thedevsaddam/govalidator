@@ -102,13 +102,19 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 }
 ```
 
+### More examples
+* [Validate JSON to simple struct](doc/SIMPLE_STRUCT_VALIDATION.md)
+* [Validate JSON to map](doc/MAP_VALIDATION.md)
+* [Validate JSON to embeded struct](doc/EMBEDED_STRUCT.md)
+
 ### Validation Rules
 * `alpha` The field under validation must be entirely alphabetic characters.
 * `alpha_dash` The field under validation may have alpha-numeric characters, as well as dashes and underscores.
 * `alpha_num` The field under validation must be entirely alpha-numeric characters.
+* `between:numeric,numeric` The field under validation check the length of characters/length of array, slice, map/range between to integer or float number etc.
 * `numeric` The field under validation must be entirely numeric characters.
-* `numeric_between:int,int` The field under validation must be a numeric value between the range.
-   e.g: `numeric_between:18,65` may contains numeric value like `35`, `55`
+* `numeric_between:numeric,numeric` The field under validation must be a numeric value between the range.
+   e.g: `numeric_between:18,65` may contains numeric value like `35`, `55` . You can also pass float value to check
 * `bool` The field under validation must be able to be cast as a boolean. Accepted input are `true, false, 1, 0, "1" and "0"`.
 * `credit_card` The field under validation must have a valid credit card number. Accepted cards are `Visa, MasterCard, American Express, Diners Club, Discover and JCB card`
 * `coordinate` The field under validation must have a value of valid coordinate.
@@ -171,8 +177,7 @@ func init() {
 Note: Array, map, slice can be validated by adding custom rules.
 
 ### Contribution
-There are many tasks that need to be done. I have tried to make a minimal setup, need more code refactoring, review, bug fixing and adding features.
-If you are interested to make the package better please send pull requests.
+If you are interested to make the package better please send pull requests or create issue so that others can fix.
 
 ### See [Benchmark](doc/BENCHMARK.md)
 ### See [GoDoc](https://godoc.org/github.com/thedevsaddam/govalidator)

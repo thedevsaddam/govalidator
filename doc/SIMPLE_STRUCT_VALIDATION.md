@@ -1,7 +1,8 @@
-### Validate JSON body into Map
+
+### Validate JSON body into a simple Struct
 
 When using ValidateJSON you must a map[string]interface{}, rules and request. You can also pass message rules if you need custom message or localization.
-	
+
 ```go
 package main
 
@@ -13,7 +14,15 @@ import (
 	"github.com/thedevsaddam/govalidator"
 )
 
+type user struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Web      string `json:"web"`
+	Age      int    `json:"age"`
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
+	var user user
 	rules := govalidator.MapData{
 		"username": []string{"required", "between:3,5"},
 		"email":    []string{"required", "min:4", "max:20", "email"},
@@ -21,18 +30,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		"age":      []string{"numeric_between:18,56"},
 	}
 
-	data := make(map[string]interface{}, 0)
-
 	opts := govalidator.Options{
 		Request: r,
+		Data:    &user,
 		Rules:   rules,
-		Data:    &data,
 	}
 
-	vd := govalidator.New(opts)
-	e := vd.ValidateJSON()
-	fmt.Println(data)
-	err := map[string]interface{}{"validation error": e}
+	v := govalidator.New(opts)
+	e := v.ValidateJSON()
+	fmt.Println(user) // your incoming JSON data in Go data struct
+	err := map[string]interface{}{"validationError": e}
 	w.Header().Set("Content-type", "applciation/json")
 	json.NewEncoder(w).Encode(err)
 }
@@ -44,36 +51,19 @@ func main() {
 }
 
 ```
-
 ***Resposne***
 ```json
 {
     "validationError": {
         "age": [
-            "The age field must be between 18 and 56"
-        ],
-        "dob": [
-            "The dob field must be a valid date format. e.g: yyyy-mm-dd, yyyy/mm/dd etc"
+            "The age field must be numeric value between 18 and 56"
         ],
         "email": [
-            "The email field is required",
+            "The email field must be minimum 4 char",
             "The email field must be a valid email address"
         ],
-        "phone": [
-            "The phone field must be 11 digits"
-        ],
-        "postalCode": [
-            "The postalCode field must be 4 digits"
-        ],
-        "roles": [
-            "The roles field must be length of 4"
-        ],
         "username": [
-            "The username field is required",
-            "The username field must be between 3 and 8"
-        ],
-        "village": [
-            "The village field must be between 3 and 10"
+            "The username field must be between 3 and 5"
         ],
         "web": [
             "The web field format is invalid"
@@ -81,5 +71,3 @@ func main() {
     }
 }
 ```
-
-Note: You can pass custom message
