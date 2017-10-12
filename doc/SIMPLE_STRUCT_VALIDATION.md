@@ -1,7 +1,7 @@
 
 ### Validate JSON body into a simple Struct
 
-When using ValidateJSON you must a map[string]interface{}, rules and request. You can also pass message rules if you need custom message or localization.
+When using ValidateJSON you must provide data struct or map, rules and request. You can also pass message rules if you need custom message or localization.
 
 ```go
 package main
