@@ -1,7 +1,7 @@
 Package govalidator
 =========================
 [![Build Status](https://travis-ci.org/thedevsaddam/govalidator.svg?branch=master)](https://travis-ci.org/thedevsaddam/govalidator)
-![Project status](https://img.shields.io/badge/version-0.1-green.svg)
+[![Project status](https://img.shields.io/badge/version-0.1-green.svg)](https://github.com/thedevsaddam/govalidator/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/thedevsaddam/govalidator)](https://goreportcard.com/report/github.com/thedevsaddam/govalidator)
 [![GoDoc](https://godoc.org/github.com/thedevsaddam/govalidator?status.svg)](https://godoc.org/github.com/thedevsaddam/govalidator)
 [![License](https://img.shields.io/dub/l/vibe-d.svg)](https://github.com/thedevsaddam/govalidator/blob/dev/LICENSE.md)
@@ -195,7 +195,7 @@ opts := govalidator.Options{
 If you are interested to make the package better please send pull requests or create issue so that others can fix.
 
 ### See [Benchmark](doc/BENCHMARK.md)
-### See [Api doc](https://godoc.org/github.com/thedevsaddam/govalidator)
+### See [API doc](https://godoc.org/github.com/thedevsaddam/govalidator)
 
 ### **License**
 The **govalidator** is an open-source software licensed under the [MIT License](LICENSE.md).
