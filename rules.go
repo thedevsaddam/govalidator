@@ -44,6 +44,9 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
+		if value == nil {
+			return err
+		}
 		rv := reflect.ValueOf(value)
 		switch rv.Kind() {
 		case reflect.String, reflect.Array, reflect.Slice, reflect.Map:
