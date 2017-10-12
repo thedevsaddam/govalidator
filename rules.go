@@ -197,6 +197,11 @@ func init() {
 			if v != 0 && v != 1 {
 				return err
 			}
+		case int64:
+			v := value.(int64)
+			if v != 0 && v != 1 {
+				return err
+			}
 		case uint:
 			v := value.(uint)
 			if v != 0 && v != 1 {
@@ -214,6 +219,11 @@ func init() {
 			}
 		case uint32:
 			v := value.(uint32)
+			if v != 0 && v != 1 {
+				return err
+			}
+		case uint64:
+			v := value.(uint64)
 			if v != 0 && v != 1 {
 				return err
 			}

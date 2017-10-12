@@ -114,6 +114,17 @@ func BenchmarkRoller_Start(b *testing.B) {
 	}
 }
 
+func Test_Roller_Start_empty_map(t *testing.T) {
+	r := roller{}
+	m := make(map[string]interface{}, 0)
+	r.setTagIdentifier("validate")
+	r.setTagSeparator("|")
+	r.start(m)
+	if len(r.getFlatMap()) > 0 {
+		t.Error("Failed to validate empty map")
+	}
+}
+
 func TestRoller_traverseStructWithEmbeddedPointerStructAndMap(t *testing.T) {
 	r := roller{}
 	s := structWithPointerToEmbeddedStruct{

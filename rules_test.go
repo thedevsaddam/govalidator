@@ -230,7 +230,20 @@ func Test_Boolean(t *testing.T) {
 		Bool        bool    `json:"_bool"`
 	}
 
-	postBools := Bools{BoolStr: "abc", BoolInt: 90, BoolInt8: 10, BoolInt16: 22, BoolInt32: 76, BoolInt64: 9, BoolUint: 5, BoolUint8: 9, BoolUint16: 9, BoolUint32: 9, BoolUint64: 8, BoolUintptr: 9}
+	postBools := Bools{
+		BoolStr:     "abc",
+		BoolInt:     90,
+		BoolInt8:    10,
+		BoolInt16:   22,
+		BoolInt32:   76,
+		BoolInt64:   9,
+		BoolUint:    5,
+		BoolUint8:   9,
+		BoolUint16:  9,
+		BoolUint32:  9,
+		BoolUint64:  8,
+		BoolUintptr: 9,
+	}
 	var boolObj Bools
 
 	body, _ := json.Marshal(postBools)
@@ -259,9 +272,7 @@ func Test_Boolean(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	fmt.Println(len(validationErr)) // TODO: Need to fix the test
 	if len(validationErr) != 12 {
-		t.Log(validationErr)
 		t.Error("bool validation failed!")
 	}
 }
