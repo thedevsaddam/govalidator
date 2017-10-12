@@ -19,7 +19,7 @@ import (
 
 func init() {
 	// custom rules to take fixed length word.
-	// e.g: word:5 will throw error if the field does not contain exact 5 word
+	// e.g: word:5 will throw error if the field contain more than 5 words
 	govalidator.AddCustomRule("max_word", func(field string, rule string, message string, value interface{}) error {
 		valSlice := strings.Fields(value.(string))
 		l, _ := strconv.Atoi(strings.TrimPrefix(rule, "max_word:")) //handle other error
@@ -27,7 +27,7 @@ func init() {
 			if message != "" {
 				return errors.New(message)
 			}
-			return fmt.Errorf("The %s field must be %d word", field, l)
+			return fmt.Errorf("The %s field must not be greater than %d words", field, l)
 		}
 		return nil
 	})
@@ -73,7 +73,7 @@ func main() {
 {
     "validationError": {
         "body": [
-            "The body field must be 150 word"
+            "The body field must not be greater than 150 words"
         ],
         "tags": [
             "The tags field must be between 3 and 5"
