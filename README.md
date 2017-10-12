@@ -4,7 +4,7 @@ Package govalidator
 ![Project status](https://img.shields.io/badge/version-0.1-green.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/thedevsaddam/govalidator)](https://goreportcard.com/report/github.com/thedevsaddam/govalidator)
 [![GoDoc](https://godoc.org/github.com/thedevsaddam/govalidator?status.svg)](https://godoc.org/github.com/thedevsaddam/govalidator)
-![License](https://img.shields.io/dub/l/vibe-d.svg)
+[![License](https://img.shields.io/dub/l/vibe-d.svg)](https://github.com/thedevsaddam/govalidator/blob/dev/LICENSE.md)
 
 Validate golang request data with simple rules. Highly inspired by Laravel's request validation.
 
@@ -76,7 +76,7 @@ func main() {
 
 ```
 
-Send request to the server using curl or postman: `curl GET "http://localhost:9000?web=&age=&zip=&dob=&agree="`
+Send request to the server using curl or postman: `curl GET "http://localhost:9000?web=&phone=&zip=&dob=&agree="`
 
 
 ***Response***
@@ -106,12 +106,13 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * [Validate JSON to simple struct](doc/SIMPLE_STRUCT_VALIDATION.md)
 * [Validate JSON to map](doc/MAP_VALIDATION.md)
 * [Validate JSON to embeded struct](doc/EMBEDED_STRUCT.md)
+* [Validate using custom rule](doc/CUSTOM_RULE.md)
 
 ### Validation Rules
 * `alpha` The field under validation must be entirely alphabetic characters.
 * `alpha_dash` The field under validation may have alpha-numeric characters, as well as dashes and underscores.
 * `alpha_num` The field under validation must be entirely alpha-numeric characters.
-* `between:numeric,numeric` The field under validation check the length of characters/length of array, slice, map/range between to integer or float number etc.
+* `between:numeric,numeric` The field under validation check the length of characters/ length of array, slice, map/ range between two integer or float number etc.
 * `numeric` The field under validation must be entirely numeric characters.
 * `numeric_between:numeric,numeric` The field under validation must be a numeric value between the range.
    e.g: `numeric_between:18,65` may contains numeric value like `35`, `55` . You can also pass float value to check
@@ -176,11 +177,25 @@ func init() {
 ```
 Note: Array, map, slice can be validated by adding custom rules.
 
+### Custom Message/ Localization
+If you need to translate validation message you can pass messages as options.
+
+```go
+messages := govalidator.MapData{
+	"username": []string{"required:You must provide username", "between:The username field must be between 3 to 8 chars"},
+	"zip":      []string{"numeric:Please provide zip field as numeric"},
+}
+
+opts := govalidator.Options{
+	Messages:        messages,
+}
+```
+
 ### Contribution
 If you are interested to make the package better please send pull requests or create issue so that others can fix.
 
 ### See [Benchmark](doc/BENCHMARK.md)
-### See [GoDoc](https://godoc.org/github.com/thedevsaddam/govalidator)
+### See [Api doc](https://godoc.org/github.com/thedevsaddam/govalidator)
 
 ### **License**
 The **govalidator** is an open-source software licensed under the [MIT License](LICENSE.md).
