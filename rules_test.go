@@ -767,3 +767,65 @@ func Test_IP_message(t *testing.T) {
 		t.Error("IP custom message failed!")
 	}
 }
+
+func Test_IPV4(t *testing.T) {
+	type user struct {
+		IP string `json:"ip"`
+	}
+
+	postUser := user{IP: "invdalid IP"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"ip": []string{"ip_v4"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("IP v4 validation failed!")
+	}
+}
+
+func Test_IPv4_message(t *testing.T) {
+	type user struct {
+		IP string `json:"ip"`
+	}
+
+	postUser := user{IP: "invalid IP"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"ip": []string{"ip_v4:custom_message"},
+	}
+
+	rules := MapData{
+		"ip": []string{"ip_v4"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if validationErr.Get("ip") != "custom_message" {
+		t.Error("IP v4 custom message failed!")
+	}
+}
