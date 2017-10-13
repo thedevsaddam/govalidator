@@ -512,3 +512,34 @@ func Test_DigitsBetweenPanic(t *testing.T) {
 		t.Error("Digits between panic failed!")
 	}
 }
+
+func Test_Date(t *testing.T) {
+	type user struct {
+		DOB         string `json:"dob"`
+		JoiningDate string `json:"joining_date"`
+	}
+
+	postUser := user{DOB: "invalida date", JoiningDate: "10"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"dob":          []string{"date"},
+		"joining_date": []string{"date:dd-mm-yyyy"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 2 {
+		t.Log(validationErr)
+		t.Error("Date validation failed!")
+	}
+}
