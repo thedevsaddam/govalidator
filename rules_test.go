@@ -643,3 +643,65 @@ func Test_Email_message(t *testing.T) {
 		t.Error("Email message validation failed!")
 	}
 }
+
+func Test_Float(t *testing.T) {
+	type user struct {
+		CGPA string `json:"cgpa"`
+	}
+
+	postUser := user{CGPA: "invdalid cgpa"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"cgpa": []string{"float"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("Float validation failed!")
+	}
+}
+
+func Test_Float_message(t *testing.T) {
+	type user struct {
+		CGPA string `json:"cgpa"`
+	}
+
+	postUser := user{CGPA: "invdalid cgpa"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"cgpa": []string{"float"},
+	}
+
+	messages := MapData{
+		"cgpa": []string{"float:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if k := validationErr.Get("cgpa"); k != "custom_message" {
+		t.Error("Float custom message failed!")
+	}
+}
