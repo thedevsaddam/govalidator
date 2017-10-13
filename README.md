@@ -51,15 +51,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	messages := govalidator.MapData{
-		"username": []string{"required:আপনাকে অবশ্যই ইউজারনেম দিতে হবে", "between:ইউজারনেম অবশ্যই ৩-৮ অক্ষর হতে হবে।"},
-		"zip":      []string{"numeric:জিপ কোড অবশ্যই নাম্বার হবে"},
+		"username": []string{"required:আপনাকে অবশ্যই ইউজারনেম দিতে হবে", "between:ইউজারনেম অবশ্যই ৩-৮ অক্ষর হতে হবে"},
+		"phone":    []string{"digits:ফোন নাম্বার অবশ্যই ১১ নম্বারের হতে হবে"},
 	}
 
 	opts := govalidator.Options{
 		Request:         r,        // request object
 		Rules:           rules,    // rules map
 		Messages:        messages, // custom message map (Optional)
-		RequiredDefault: true,     // all the field to be required
+		RequiredDefault: true,     // all the field to be pass the rules
 	}
 	v := govalidator.New(opts)
 	e := v.Validate()
@@ -73,7 +73,6 @@ func main() {
 	fmt.Println("Listening on port: 9000")
 	http.ListenAndServe(":9000", nil)
 }
-
 
 ```
 
@@ -91,10 +90,15 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
             "The dob field must be a valid date format. e.g: yyyy-mm-dd, yyyy/mm/dd etc"
         ],
         "email": [
-            "The email field must be minimum 4 char"
+            "The email field is required",
+            "The email field must be a valid email address"
         ],
         "phone": [
-            "The phone field must be 11 digits"
+            "ফোন নাম্বার অবশ্যই ১১ নম্বারের হতে হবে"
+        ],
+        "username": [
+            "আপনাকে অবশ্যই ইউজারনেম দিতে হবে",
+            "ইউজারনেম অবশ্যই ৩-৮ অক্ষর হতে হবে"
         ],
         "web": [
             "The web field format is invalid"
