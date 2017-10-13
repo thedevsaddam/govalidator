@@ -447,3 +447,68 @@ func Test_Digits(t *testing.T) {
 		t.Error("Digits validation failed!")
 	}
 }
+
+func Test_DigitsBetween(t *testing.T) {
+	type user struct {
+		Zip   string `json:"zip"`
+		Level string `json:"level"`
+	}
+
+	postUser := user{Zip: "8322", Level: "10"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"zip":   []string{"digits_between:5,10"},
+		"level": []string{"digits_between:5,10"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 2 {
+		t.Error("Digits between validation failed!")
+	}
+}
+
+func Test_DigitsBetweenPanic(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("Digits between failed to panic!")
+		}
+	}()
+	type user struct {
+		Zip   string `json:"zip"`
+		Level string `json:"level"`
+	}
+
+	postUser := user{Zip: "8322", Level: "10"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"zip":   []string{"digits_between:5"},
+		"level": []string{"digits_between:i,k"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 2 {
+		t.Error("Digits between panic failed!")
+	}
+}
