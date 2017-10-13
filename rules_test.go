@@ -575,7 +575,7 @@ func Test_Date_message(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if k := validationErr.Get("dob"); k != "custom_message" {
+	if validationErr.Get("dob") != "custom_message" {
 		t.Error("Date custom message validation failed!")
 	}
 	if k := validationErr.Get("dob"); k != "custom_message" {
@@ -639,7 +639,7 @@ func Test_Email_message(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if k := validationErr.Get("email"); k != "custom_message" {
+	if validationErr.Get("email") != "custom_message" {
 		t.Error("Email message validation failed!")
 	}
 }
@@ -701,7 +701,69 @@ func Test_Float_message(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if k := validationErr.Get("cgpa"); k != "custom_message" {
+	if validationErr.Get("cgpa") != "custom_message" {
 		t.Error("Float custom message failed!")
+	}
+}
+
+func Test_IP(t *testing.T) {
+	type user struct {
+		IP string `json:"ip"`
+	}
+
+	postUser := user{IP: "invdalid IP"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"ip": []string{"ip"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("IP validation failed!")
+	}
+}
+
+func Test_IP_message(t *testing.T) {
+	type user struct {
+		IP string `json:"ip"`
+	}
+
+	postUser := user{IP: "invdalid IP"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"ip": []string{"ip:custom_message"},
+	}
+
+	rules := MapData{
+		"ip": []string{"ip"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if validationErr.Get("ip") != "custom_message" {
+		t.Error("IP custom message failed!")
 	}
 }
