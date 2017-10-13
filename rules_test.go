@@ -588,7 +588,7 @@ func Test_Email(t *testing.T) {
 		Email string `json:"email"`
 	}
 
-	postUser := user{Email: "invdalid email"}
+	postUser := user{Email: "invalid email"}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
@@ -617,7 +617,7 @@ func Test_Email_message(t *testing.T) {
 		Email string `json:"email"`
 	}
 
-	postUser := user{Email: "invdalid email"}
+	postUser := user{Email: "invalid email"}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
@@ -649,7 +649,7 @@ func Test_Float(t *testing.T) {
 		CGPA string `json:"cgpa"`
 	}
 
-	postUser := user{CGPA: "invdalid cgpa"}
+	postUser := user{CGPA: "invalid cgpa"}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
@@ -678,7 +678,7 @@ func Test_Float_message(t *testing.T) {
 		CGPA string `json:"cgpa"`
 	}
 
-	postUser := user{CGPA: "invdalid cgpa"}
+	postUser := user{CGPA: "invalid cgpa"}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
@@ -711,7 +711,7 @@ func Test_IP(t *testing.T) {
 		IP string `json:"ip"`
 	}
 
-	postUser := user{IP: "invdalid IP"}
+	postUser := user{IP: "invalid IP"}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
@@ -740,7 +740,7 @@ func Test_IP_message(t *testing.T) {
 		IP string `json:"ip"`
 	}
 
-	postUser := user{IP: "invdalid IP"}
+	postUser := user{IP: "invalid IP"}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
@@ -768,12 +768,12 @@ func Test_IP_message(t *testing.T) {
 	}
 }
 
-func Test_IPV4(t *testing.T) {
+func Test_IPv4(t *testing.T) {
 	type user struct {
 		IP string `json:"ip"`
 	}
 
-	postUser := user{IP: "invdalid IP"}
+	postUser := user{IP: "invalid IP"}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
@@ -827,5 +827,67 @@ func Test_IPv4_message(t *testing.T) {
 	validationErr := vd.ValidateJSON()
 	if validationErr.Get("ip") != "custom_message" {
 		t.Error("IP v4 custom message failed!")
+	}
+}
+
+func Test_IPv6(t *testing.T) {
+	type user struct {
+		IP string `json:"ip"`
+	}
+
+	postUser := user{IP: "invalid IP"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"ip": []string{"ip_v6"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("IP v6 validation failed!")
+	}
+}
+
+func Test_IPv6_message(t *testing.T) {
+	type user struct {
+		IP string `json:"ip"`
+	}
+
+	postUser := user{IP: "invalid IP"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"ip": []string{"ip_v6:custom_message"},
+	}
+
+	rules := MapData{
+		"ip": []string{"ip_v6"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if validationErr.Get("ip") != "custom_message" {
+		t.Error("IP v6 custom message failed!")
 	}
 }
