@@ -543,3 +543,103 @@ func Test_Date(t *testing.T) {
 		t.Error("Date validation failed!")
 	}
 }
+
+func Test_Date_message(t *testing.T) {
+	type user struct {
+		DOB         string `json:"dob"`
+		JoiningDate string `json:"joining_date"`
+	}
+
+	postUser := user{DOB: "invalida date", JoiningDate: "10"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"dob":          []string{"date"},
+		"joining_date": []string{"date:dd-mm-yyyy"},
+	}
+
+	messages := MapData{
+		"dob":          []string{"date:custom_message"},
+		"joining_date": []string{"date:dd-mm-yyyy:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if k := validationErr.Get("dob"); k != "custom_message" {
+		t.Error("Date custom message validation failed!")
+	}
+	if k := validationErr.Get("dob"); k != "custom_message" {
+		t.Error("Date date:dd-mm-yyyy custom message validation failed!")
+	}
+}
+
+func Test_Email(t *testing.T) {
+	type user struct {
+		Email string `json:"email"`
+	}
+
+	postUser := user{Email: "invdalid email"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"email": []string{"email"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("Email validation failed!")
+	}
+}
+
+func Test_Email_message(t *testing.T) {
+	type user struct {
+		Email string `json:"email"`
+	}
+
+	postUser := user{Email: "invdalid email"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"email": []string{"email"},
+	}
+
+	messages := MapData{
+		"email": []string{"email:custom_message"},
+	}
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if k := validationErr.Get("email"); k != "custom_message" {
+		t.Error("Email message validation failed!")
+	}
+}
