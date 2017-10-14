@@ -891,3 +891,275 @@ func Test_IPv6_message(t *testing.T) {
 		t.Error("IP v6 custom message failed!")
 	}
 }
+
+func Test_JSON(t *testing.T) {
+	type user struct {
+		Settings string `json:"settings"`
+	}
+
+	postUser := user{Settings: "invalid json"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"settings": []string{"json"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("JSON validation failed!")
+	}
+}
+
+func Test_JSON_valid(t *testing.T) {
+	type user struct {
+		Settings string `json:"settings"`
+	}
+
+	postUser := user{Settings: `{"name": "John Doe", "age": 30}`}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"settings": []string{"json"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Log(validationErr)
+		t.Error("Validation failed for valid JSON")
+	}
+}
+
+func Test_JSON_message(t *testing.T) {
+	type user struct {
+		Settings string `json:"settings"`
+	}
+
+	postUser := user{Settings: "invalid json"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"settings": []string{"json:custom_message"},
+	}
+
+	rules := MapData{
+		"settings": []string{"json"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if validationErr.Get("settings") != "custom_message" {
+		t.Error("JSON custom message failed!")
+	}
+}
+
+func Test_LatLon(t *testing.T) {
+	type Location struct {
+		Latitude  string `json:"lat"`
+		Longitude string `json:"lon"`
+	}
+
+	postLocation := Location{Latitude: "invalid lat", Longitude: "invalid lon"}
+	var loc Location
+
+	body, _ := json.Marshal(postLocation)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"lat": []string{"lat"},
+		"lon": []string{"lon"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &loc,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 2 {
+		t.Log(validationErr)
+		t.Error("Lat Lon validation failed!")
+	}
+}
+
+func Test_LatLon_valid(t *testing.T) {
+	type Location struct {
+		Latitude  string `json:"lat"`
+		Longitude string `json:"lon"`
+	}
+
+	postLocation := Location{Latitude: "23.810332", Longitude: "90.412518"}
+	var loc Location
+
+	body, _ := json.Marshal(postLocation)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"lat": []string{"lat"},
+		"lon": []string{"lon"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &loc,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Log(validationErr)
+		t.Error("Valid Lat Lon validation failed!")
+	}
+}
+
+func Test_LatLon_message(t *testing.T) {
+	type Location struct {
+		Latitude  string `json:"lat"`
+		Longitude string `json:"lon"`
+	}
+
+	postLocation := Location{Latitude: "invalid lat", Longitude: "invalid lon"}
+	var loc Location
+
+	body, _ := json.Marshal(postLocation)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"lat": []string{"lat:custom_message"},
+		"lon": []string{"lon:custom_message"},
+	}
+
+	rules := MapData{
+		"lat": []string{"lat"},
+		"lon": []string{"lon"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &loc,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if validationErr.Get("lat") != "custom_message" ||
+		validationErr.Get("lon") != "custom_message" {
+		t.Error("Lat lon custom message failed")
+	}
+}
+
+func Test_Len(t *testing.T) {
+	type user struct {
+		Name        string   `json:"name"`
+		Roll        int      `json:"roll"`
+		Permissions []string `json:"permissions"`
+	}
+
+	postUser := user{
+		Name:        "john",
+		Roll:        11,
+		Permissions: []string{"create", "delete", "update"},
+	}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"name":        []string{"len:5"},
+		"roll":        []string{"len:5"},
+		"permissions": []string{"len:10"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 3 {
+		t.Log(validationErr)
+		t.Error("Len validation failed!")
+	}
+}
+
+func Test_Len_message(t *testing.T) {
+	type user struct {
+		Name        string   `json:"name"`
+		Roll        int      `json:"roll"`
+		Permissions []string `json:"permissions"`
+	}
+
+	postUser := user{
+		Name:        "john",
+		Roll:        11,
+		Permissions: []string{"create", "delete", "update"},
+	}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"name":        []string{"len:custom_message"},
+		"roll":        []string{"len:custom_message"},
+		"permissions": []string{"len:custom_message"},
+	}
+
+	rules := MapData{
+		"name":        []string{"len:5"},
+		"roll":        []string{"len:5"},
+		"permissions": []string{"len:10"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if validationErr.Get("name") != "custom_message" ||
+		validationErr.Get("roll") != "custom_message" ||
+		validationErr.Get("permissions") != "custom_message" {
+		t.Error("len custom message failed")
+	}
+}

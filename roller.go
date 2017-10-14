@@ -32,16 +32,23 @@ func (r *roller) start(iface interface{}) {
 		ifv = ifv.Elem()
 		ift = ift.Elem()
 	}
+	canInterface := ifv.CanInterface()
 	//check the provided root elment
 	switch ift.Kind() {
 	case reflect.Struct:
-		r.traverseStruct(ifv.Interface())
+		if canInterface {
+			r.traverseStruct(ifv.Interface())
+		}
 	case reflect.Map:
 		if ifv.Len() > 0 {
-			r.traverseMap(ifv.Interface())
+			if canInterface {
+				r.traverseMap(ifv.Interface())
+			}
 		}
 	case reflect.Slice:
-		r.push("slice", ifv.Interface())
+		if canInterface {
+			r.push("slice", ifv.Interface())
+		}
 	}
 }
 
@@ -94,31 +101,45 @@ func (r *roller) traverseStruct(iface interface{}) {
 
 		switch v.Kind() {
 		case reflect.Struct:
-			r.typeName = ift.Name()
-			r.traverseStruct(v.Interface())
+			if v.CanInterface() {
+				r.typeName = ift.Name()
+				r.traverseStruct(v.Interface())
+			}
 		case reflect.Map:
-			r.traverseMap(v.Interface())
+			if v.CanInterface() {
+				r.traverseMap(v.Interface())
+			}
 		case reflect.Ptr: // if the field inside struct is Ptr then get the type and underlying values as interface{}
 			ptrReflectionVal := reflect.Indirect(v)
 			ptrField := ptrReflectionVal.Type()
 			switch ptrField.Kind() {
 			case reflect.Struct:
-				r.traverseStruct(v.Interface())
+				if v.CanInterface() {
+					r.traverseStruct(v.Interface())
+				}
 			case reflect.Map:
-				r.traverseMap(v.Interface())
+				if v.CanInterface() {
+					r.traverseMap(v.Interface())
+				}
 			}
 		default:
 			if len(rfv.Tag.Get(r.tagIdentifier)) > 0 {
 				tags := strings.Split(rfv.Tag.Get(r.tagIdentifier), r.tagSeparator)
 				// add if first tag is not hyphen
 				if tags[0] != "-" {
-					r.push(tags[0], v.Interface())
+					if v.CanInterface() {
+						r.push(tags[0], v.Interface())
+					}
 				}
 			} else {
 				if v.Kind() == reflect.Ptr {
-					r.push(ift.Name()+"."+rfv.Name, ifv.Interface())
+					if ifv.CanInterface() {
+						r.push(ift.Name()+"."+rfv.Name, ifv.Interface())
+					}
 				} else {
-					r.push(ift.Name()+"."+rfv.Name, v.Interface())
+					if v.CanInterface() {
+						r.push(ift.Name()+"."+rfv.Name, v.Interface())
+					}
 				}
 			}
 		}
