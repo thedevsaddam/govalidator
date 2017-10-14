@@ -1076,7 +1076,90 @@ func Test_LatLon_message(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if validationErr.Get("lat") != "custom_message" || validationErr.Get("lon") != "custom_message" {
+	if validationErr.Get("lat") != "custom_message" ||
+		validationErr.Get("lon") != "custom_message" {
 		t.Error("Lat lon custom message failed")
+	}
+}
+
+func Test_Len(t *testing.T) {
+	type user struct {
+		Name        string   `json:"name"`
+		Roll        int      `json:"roll"`
+		Permissions []string `json:"permissions"`
+	}
+
+	postUser := user{
+		Name:        "john",
+		Roll:        11,
+		Permissions: []string{"create", "delete", "update"},
+	}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"name":        []string{"len:5"},
+		"roll":        []string{"len:5"},
+		"permissions": []string{"len:10"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 3 {
+		t.Log(validationErr)
+		t.Error("Len validation failed!")
+	}
+}
+
+func Test_Len_message(t *testing.T) {
+	type user struct {
+		Name        string   `json:"name"`
+		Roll        int      `json:"roll"`
+		Permissions []string `json:"permissions"`
+	}
+
+	postUser := user{
+		Name:        "john",
+		Roll:        11,
+		Permissions: []string{"create", "delete", "update"},
+	}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"name":        []string{"len:custom_message"},
+		"roll":        []string{"len:custom_message"},
+		"permissions": []string{"len:custom_message"},
+	}
+
+	rules := MapData{
+		"name":        []string{"len:5"},
+		"roll":        []string{"len:5"},
+		"permissions": []string{"len:10"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if validationErr.Get("name") != "custom_message" ||
+		validationErr.Get("roll") != "custom_message" ||
+		validationErr.Get("permissions") != "custom_message" {
+		t.Error("len custom message failed")
 	}
 }
