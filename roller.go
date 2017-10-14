@@ -90,6 +90,7 @@ func (r *roller) push(key string, val interface{}) bool {
 func (r *roller) traverseStruct(iface interface{}) {
 	ifv := reflect.ValueOf(iface)
 	ift := reflect.TypeOf(iface)
+
 	if ift.Kind() == reflect.Ptr {
 		ifv = ifv.Elem()
 		ift = ift.Elem()
@@ -111,15 +112,17 @@ func (r *roller) traverseStruct(iface interface{}) {
 			}
 		case reflect.Ptr: // if the field inside struct is Ptr then get the type and underlying values as interface{}
 			ptrReflectionVal := reflect.Indirect(v)
-			ptrField := ptrReflectionVal.Type()
-			switch ptrField.Kind() {
-			case reflect.Struct:
-				if v.CanInterface() {
-					r.traverseStruct(v.Interface())
-				}
-			case reflect.Map:
-				if v.CanInterface() {
-					r.traverseMap(v.Interface())
+			if !isEmpty(ptrReflectionVal) {
+				ptrField := ptrReflectionVal.Type()
+				switch ptrField.Kind() {
+				case reflect.Struct:
+					if v.CanInterface() {
+						r.traverseStruct(v.Interface())
+					}
+				case reflect.Map:
+					if v.CanInterface() {
+						r.traverseMap(v.Interface())
+					}
 				}
 			}
 		default:
