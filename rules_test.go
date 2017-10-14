@@ -891,3 +891,94 @@ func Test_IPv6_message(t *testing.T) {
 		t.Error("IP v6 custom message failed!")
 	}
 }
+
+func Test_JSON(t *testing.T) {
+	type user struct {
+		Settings string `json:"settings"`
+	}
+
+	postUser := user{Settings: "invalid json"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"settings": []string{"json"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("JSON validation failed!")
+	}
+}
+
+func Test_JSON_valid(t *testing.T) {
+	type user struct {
+		Settings string `json:"settings"`
+	}
+
+	postUser := user{Settings: `{"name": "John Doe", "age": 30}`}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"settings": []string{"json"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &userObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Log(validationErr)
+		t.Error("Validation failed for valid JSON")
+	}
+}
+
+func Test_JSON_message(t *testing.T) {
+	type user struct {
+		Settings string `json:"settings"`
+	}
+
+	postUser := user{Settings: "invalid json"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"settings": []string{"json:custom_message"},
+	}
+
+	rules := MapData{
+		"settings": []string{"json"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if validationErr.Get("settings") != "custom_message" {
+		t.Error("JSON custom message failed!")
+	}
+}
