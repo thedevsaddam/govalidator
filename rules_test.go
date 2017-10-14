@@ -982,3 +982,101 @@ func Test_JSON_message(t *testing.T) {
 		t.Error("JSON custom message failed!")
 	}
 }
+
+func Test_LatLon(t *testing.T) {
+	type Location struct {
+		Latitude  string `json:"lat"`
+		Longitude string `json:"lon"`
+	}
+
+	postLocation := Location{Latitude: "invalid lat", Longitude: "invalid lon"}
+	var loc Location
+
+	body, _ := json.Marshal(postLocation)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"lat": []string{"lat"},
+		"lon": []string{"lon"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &loc,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 2 {
+		t.Log(validationErr)
+		t.Error("Lat Lon validation failed!")
+	}
+}
+
+func Test_LatLon_valid(t *testing.T) {
+	type Location struct {
+		Latitude  string `json:"lat"`
+		Longitude string `json:"lon"`
+	}
+
+	postLocation := Location{Latitude: "23.810332", Longitude: "90.412518"}
+	var loc Location
+
+	body, _ := json.Marshal(postLocation)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"lat": []string{"lat"},
+		"lon": []string{"lon"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &loc,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Log(validationErr)
+		t.Error("Valid Lat Lon validation failed!")
+	}
+}
+
+func Test_LatLon_message(t *testing.T) {
+	type Location struct {
+		Latitude  string `json:"lat"`
+		Longitude string `json:"lon"`
+	}
+
+	postLocation := Location{Latitude: "invalid lat", Longitude: "invalid lon"}
+	var loc Location
+
+	body, _ := json.Marshal(postLocation)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"lat": []string{"lat:custom_message"},
+		"lon": []string{"lon:custom_message"},
+	}
+
+	rules := MapData{
+		"lat": []string{"lat"},
+		"lon": []string{"lon"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &loc,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if validationErr.Get("lat") != "custom_message" || validationErr.Get("lon") != "custom_message" {
+		t.Error("Lat lon custom message failed")
+	}
+}
