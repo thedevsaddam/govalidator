@@ -1274,7 +1274,7 @@ func Test_URL(t *testing.T) {
 	}
 }
 
-func Test_UR_validL(t *testing.T) {
+func Test_UR_valid(t *testing.T) {
 	type user struct {
 		Web string `json:"web"`
 	}
@@ -1305,4 +1305,59 @@ func Test_UR_validL(t *testing.T) {
 	if len(validationErr) != 0 {
 		t.Error("Valid URL validation failed!")
 	}
+}
+
+func Test_UUIDS(t *testing.T) {
+	type user struct {
+		UUID   string `json:"uuid"`
+		UUIDV3 string `json:"uuid3"`
+		UUIDV4 string `json:"uuid4"`
+		UUIDV5 string `json:"uuid5"`
+	}
+
+	postUser := user{
+		UUID:   "invalid uuid",
+		UUIDV3: "invalid uuid",
+		UUIDV4: "invalid uuid",
+		UUIDV5: "invalid uuid",
+	}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"uuid":  []string{"uuid"},
+		"uuid3": []string{"uuid_v3"},
+		"uuid4": []string{"uuid_v4"},
+		"uuid5": []string{"uuid_v5"},
+	}
+
+	messages := MapData{
+		"uuid":  []string{"uuid:custom_message"},
+		"uuid3": []string{"uuid_v3:custom_message"},
+		"uuid4": []string{"uuid_v4:custom_message"},
+		"uuid5": []string{"uuid_v5:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 4 {
+		t.Error("UUID validation failed!")
+	}
+
+	if validationErr.Get("uuid") != "custom_message" ||
+		validationErr.Get("uuid3") != "custom_message" ||
+		validationErr.Get("uuid4") != "custom_message" ||
+		validationErr.Get("uuid5") != "custom_message" {
+		t.Error("UUID custom message failed!")
+	}
+
 }
