@@ -86,16 +86,25 @@ func Test_Required(t *testing.T) {
 	body, _ := json.Marshal(postRequired)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
+	messages := MapData{
+		"_str": []string{"required:custom_message"},
+	}
+
 	opts := Options{
-		Request: req,
-		Data:    &trequired,
-		Rules:   rules,
+		Request:  req,
+		Data:     &trequired,
+		Rules:    rules,
+		Messages: messages,
 	}
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 14 {
 		t.Error("required validation failed!")
+	}
+
+	if validationErr.Get("_str") != "custom_message" {
+		t.Error("requried rule custom message failed")
 	}
 }
 
@@ -110,14 +119,19 @@ func Test_Regex(t *testing.T) {
 	body, _ := json.Marshal(postRegex)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
+	messages := MapData{
+		"name": []string{"regex:custom_message"},
+	}
+
 	rules := MapData{
 		"name": []string{"regex:^[0-9]+$"},
 	}
 
 	opts := Options{
-		Request: req,
-		Data:    &tregex,
-		Rules:   rules,
+		Request:  req,
+		Data:     &tregex,
+		Rules:    rules,
+		Messages: messages,
 	}
 
 	vd := New(opts)
@@ -125,6 +139,11 @@ func Test_Regex(t *testing.T) {
 	if len(validationErr) != 1 {
 		t.Error("regex validation failed!")
 	}
+
+	if validationErr.Get("name") != "custom_message" {
+		t.Error("regex rule custom message failed")
+	}
+
 }
 
 func Test_Alpha(t *testing.T) {
@@ -138,20 +157,29 @@ func Test_Alpha(t *testing.T) {
 	body, _ := json.Marshal(postUser)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
+	messages := MapData{
+		"name": []string{"alpha:custom_message"},
+	}
+
 	rules := MapData{
 		"name": []string{"alpha"},
 	}
 
 	opts := Options{
-		Request: req,
-		Data:    &userObj,
-		Rules:   rules,
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
 	}
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 1 {
 		t.Error("alpha validation failed!")
+	}
+
+	if validationErr.Get("name") != "custom_message" {
+		t.Error("alpha custom message failed!")
 	}
 }
 
@@ -166,14 +194,19 @@ func Test_AlphaDash(t *testing.T) {
 	body, _ := json.Marshal(postUser)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
+	messages := MapData{
+		"name": []string{"alpha_dash:custom_message"},
+	}
+
 	rules := MapData{
 		"name": []string{"alpha_dash"},
 	}
 
 	opts := Options{
-		Request: req,
-		Data:    &userObj,
-		Rules:   rules,
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
 	}
 
 	vd := New(opts)
@@ -181,6 +214,10 @@ func Test_AlphaDash(t *testing.T) {
 	if len(validationErr) != 1 {
 		t.Log(validationErr)
 		t.Error("alpha_dash validation failed!")
+	}
+
+	if validationErr.Get("name") != "custom_message" {
+		t.Error("alpha dash custom message failed!")
 	}
 }
 
@@ -199,10 +236,15 @@ func Test_AlphaNumeric(t *testing.T) {
 		"name": []string{"alpha_num"},
 	}
 
+	messages := MapData{
+		"name": []string{"alpha_num:custom_message"},
+	}
+
 	opts := Options{
-		Request: req,
-		Data:    &userObj,
-		Rules:   rules,
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
 	}
 
 	vd := New(opts)
@@ -210,6 +252,10 @@ func Test_AlphaNumeric(t *testing.T) {
 	if len(validationErr) != 1 {
 		t.Log(validationErr)
 		t.Error("alpha_num validation failed!")
+	}
+
+	if validationErr.Get("name") != "custom_message" {
+		t.Error("alpha num custom message failed!")
 	}
 }
 
@@ -264,16 +310,29 @@ func Test_Boolean(t *testing.T) {
 		"boolUintptr": []string{"bool"},
 	}
 
+	messages := MapData{
+		"boolStr":  []string{"bool:custom_message"},
+		"boolInt":  []string{"bool:custom_message"},
+		"boolUint": []string{"bool:custom_message"},
+	}
+
 	opts := Options{
-		Request: req,
-		Data:    &boolObj,
-		Rules:   rules,
+		Request:  req,
+		Data:     &boolObj,
+		Rules:    rules,
+		Messages: messages,
 	}
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 12 {
 		t.Error("bool validation failed!")
+	}
+
+	if validationErr.Get("boolStr") != "custom_message" ||
+		validationErr.Get("boolInt") != "custom_message" ||
+		validationErr.Get("boolUint") != "custom_message" {
+		t.Error("bool custom message failed!")
 	}
 }
 
