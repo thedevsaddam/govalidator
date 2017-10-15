@@ -605,7 +605,7 @@ func init() {
 		switch rv.Kind() {
 		case reflect.String:
 			inLen := rv.Len()
-			if !(inLen <= lenInt) {
+			if inLen < lenInt {
 				if message != "" {
 					return errors.New(message)
 				}
@@ -613,7 +613,7 @@ func init() {
 			}
 		case reflect.Array, reflect.Map, reflect.Slice:
 			inLen := rv.Len()
-			if !(inLen <= lenInt) {
+			if inLen < lenInt {
 				if message != "" {
 					return errors.New(message)
 				}

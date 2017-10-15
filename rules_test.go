@@ -1458,3 +1458,94 @@ func Test_UUIDS(t *testing.T) {
 	}
 
 }
+
+func Test_min(t *testing.T) {
+	type Body struct {
+		Str     string   `json:"_str"`
+		Slice   []string `json:"_slice"`
+		Int     int      `json:"_int"`
+		Int8    int8     `json:"_int8"`
+		Int16   int16    `json:"_int16"`
+		Int32   int32    `json:"_int32"`
+		Int64   int64    `json:"_int64"`
+		Uint    uint     `json:"_uint"`
+		Uint8   uint8    `json:"_uint8"`
+		Uint16  uint16   `json:"_uint16"`
+		Uint32  uint32   `json:"_uint32"`
+		Uint64  uint64   `json:"_uint64"`
+		Uintptr uintptr  `json:"_uintptr"`
+		Float32 float32  `json:"_float32"`
+		Float64 float64  `json:"_float64"`
+	}
+
+	postBody := Body{
+		Str:     "xyz",
+		Slice:   []string{"x", "y"},
+		Int:     2,
+		Int8:    2,
+		Int16:   2,
+		Int32:   2,
+		Int64:   2,
+		Uint:    2,
+		Uint8:   2,
+		Uint16:  2,
+		Uint32:  2,
+		Uint64:  2,
+		Uintptr: 2,
+		Float32: 2.4,
+		Float64: 3.2,
+	}
+
+	var bodyObj Body
+
+	body, _ := json.Marshal(postBody)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"_str":     []string{"min:5"},
+		"_slice":   []string{"min:5"},
+		"_int":     []string{"min:5"},
+		"_int8":    []string{"min:5"},
+		"_int16":   []string{"min:5"},
+		"_int32":   []string{"min:5"},
+		"_int64":   []string{"min:5"},
+		"_uint":    []string{"min:5"},
+		"_uint8":   []string{"min:5"},
+		"_uint16":  []string{"min:5"},
+		"_uint32":  []string{"min:5"},
+		"_uint64":  []string{"min:5"},
+		"_uintptr": []string{"min:5"},
+		"_float32": []string{"min:5"},
+		"_float64": []string{"min:5"},
+	}
+
+	messages := MapData{
+		"_str":     []string{"min:custom_message"},
+		"_slice":   []string{"min:custom_message"},
+		"_int":     []string{"min:custom_message"},
+		"_uint":    []string{"min:custom_message"},
+		"_float32": []string{"min:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &bodyObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 15 {
+		t.Error("min validation failed!")
+	}
+
+	if validationErr.Get("_str") != "custom_message" ||
+		validationErr.Get("_slice") != "custom_message" ||
+		validationErr.Get("_int") != "custom_message" ||
+		validationErr.Get("_uint") != "custom_message" ||
+		validationErr.Get("_float32") != "custom_message" {
+		t.Error("min custom message failed!")
+	}
+
+}
