@@ -1333,6 +1333,47 @@ func Test_Numeric_valid(t *testing.T) {
 	}
 }
 
+func Test_NumericBetween(t *testing.T) {
+	type user struct {
+		Age  int    `json:"age"`
+		CGPA string `json:"cgpa"`
+	}
+
+	postUser := user{Age: 77, CGPA: "2.90"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"age":  []string{"numeric_between:18,60"},
+		"cgpa": []string{"numeric_between:3.5,4.9"},
+	}
+
+	messages := MapData{
+		"age":  []string{"numeric_between:custom_message"},
+		"cgpa": []string{"numeric_between:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 2 {
+		t.Error("numeric_between validation failed!")
+	}
+
+	if validationErr.Get("age") != "custom_message" ||
+		validationErr.Get("cgpa") != "custom_message" {
+		t.Error("numeric_between custom message failed!")
+	}
+}
+
 func Test_URL(t *testing.T) {
 	type user struct {
 		Web string `json:"web"`

@@ -819,14 +819,16 @@ func init() {
 			panic(errInvalidArgument)
 		}
 		// check for integer value
-		min, err := strconv.Atoi(rng[0])
+		_min, err := strconv.ParseFloat(rng[0], 64)
 		if err != nil {
 			panic(errStringToInt)
 		}
-		max, err := strconv.Atoi(rng[1])
+		min := int(_min)
+		_max, err := strconv.ParseFloat(rng[1], 64)
 		if err != nil {
 			panic(errStringToInt)
 		}
+		max := int(_max)
 		errMsg := fmt.Errorf("The %s field must be numeric value between %d and %d", field, min, max)
 		if message != "" {
 			errMsg = errors.New(message)
