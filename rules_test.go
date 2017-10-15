@@ -1163,3 +1163,75 @@ func Test_Len_message(t *testing.T) {
 		t.Error("len custom message failed")
 	}
 }
+
+func Test_Numeric(t *testing.T) {
+	type user struct {
+		NID string `json:"nid"`
+	}
+
+	postUser := user{NID: "invalid nid"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"nid": []string{"numeric"},
+	}
+
+	messages := MapData{
+		"nid": []string{"numeric:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("Numeric validation failed!")
+	}
+
+	if validationErr.Get("nid") != "custom_message" {
+		t.Error("Numeric custom message failed!")
+	}
+}
+
+func Test_Numeric_valid(t *testing.T) {
+	type user struct {
+		NID string `json:"nid"`
+	}
+
+	postUser := user{NID: "109922"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"nid": []string{"numeric"},
+	}
+
+	messages := MapData{
+		"nid": []string{"numeric:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Log(validationErr)
+		t.Error("Valid numeric validation failed!")
+	}
+}
