@@ -1235,3 +1235,74 @@ func Test_Numeric_valid(t *testing.T) {
 		t.Error("Valid numeric validation failed!")
 	}
 }
+
+func Test_URL(t *testing.T) {
+	type user struct {
+		Web string `json:"web"`
+	}
+
+	postUser := user{Web: "invalid url"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"web": []string{"url"},
+	}
+
+	messages := MapData{
+		"web": []string{"url:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("URL validation failed!")
+	}
+
+	if validationErr.Get("web") != "custom_message" {
+		t.Error("URL custom message failed!")
+	}
+}
+
+func Test_UR_validL(t *testing.T) {
+	type user struct {
+		Web string `json:"web"`
+	}
+
+	postUser := user{Web: "www.google.com"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"web": []string{"url"},
+	}
+
+	messages := MapData{
+		"web": []string{"url:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Error("Valid URL validation failed!")
+	}
+}
