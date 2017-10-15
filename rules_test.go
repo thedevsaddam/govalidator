@@ -404,20 +404,29 @@ func Test_CreditCard(t *testing.T) {
 	body, _ := json.Marshal(postUser)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
+	messages := MapData{
+		"credit_card": []string{"credit_card:custom_message"},
+	}
+
 	rules := MapData{
 		"credit_card": []string{"credit_card"},
 	}
 
 	opts := Options{
-		Request: req,
-		Data:    &userObj,
-		Rules:   rules,
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
 	}
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 1 {
-		t.Error("Credit card validation failed!")
+		t.Error("credit card validation failed!")
+	}
+
+	if validationErr.Get("credit_card") != "custom_message" {
+		t.Error("credit_card custom message failed!")
 	}
 }
 
@@ -432,20 +441,29 @@ func Test_Coordinate(t *testing.T) {
 	body, _ := json.Marshal(postUser)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
+	messages := MapData{
+		"coordinate": []string{"coordinate:custom_message"},
+	}
+
 	rules := MapData{
 		"coordinate": []string{"coordinate"},
 	}
 
 	opts := Options{
-		Request: req,
-		Data:    &userObj,
-		Rules:   rules,
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
 	}
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 1 {
-		t.Error("Coordinate validation failed!")
+		t.Error("coordinate validation failed!")
+	}
+
+	if validationErr.Get("coordinate") != "custom_message" {
+		t.Error("coordinate custom message failed!")
 	}
 }
 
@@ -464,16 +482,25 @@ func Test_CSSColor(t *testing.T) {
 		"color": []string{"css_color"},
 	}
 
+	messages := MapData{
+		"color": []string{"color:custom_message"},
+	}
+
 	opts := Options{
-		Request: req,
-		Data:    &userObj,
-		Rules:   rules,
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
 	}
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 1 {
 		t.Error("CSS color validation failed!")
+	}
+
+	if validationErr.Get("color") != "custom_message" {
+		t.Error("css_color custom message failed!")
 	}
 }
 
