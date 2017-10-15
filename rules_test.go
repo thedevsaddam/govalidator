@@ -1547,5 +1547,95 @@ func Test_min(t *testing.T) {
 		validationErr.Get("_float32") != "custom_message" {
 		t.Error("min custom message failed!")
 	}
+}
 
+func Test_max(t *testing.T) {
+	type Body struct {
+		Str     string   `json:"_str"`
+		Slice   []string `json:"_slice"`
+		Int     int      `json:"_int"`
+		Int8    int8     `json:"_int8"`
+		Int16   int16    `json:"_int16"`
+		Int32   int32    `json:"_int32"`
+		Int64   int64    `json:"_int64"`
+		Uint    uint     `json:"_uint"`
+		Uint8   uint8    `json:"_uint8"`
+		Uint16  uint16   `json:"_uint16"`
+		Uint32  uint32   `json:"_uint32"`
+		Uint64  uint64   `json:"_uint64"`
+		Uintptr uintptr  `json:"_uintptr"`
+		Float32 float32  `json:"_float32"`
+		Float64 float64  `json:"_float64"`
+	}
+
+	postBody := Body{
+		Str:     "xyzabc",
+		Slice:   []string{"x", "y", "z"},
+		Int:     20,
+		Int8:    20,
+		Int16:   20,
+		Int32:   20,
+		Int64:   20,
+		Uint:    20,
+		Uint8:   20,
+		Uint16:  20,
+		Uint32:  20,
+		Uint64:  20,
+		Uintptr: 20,
+		Float32: 20.4,
+		Float64: 30.2,
+	}
+
+	var bodyObj Body
+
+	body, _ := json.Marshal(postBody)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"_str":     []string{"max:5"},
+		"_slice":   []string{"max:2"},
+		"_int":     []string{"max:5"},
+		"_int8":    []string{"max:5"},
+		"_int16":   []string{"max:5"},
+		"_int32":   []string{"max:5"},
+		"_int64":   []string{"max:5"},
+		"_uint":    []string{"max:5"},
+		"_uint8":   []string{"max:5"},
+		"_uint16":  []string{"max:5"},
+		"_uint32":  []string{"max:5"},
+		"_uint64":  []string{"max:5"},
+		"_uintptr": []string{"max:5"},
+		"_float32": []string{"max:5"},
+		"_float64": []string{"max:5"},
+	}
+
+	messages := MapData{
+		"_str":     []string{"max:custom_message"},
+		"_slice":   []string{"max:custom_message"},
+		"_int":     []string{"max:custom_message"},
+		"_uint":    []string{"max:custom_message"},
+		"_float32": []string{"max:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &bodyObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 15 {
+		t.Error(validationErr)
+		t.Error("max validation failed!")
+	}
+
+	if validationErr.Get("_str") != "custom_message" ||
+		validationErr.Get("_slice") != "custom_message" ||
+		validationErr.Get("_int") != "custom_message" ||
+		validationErr.Get("_uint") != "custom_message" ||
+		validationErr.Get("_float32") != "custom_message" {
+		t.Error("max custom message failed!")
+	}
 }

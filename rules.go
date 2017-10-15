@@ -729,7 +729,6 @@ func init() {
 			}
 		case reflect.Int:
 			in := value.(int)
-			fmt.Println(in, lenInt)
 			if in > lenInt {
 				return errMsg
 			}
