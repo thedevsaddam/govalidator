@@ -483,7 +483,7 @@ func Test_CSSColor(t *testing.T) {
 	}
 
 	messages := MapData{
-		"color": []string{"color:custom_message"},
+		"color": []string{"css_color:custom_message"},
 	}
 
 	opts := Options{
@@ -551,16 +551,27 @@ func Test_DigitsBetween(t *testing.T) {
 		"level": []string{"digits_between:5,10"},
 	}
 
+	messages := MapData{
+		"zip":   []string{"digits_between:custom_message"},
+		"level": []string{"digits_between:custom_message"},
+	}
+
 	opts := Options{
-		Request: req,
-		Data:    &userObj,
-		Rules:   rules,
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
 	}
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 2 {
-		t.Error("Digits between validation failed!")
+		t.Error("digits between validation failed!")
+	}
+
+	if validationErr.Get("zip") != "custom_message" ||
+		validationErr.Get("level") != "custom_message" {
+		t.Error("digits_between custom message failed!")
 	}
 }
 
