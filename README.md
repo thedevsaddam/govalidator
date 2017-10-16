@@ -108,7 +108,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 ```
 
 ### More examples
-***Validate application/json or application/text as raw body***
+***Validate `application/json` or `text/plain` as raw body***
 
 * [Validate JSON to simple struct](doc/SIMPLE_STRUCT_VALIDATION.md)
 * [Validate JSON to map](doc/MAP_VALIDATION.md)
