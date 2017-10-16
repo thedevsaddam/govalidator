@@ -104,7 +104,7 @@ func Test_Required(t *testing.T) {
 	}
 
 	if validationErr.Get("_str") != "custom_message" {
-		t.Error("requried rule custom message failed")
+		t.Error("required rule custom message failed")
 	}
 }
 
