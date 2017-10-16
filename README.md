@@ -108,6 +108,8 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 ```
 
 ### More examples
+***Validate application/json or application/text as raw body***
+
 * [Validate JSON to simple struct](doc/SIMPLE_STRUCT_VALIDATION.md)
 * [Validate JSON to map](doc/MAP_VALIDATION.md)
 * [Validate JSON to embeded struct](doc/EMBEDED_STRUCT.md)
@@ -132,13 +134,11 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
    e.g: `digits_between:3,5` may contains digits like `2323`, `12435`
 * `email` The field under validation must have a valid email.
 * `float` The field under validation must have a valid float number.
-* `in:foo,bar` The field under validation must have one of the values. e.g: `in:admin,manager,user` must contain the values (admin or manager or user)
-* `min:int` The field under validation must have a min length of characters.
+* `max:numeric` The field under validation must have a min length of characters for string, items length for slice/map, value for integer or float.
    e.g: `min:3` may contains characters minimum length of 3 like `"john", "jane", "jane321"` but not `"mr", "xy"`
-* `max:int` The field under validation must have a max length of characters.
+* `max:numeric` The field under validation must have a max length of characters for string, items length for slice/map, value for integer or float.
    e.g: `max:6` may contains characters maximum length of 6 like `"john doe", "jane doe"` but not `"john", "jane"`
-* `not_in:foo,bar` The field under validation must have one value except foo,bar. e.g: `not_in:admin,manager,user` must not contain the values (admin or manager or user)
-* `len:int` The field under validation must have an exact length of characters.
+* `len:numeric` The field under validation must have an exact length of characters, exact integer or float value, exact size of map/slice.
    e.g: `len:4` may contains characters exact length of 4 like `Food, Mood, Good`
 * `ip` The field under validation must be a valid IP address.
 * `ip_v4` The field under validation must be a valid IP V4 address.
@@ -147,7 +147,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * `lat` The field under validation must be a valid latitude.
 * `lon` The field under validation must be a valid longitude.
 * `regex:regurlar expression` The field under validation validate against the regex. e.g: `regex:^[a-zA-Z]+$` validate the letters.
-* `required` The field under validation must be present in the input data and not empty. A field is considered "empty" if one of the following conditions are true: 1) The value is null. 2)The value is an empty string.
+* `required` The field under validation must be present in the input data and not empty. A field is considered "empty" if one of the following conditions are true: 1) The value is null. 2)The value is an empty string. 3) Zero length of map, slice. 4) Zero value for integer or float
 * `url` The field under validation must be a valid URL.
 * `uuid` The field under validation must be a valid UUID.
 * `uuid_v3` The field under validation must be a valid UUID V3.
