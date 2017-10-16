@@ -128,3 +128,19 @@ func TestValidator_ValidateJSON(t *testing.T) {
 		t.Error("ValidateJSON failed")
 	}
 }
+
+func TestValidator_ValidateJSON_panic(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("ValidateJSON did not panic")
+		}
+	}()
+
+	opts := Options{}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 5 {
+		t.Error("ValidateJSON failed")
+	}
+}
