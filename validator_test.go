@@ -98,7 +98,7 @@ func TestValidator_ValidateJSON(t *testing.T) {
 		Address: "",
 		Age:     1,
 		Zip:     "122",
-		Color:   40,
+		Color:   5,
 	}
 
 	rules := MapData{
@@ -122,9 +122,9 @@ func TestValidator_ValidateJSON(t *testing.T) {
 	}
 
 	vd := New(opts)
-	vd.ValidateJSON()
-	// fmt.Println("validationErr: ", validationErr)
-	// if len(validationErr) != 5 {
-	// 	t.Error("ValidateStructJSON failed")
-	// }
+	vd.SetTagIdentifier("json")
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 5 {
+		t.Error("ValidateJSON failed")
+	}
 }
