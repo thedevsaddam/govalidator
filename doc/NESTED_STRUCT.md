@@ -1,5 +1,5 @@
 
-### Validate JSON body into a embedded Struct with slice
+### Validate JSON body with nested struct and slice
 
 
 ```go

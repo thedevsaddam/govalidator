@@ -112,7 +112,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 
 * [Validate JSON to simple struct](doc/SIMPLE_STRUCT_VALIDATION.md)
 * [Validate JSON to map](doc/MAP_VALIDATION.md)
-* [Validate JSON to embeded struct](doc/EMBEDED_STRUCT.md)
+* [Validate JSON to nested struct](doc/NESTED_STRUCT.md)
 * [Validate using custom rule](doc/CUSTOM_RULE.md)
 
 ### Validation Rules
