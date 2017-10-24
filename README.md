@@ -198,9 +198,12 @@ opts := govalidator.Options{
 
 ### Contribution
 If you are interested to make the package better please send pull requests or create issue so that others can fix.
+[Read the contribution guide here](CONTRIBUTING.md)
 
-### See [Benchmark](doc/BENCHMARK.md)
-### See [API doc](https://godoc.org/github.com/thedevsaddam/govalidator)
+### See all [contributors](https://github.com/thedevsaddam/govalidator/graphs/contributors)
+
+### See [benchmarks](doc/BENCHMARK.md)
+### Read [API doc](https://godoc.org/github.com/thedevsaddam/govalidator)
 
 ### **License**
 The **govalidator** is an open-source software licensed under the [MIT License](LICENSE.md).
