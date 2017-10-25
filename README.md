@@ -139,7 +139,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * `max:numeric` The field under validation must have a max length of characters for string, items length for slice/map, value for integer or float.
    e.g: `max:6` may contains characters maximum length of 6 like `"john doe", "jane doe"` but not `"john", "jane"`
 * `len:numeric` The field under validation must have an exact length of characters, exact integer or float value, exact size of map/slice.
-   e.g: `len:4` may contains characters exact length of 4 like `Food, Mood, Good`
+   e.g: `len:4` may contains characters exact length of 4 like `Food, Mood, Good`   
 * `ip` The field under validation must be a valid IP address.
 * `ip_v4` The field under validation must be a valid IP V4 address.
 * `ip_v6` The field under validation must be a valid IP V6 address.
@@ -153,6 +153,8 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * `uuid_v3` The field under validation must be a valid UUID V3.
 * `uuid_v4` The field under validation must be a valid UUID V4.
 * `uuid_v5` The field under validation must be a valid UUID V5.
+* `in:item1,item2,item3` The field under validation must equal one of the items in the list. This accepts ints and strings.
+* `not_in:item1,item2,item3` The field under validation must not equal any of the items in the list. This accepts ints and strings.
 
 ### Add Custom Rules
 
