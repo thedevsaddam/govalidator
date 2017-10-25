@@ -132,6 +132,8 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * `digits:int` The field under validation must be numeric and must have an exact length of value.
 * `digits_between:int,int` The field under validation must be numeric and must have length between the range.
    e.g: `digits_between:3,5` may contains digits like `2323`, `12435`
+* `in:foo,bar` The field under validation must have one of the values. e.g: `in:admin,manager,user` must contain the values (admin or manager or user)
+* `not_in:foo,bar` The field under validation must have one value except foo,bar. e.g: `not_in:admin,manager,user` must not contain the values (admin or manager or user)
 * `email` The field under validation must have a valid email.
 * `float` The field under validation must have a valid float number.
 * `max:numeric` The field under validation must have a min length of characters for string, items length for slice/map, value for integer or float.
