@@ -934,4 +934,37 @@ func init() {
 		return nil
 	})
 
+	// In check if provided field equals one of the values specified in the rule
+	AddCustomRule("in", func(field string, rule string, message string, value interface{}) error {
+		rng := strings.Split(strings.TrimPrefix(rule, "in:"), ",")
+		if len(rng) == 0 {
+			panic(errInvalidArgument)
+		}
+		str := toString(value)
+		err := fmt.Errorf("The %s field must be one of %v", field, strings.Join(rng, ", "))
+		if message != "" {
+			err = errors.New(message)
+		}
+		if !isIn(rng, str) {
+			return err
+		}
+		return nil
+	})
+
+	// In check if provided field equals one of the values specified in the rule
+	AddCustomRule("not_in", func(field string, rule string, message string, value interface{}) error {
+		rng := strings.Split(strings.TrimPrefix(rule, "not_in:"), ",")
+		if len(rng) == 0 {
+			panic(errInvalidArgument)
+		}
+		str := toString(value)
+		err := fmt.Errorf("The %s field must not be any of %v", field, strings.Join(rng, ", "))
+		if message != "" {
+			err = errors.New(message)
+		}
+		if isIn(rng, str) {
+			return err
+		}
+		return nil
+	})
 }

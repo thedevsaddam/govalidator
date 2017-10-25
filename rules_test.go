@@ -1680,3 +1680,283 @@ func Test_max(t *testing.T) {
 		t.Error("max custom message failed!")
 	}
 }
+
+func Test_In(t *testing.T) {
+	type user struct {
+		Input string `json:"input"`
+	}
+
+	postUser := user{Input: "4"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"input": []string{"in:custom_message"},
+	}
+
+	rules := MapData{
+		"input": []string{"in:1,2,3"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Error("in validation failed!")
+	}
+
+	if validationErr.Get("input") != "custom_message" {
+		t.Error("in custom message failed!")
+	}
+}
+
+func Test_In_valid(t *testing.T) {
+	type user struct {
+		Input string `json:"input"`
+	}
+
+	postUser := user{Input: "1"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"input": []string{"in:custom_message"},
+	}
+
+	rules := MapData{
+		"input": []string{"in:1,2,3"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Error("in validation was triggered when valid!")
+	}
+}
+
+func Test_In_string(t *testing.T) {
+	type user struct {
+		Input string `json:"input"`
+	}
+
+	postUser := user{Input: "bob"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"input": []string{"in:custom_message"},
+	}
+
+	rules := MapData{
+		"input": []string{"in:tom,dick,harry"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Error("in validation failed!")
+	}
+
+	if validationErr.Get("input") != "custom_message" {
+		t.Error("in custom message failed!")
+	}
+}
+
+func Test_In_string_valid(t *testing.T) {
+	type user struct {
+		Input string `json:"input"`
+	}
+
+	postUser := user{Input: "dick"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"input": []string{"in:custom_message"},
+	}
+
+	rules := MapData{
+		"input": []string{"in:tom,dick,harry"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Error("in validation was triggered when valid!")
+	}
+}
+
+func Test_NotIn(t *testing.T) {
+	type user struct {
+		Input string `json:"input"`
+	}
+
+	postUser := user{Input: "2"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"input": []string{"not_in:custom_message"},
+	}
+
+	rules := MapData{
+		"input": []string{"not_in:1,2,3"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Error("not_in validation failed!")
+	}
+
+	if validationErr.Get("input") != "custom_message" {
+		t.Error("not_in custom message failed!")
+	}
+}
+
+func Test_NotIn_valid(t *testing.T) {
+	type user struct {
+		Input string `json:"input"`
+	}
+
+	postUser := user{Input: "4"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"input": []string{"not_in:custom_message"},
+	}
+
+	rules := MapData{
+		"input": []string{"not_in:1,2,3"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Error("not_in validation was triggered when valid!")
+	}
+}
+
+func Test_NotIn_string(t *testing.T) {
+	type user struct {
+		Input string `json:"input"`
+	}
+
+	postUser := user{Input: "harry"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"input": []string{"not_in:custom_message"},
+	}
+
+	rules := MapData{
+		"input": []string{"not_in:tom,dick,harry"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 1 {
+		t.Error("not_in validation failed!")
+	}
+
+	if validationErr.Get("input") != "custom_message" {
+		t.Error("not_in custom message failed!")
+	}
+}
+
+func Test_NotIn_string_valid(t *testing.T) {
+	type user struct {
+		Input string `json:"input"`
+	}
+
+	postUser := user{Input: "bob"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"input": []string{"not_in:custom_message"},
+	}
+
+	rules := MapData{
+		"input": []string{"not_in:tom,dick,harry"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Error("not_in validation was triggered when valid!")
+	}
+}
