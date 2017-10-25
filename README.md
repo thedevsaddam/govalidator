@@ -1,7 +1,7 @@
 Package govalidator
 =========================
 [![Build Status](https://travis-ci.org/thedevsaddam/govalidator.svg?branch=master)](https://travis-ci.org/thedevsaddam/govalidator)
-[![Project status](https://img.shields.io/badge/version-1.0-green.svg)](https://github.com/thedevsaddam/govalidator/releases)
+[![Project status](https://img.shields.io/badge/version-1.1-green.svg)](https://github.com/thedevsaddam/govalidator/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/thedevsaddam/govalidator)](https://goreportcard.com/report/github.com/thedevsaddam/govalidator)
 [![cover.run go](https://cover.run/go/github.com/thedevsaddam/govalidator.svg)](https://cover.run/go/github.com/thedevsaddam/govalidator)
 [![GoDoc](https://godoc.org/github.com/thedevsaddam/govalidator?status.svg)](https://godoc.org/github.com/thedevsaddam/govalidator)
