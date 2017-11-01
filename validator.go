@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	tagIdentifier = "json" //tagName idetify the struct tag for govalidator
-	tagSeparator  = "|"    //tagSeparator use to separate tags in struct
+	tagIdentifier         = "json" //tagName idetify the struct tag for govalidator
+	tagSeparator          = "|"    //tagSeparator use to separate tags in struct
+	defaultFormSize int64 = 1024 * 1024 * 1
 )
 
 type (
@@ -25,7 +26,8 @@ type (
 		RequiredDefault bool    // RequiredDefault represents if all the fields are by default required or not
 		Rules           MapData // Rules represents rules for form-data/x-url-encoded/query params data
 		Messages        MapData // Messages represents custom/localize message for rules
-		TagIdentifier   string  //TagIdentifier represents struct tag identifier, e.g: json or validate etc
+		TagIdentifier   string  // TagIdentifier represents struct tag identifier, e.g: json or validate etc
+		FormSize        int64   //Form represents the multipart forom data max memory size in bytes
 	}
 
 	// Validator represents a validator with options
@@ -82,7 +84,7 @@ func (v *Validator) Validate() url.Values {
 	v.keepRequiredField()
 
 	for field, rules := range v.Opts.Rules {
-		reqVal := strings.TrimSpace(v.parseAndGetVal(field))
+		reqVal := strings.TrimSpace(v.Opts.Request.Form.Get(field))
 		for _, rule := range rules {
 			if !isRuleExist(rule) {
 				panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
@@ -90,23 +92,21 @@ func (v *Validator) Validate() url.Values {
 			msg := v.getCustomMessage(field, rule)
 			// validate if custom rules exist
 			validateCustomRules(field, rule, msg, reqVal, errsBag)
+			// validate file
+			validateFiles(v.Opts.Request, field, rule, msg, errsBag)
 		}
 	}
 
 	return errsBag
 }
 
-// parseAndGetVal parse the incoming request object and return the value associated with the key
-func (v *Validator) parseAndGetVal(key string) string {
-	// v.Opts.Request.ParseMultipartForm(1024)
-	// r.ParseForm()
-	return v.Opts.Request.Form.Get(key)
-}
-
 // keepRequiredField remove non required rules field from rules if requiredDefault field is false
 // and if the input data is empty for this field
 func (v *Validator) keepRequiredField() {
-	v.Opts.Request.ParseMultipartForm(1024)
+	v.Opts.Request.ParseMultipartForm(defaultFormSize)
+	if v.Opts.FormSize == 0 {
+		v.Opts.Request.ParseMultipartForm(v.Opts.FormSize)
+	}
 	//r.ParseForm()
 	inputs := v.Opts.Request.Form
 	if !v.Opts.RequiredDefault {

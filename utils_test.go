@@ -2,6 +2,7 @@ package govalidator
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -38,6 +39,9 @@ func Test_isRuleExist(t *testing.T) {
 	if isRuleExist("not exist") {
 		t.Error("isRuleExist failed for invalid rule")
 	}
+	if !isRuleExist("mime") {
+		t.Error("extended rules failed")
+	}
 }
 
 func Test_toString(t *testing.T) {
@@ -56,16 +60,40 @@ func Test_isEmpty(t *testing.T) {
 	var Float32 float32
 	var Str string
 	var Slice []int
+	var e interface{}
 	list := map[string]interface{}{
-		"_int":     Int,
-		"_int8":    Int8,
-		"_float32": Float32,
-		"_str":     Str,
-		"_slice":   Slice,
+		"_int":             Int,
+		"_int8":            Int8,
+		"_float32":         Float32,
+		"_str":             Str,
+		"_slice":           Slice,
+		"_empty_interface": e,
 	}
 	for k, v := range list {
 		if !isEmpty(v) {
 			t.Errorf("%v failed", k)
 		}
+	}
+}
+
+func Test_getFileInfo(t *testing.T) {
+	req, err := buildMocFormReq()
+	if err != nil {
+		t.Error("request failed", err)
+	}
+	fn, ext, mime, size, err := getFileInfo(req, "file")
+
+	if fn != "BENCHMARK.md" {
+		t.Error("failed to get file name")
+	}
+	if ext != "md" {
+		t.Error("failed to get file extension")
+	}
+	if !strings.Contains(mime, "text/plain") {
+		t.Log(mime)
+		t.Error("failed to get file mime")
+	}
+	if size <= 0 {
+		t.Error("failed to get file size")
 	}
 }

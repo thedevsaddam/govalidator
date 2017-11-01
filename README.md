@@ -1,7 +1,7 @@
 Package govalidator
 =========================
 [![Build Status](https://travis-ci.org/thedevsaddam/govalidator.svg?branch=master)](https://travis-ci.org/thedevsaddam/govalidator)
-[![Project status](https://img.shields.io/badge/version-1.1-green.svg)](https://github.com/thedevsaddam/govalidator/releases)
+[![Project status](https://img.shields.io/badge/version-1.2-green.svg)](https://github.com/thedevsaddam/govalidator/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/thedevsaddam/govalidator)](https://goreportcard.com/report/github.com/thedevsaddam/govalidator)
 [![Coverage Status](https://coveralls.io/repos/github/thedevsaddam/govalidator/badge.svg?branch=master)](https://coveralls.io/github/thedevsaddam/govalidator?branch=master)
 [![GoDoc](https://godoc.org/github.com/thedevsaddam/govalidator?status.svg)](https://godoc.org/github.com/thedevsaddam/govalidator)
@@ -15,6 +15,8 @@ Validate golang request data with simple rules. Highly inspired by Laravel's req
 Install the package using
 ```go
 $ go get github.com/thedevsaddam/govalidator
+// or
+$ go get gopkg.in/thedevsaddam/govalidator.v1
 ```
 
 ### Usage
@@ -22,6 +24,8 @@ $ go get github.com/thedevsaddam/govalidator
 To use the package import it in your `*.go` code
 ```go
 import "github.com/thedevsaddam/govalidator"
+// or
+import "gopkg.in/thedevsaddam/govalidator.v1"
 ```
 
 ### Example
@@ -114,6 +118,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * [Validate JSON to map](doc/MAP_VALIDATION.md)
 * [Validate JSON to nested struct](doc/NESTED_STRUCT.md)
 * [Validate using custom rule](doc/CUSTOM_RULE.md)
+* [Validate file](doc/FILE_VALIDATION.md)
 
 ### Validation Rules
 * `alpha` The field under validation must be entirely alphabetic characters.
@@ -150,6 +155,9 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * `lon` The field under validation must be a valid longitude.
 * `regex:regurlar expression` The field under validation validate against the regex. e.g: `regex:^[a-zA-Z]+$` validate the letters.
 * `required` The field under validation must be present in the input data and not empty. A field is considered "empty" if one of the following conditions are true: 1) The value is null. 2)The value is an empty string. 3) Zero length of map, slice. 4) Zero value for integer or float
+* `size:integer` The field under validation validate a file size only in form-data ([see example](doc/FILE_VALIDATION.md))
+* `ext:jpg,png` The field under validation validate a file extension ([see example](doc/FILE_VALIDATION.md))
+* `mime:image/jpg,image/png` The field under validation validate a file mime type ([see example](doc/FILE_VALIDATION.md))
 * `url` The field under validation must be a valid URL.
 * `uuid` The field under validation must be a valid UUID.
 * `uuid_v3` The field under validation must be a valid UUID V3.
