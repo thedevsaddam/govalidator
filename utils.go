@@ -59,6 +59,7 @@ func isEmpty(x interface{}) bool {
 	return reflect.DeepEqual(x, reflect.Zero(rt).Interface())
 }
 
+// Sizer interface
 type Sizer interface {
 	Size() int64
 }

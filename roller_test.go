@@ -116,10 +116,10 @@ func BenchmarkRoller_Start(b *testing.B) {
 
 func Test_Roller_Start_empty_map(t *testing.T) {
 	r := roller{}
-	m := make(map[string]interface{}, 0)
+	emap := make(map[string]interface{}, 0)
 	r.setTagIdentifier("validate")
 	r.setTagSeparator("|")
-	r.start(m)
+	r.start(emap)
 	if len(r.getFlatMap()) > 0 {
 		t.Error("Failed to validate empty map")
 	}

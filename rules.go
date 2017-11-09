@@ -54,59 +54,59 @@ func init() {
 				return err
 			}
 		case reflect.Int:
-			if value.(int) == 0 {
+			if isEmpty(value.(int)) {
 				return err
 			}
 		case reflect.Int8:
-			if value.(int8) == 0 {
+			if isEmpty(value.(int8)) {
 				return err
 			}
 		case reflect.Int16:
-			if value.(int16) == 0 {
+			if isEmpty(value.(int16)) {
 				return err
 			}
 		case reflect.Int32:
-			if value.(int32) == 0 {
+			if isEmpty(value.(int32)) {
 				return err
 			}
 		case reflect.Int64:
-			if value.(int64) == 0 {
+			if isEmpty(value.(int64)) {
 				return err
 			}
 		case reflect.Float32:
-			if value.(float32) == 0 {
+			if isEmpty(value.(float32)) {
 				return err
 			}
 		case reflect.Float64:
-			if value.(float64) == 0 {
+			if isEmpty(value.(float64)) {
 				return err
 			}
 		case reflect.Uint:
-			if value.(uint) == 0 {
+			if isEmpty(value.(uint)) {
 				return err
 			}
 		case reflect.Uint8:
-			if value.(uint8) == 0 {
+			if isEmpty(value.(uint8)) {
 				return err
 			}
 		case reflect.Uint16:
-			if value.(uint16) == 0 {
+			if isEmpty(value.(uint16)) {
 				return err
 			}
 		case reflect.Uint32:
-			if value.(uint32) == 0 {
+			if isEmpty(value.(uint32)) {
 				return err
 			}
 		case reflect.Uint64:
-			if value.(uint64) == 0 {
+			if isEmpty(value.(uint64)) {
 				return err
 			}
 		case reflect.Uintptr:
-			if value.(uintptr) == 0 {
+			if isEmpty(value.(uintptr)) {
 				return err
 			}
 		default:
-			panic("validtor: invalid type for required")
+			panic("govalidator: invalid type for required rule")
 
 		}
 		return nil
