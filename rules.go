@@ -105,6 +105,19 @@ func init() {
 			if isEmpty(value.(uintptr)) {
 				return err
 			}
+		case reflect.Struct:
+			switch rv.Type().String() {
+			case "govalidator.Int":
+				if v, ok := value.(Int); ok {
+					if !v.IsSet {
+						return err
+					}
+				}
+			default:
+				panic("govalidator: invalid custom type for required rule")
+
+			}
+
 		default:
 			panic("govalidator: invalid type for required rule")
 

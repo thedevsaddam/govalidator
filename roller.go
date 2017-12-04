@@ -102,9 +102,23 @@ func (r *roller) traverseStruct(iface interface{}) {
 
 		switch v.Kind() {
 		case reflect.Struct:
+			var typeName string
+			if len(rfv.Tag.Get(r.tagIdentifier)) > 0 {
+				tags := strings.Split(rfv.Tag.Get(r.tagIdentifier), r.tagSeparator)
+				if tags[0] != "-" {
+					typeName = tags[0]
+				}
+			} else {
+				typeName = rfv.Name
+			}
 			if v.CanInterface() {
-				r.typeName = ift.Name()
-				r.traverseStruct(v.Interface())
+				switch v.Type().String() {
+				case "govalidator.Int":
+					r.push(typeName, v.Interface())
+				default:
+					r.typeName = ift.Name()
+					r.traverseStruct(v.Interface())
+				}
 			}
 		case reflect.Map:
 			if v.CanInterface() {

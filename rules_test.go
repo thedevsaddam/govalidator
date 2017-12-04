@@ -60,6 +60,7 @@ func Test_Required(t *testing.T) {
 		Uintptr uintptr `json:"_uintptr"`
 		Flaot32 float32 `json:"_float32"`
 		Flaot64 float64 `json:"_float64"`
+		Age     int     `json:"age"`
 	}
 
 	rules := MapData{
@@ -77,6 +78,7 @@ func Test_Required(t *testing.T) {
 		"_uintptr": []string{"required"},
 		"_float32": []string{"required"},
 		"_float64": []string{"required"},
+		"age":      []string{"required"},
 	}
 
 	postRequired := tRequired{}
@@ -99,7 +101,7 @@ func Test_Required(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if len(validationErr) != 14 {
+	if len(validationErr) != 15 {
 		t.Error("required validation failed!")
 	}
 

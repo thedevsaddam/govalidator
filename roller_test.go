@@ -389,3 +389,20 @@ func TestRoller_MapWithPointerPremitives(t *testing.T) {
 		t.Error("MapWithPointerPremitives failed!")
 	}
 }
+
+type structWithCustomType struct {
+	Name string `json:"name"`
+	Age  Int    `json:"age"`
+}
+
+func TestRoller_StartCustomType(t *testing.T) {
+	r := roller{}
+	swTag := structWithCustomType{Name: "John Doe", Age: Int{Value: 44}}
+	r.setTagIdentifier("json")
+	r.setTagSeparator("|")
+	r.start(&swTag)
+
+	if len(r.getFlatMap()) != 2 {
+		t.Error("failed to push custom type")
+	}
+}
