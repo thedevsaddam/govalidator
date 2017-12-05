@@ -24,7 +24,7 @@ type roller struct {
 // start start traversing through the tree
 func (r *roller) start(iface interface{}) {
 	//initialize the Tree
-	r.root = make(map[string]interface{}, 0)
+	r.root = make(map[string]interface{})
 	r.typeName = ""
 	ifv := reflect.ValueOf(iface)
 	ift := reflect.TypeOf(iface)

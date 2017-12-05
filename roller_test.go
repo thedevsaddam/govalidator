@@ -70,7 +70,7 @@ var e = Earth{
 	planet,
 }
 
-var m = make(map[string]interface{}, 0)
+var m = make(map[string]interface{})
 
 type structWithPointerToEmbeddedStruct struct {
 	Male   *Male

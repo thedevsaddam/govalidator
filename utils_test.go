@@ -45,8 +45,7 @@ func Test_isRuleExist(t *testing.T) {
 }
 
 func Test_toString(t *testing.T) {
-	var Int int
-	Int = 100
+	Int := 100
 	str := toString(Int)
 	typ := reflect.ValueOf(str).Kind()
 	if typ != reflect.String {
@@ -81,7 +80,7 @@ func Test_getFileInfo(t *testing.T) {
 	if err != nil {
 		t.Error("request failed", err)
 	}
-	fn, ext, mime, size, err := getFileInfo(req, "file")
+	fn, ext, mime, size, _ := getFileInfo(req, "file")
 
 	if fn != "BENCHMARK.md" {
 		t.Error("failed to get file name")

@@ -81,8 +81,7 @@ func isIn(haystack []string, niddle string) bool {
 // isJSON check wheather the input string is a valid json or not
 func isJSON(str string) bool {
 	var data interface{}
-	err := json.Unmarshal([]byte(str), &data)
-	if err != nil {
+	if err := json.Unmarshal([]byte(str), &data); err != nil {
 		return false
 	}
 	return true
