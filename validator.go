@@ -167,7 +167,7 @@ func (v *Validator) ValidateJSON() url.Values {
 func (v *Validator) keepJSONRequiredField(inputs map[string]interface{}) {
 	if !v.Opts.RequiredDefault {
 		for k, r := range v.Opts.Rules {
-			if val, _ := inputs[k]; isEmpty(val) { // TODO: need to write test to check it working fine
+			if val := inputs[k]; isEmpty(val) {
 				if !isContainRequiredField(r) {
 					delete(v.Opts.Rules, k)
 				}

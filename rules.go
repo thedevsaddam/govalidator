@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var rulesFuncMap = make(map[string]func(string, string, string, interface{}) error, 0)
+var rulesFuncMap = make(map[string]func(string, string, string, interface{}) error)
 
 // AddCustomRule help to add custom rules for validator
 // First argument it takes the rule name and second arg a func
