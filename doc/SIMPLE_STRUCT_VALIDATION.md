@@ -15,10 +15,11 @@ import (
 )
 
 type user struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Web      string `json:"web"`
-	Age      int    `json:"age"`
+	Username string           `json:"username"`
+	Email    string           `json:"email"`
+	Web      string           `json:"web"`
+	Age      govalidator.Int  `json:"age"`
+	Agree    govalidator.Bool `json:"agree"`
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +28,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		"username": []string{"required", "between:3,5"},
 		"email":    []string{"required", "min:4", "max:20", "email"},
 		"web":      []string{"url"},
-		"age":      []string{"numeric_between:18,56"},
+		"age":      []string{"required"},
+		"agree":    []string{"required"},
 	}
 
 	opts := govalidator.Options{
@@ -56,18 +58,22 @@ func main() {
 {
     "validationError": {
         "age": [
-            "The age field must be numeric value between 18 and 56"
+            "The age field is required"
+        ],
+        "agree": [
+            "The agree field is required"
         ],
         "email": [
+            "The email field is required",
             "The email field must be minimum 4 char",
             "The email field must be a valid email address"
         ],
         "username": [
+            "The username field is required",
             "The username field must be between 3 and 5"
-        ],
-        "web": [
-            "The web field format is invalid"
         ]
     }
 }
 ```
+
+#### Note: When using `required` rule with number or boolean data, use provided custom type like: Int, Int64, Float32, Float64 or Bool
