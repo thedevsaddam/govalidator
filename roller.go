@@ -115,6 +115,14 @@ func (r *roller) traverseStruct(iface interface{}) {
 				switch v.Type().String() {
 				case "govalidator.Int":
 					r.push(typeName, v.Interface())
+				case "govalidator.Int64":
+					r.push(typeName, v.Interface())
+				case "govalidator.Float32":
+					r.push(typeName, v.Interface())
+				case "govalidator.Float64":
+					r.push(typeName, v.Interface())
+				case "govalidator.Bool":
+					r.push(typeName, v.Interface())
 				default:
 					r.typeName = ift.Name()
 					r.traverseStruct(v.Interface())

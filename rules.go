@@ -113,6 +113,30 @@ func init() {
 						return err
 					}
 				}
+			case "govalidator.Int64":
+				if v, ok := value.(Int64); ok {
+					if !v.IsSet {
+						return err
+					}
+				}
+			case "govalidator.Float32":
+				if v, ok := value.(Float32); ok {
+					if !v.IsSet {
+						return err
+					}
+				}
+			case "govalidator.Float64":
+				if v, ok := value.(Float64); ok {
+					if !v.IsSet {
+						return err
+					}
+				}
+			case "govalidator.Bool":
+				if v, ok := value.(Bool); ok {
+					if !v.IsSet {
+						return err
+					}
+				}
 			default:
 				panic("govalidator: invalid custom type for required rule")
 

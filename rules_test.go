@@ -46,42 +46,50 @@ func Test_validateExtraRules(t *testing.T) {
 //================================= rules =================================
 func Test_Required(t *testing.T) {
 	type tRequired struct {
-		Str     string  `json:"_str"`
-		Int     int     `json:"_int"`
-		Int8    int8    `json:"_int8"`
-		Int16   int16   `json:"_int16"`
-		Int32   int32   `json:"_int32"`
-		Int64   int64   `json:"_int64"`
-		Uint    uint    `json:"_uint"`
-		Uint8   uint8   `json:"_uint8"`
-		Uint16  uint16  `json:"_uint16"`
-		Uint32  uint32  `json:"_uint32"`
-		Uint64  uint64  `json:"_uint64"`
-		Uintptr uintptr `json:"_uintptr"`
-		Flaot32 float32 `json:"_float32"`
-		Flaot64 float64 `json:"_float64"`
-		Age     int     `json:"age"`
+		Str       string  `json:"_str"`
+		Int       int     `json:"_int"`
+		Int8      int8    `json:"_int8"`
+		Int16     int16   `json:"_int16"`
+		Int32     int32   `json:"_int32"`
+		Int64     int64   `json:"_int64"`
+		Uint      uint    `json:"_uint"`
+		Uint8     uint8   `json:"_uint8"`
+		Uint16    uint16  `json:"_uint16"`
+		Uint32    uint32  `json:"_uint32"`
+		Uint64    uint64  `json:"_uint64"`
+		Uintptr   uintptr `json:"_uintptr"`
+		Flaot32   float32 `json:"_float32"`
+		Flaot64   float64 `json:"_float64"`
+		Integer   Int     `json:"integer"`
+		Integer64 Int64   `json:"integer64"`
+		Fpoint32  Float32 `json:"float32"`
+		Fpoint64  Float64 `json:"float64"`
+		Boolean   Bool    `json:"boolean"`
 	}
 
 	rules := MapData{
-		"_str":     []string{"required"},
-		"_int":     []string{"required"},
-		"_int8":    []string{"required"},
-		"_int16":   []string{"required"},
-		"_int32":   []string{"required"},
-		"_int64":   []string{"required"},
-		"_uint":    []string{"required"},
-		"_uint8":   []string{"required"},
-		"_uint16":  []string{"required"},
-		"_uint32":  []string{"required"},
-		"_uint64":  []string{"required"},
-		"_uintptr": []string{"required"},
-		"_float32": []string{"required"},
-		"_float64": []string{"required"},
-		"age":      []string{"required"},
+		"_str":      []string{"required"},
+		"_int":      []string{"required"},
+		"_int8":     []string{"required"},
+		"_int16":    []string{"required"},
+		"_int32":    []string{"required"},
+		"_int64":    []string{"required"},
+		"_uint":     []string{"required"},
+		"_uint8":    []string{"required"},
+		"_uint16":   []string{"required"},
+		"_uint32":   []string{"required"},
+		"_uint64":   []string{"required"},
+		"_uintptr":  []string{"required"},
+		"_float32":  []string{"required"},
+		"_float64":  []string{"required"},
+		"integer":   []string{"required"},
+		"integer64": []string{"required"},
+		"float32":   []string{"required"},
+		"float64":   []string{"required"},
+		"boolean":   []string{"required"},
 	}
 
-	postRequired := tRequired{}
+	postRequired := map[string]string{}
 
 	var trequired tRequired
 
@@ -101,7 +109,8 @@ func Test_Required(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if len(validationErr) != 15 {
+	if len(validationErr) != 19 {
+		t.Log(validationErr)
 		t.Error("required validation failed!")
 	}
 
