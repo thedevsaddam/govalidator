@@ -10,7 +10,10 @@ import (
 
 // validateFiles validate file size, mimes, extension etc
 func validateFiles(r *http.Request, field, rule, msg string, errsBag url.Values) {
-	fn, ext, mime, size, fErr := getFileInfo(r, field)
+	fExist, fn, ext, mime, size, fErr := getFileInfo(r, field)
+	if fExist {
+		r.Form.Add(field, "$^__file__exist__&#")
+	}
 	// check size
 	if strings.HasPrefix(rule, "size:") {
 		l, err := strconv.ParseInt(strings.TrimPrefix(rule, "size:"), 10, 64)

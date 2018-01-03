@@ -80,8 +80,10 @@ func Test_getFileInfo(t *testing.T) {
 	if err != nil {
 		t.Error("request failed", err)
 	}
-	fn, ext, mime, size, _ := getFileInfo(req, "file")
-
+	fExist, fn, ext, mime, size, _ := getFileInfo(req, "file")
+	if !fExist {
+		t.Error("file does not exist")
+	}
 	if fn != "BENCHMARK.md" {
 		t.Error("failed to get file name")
 	}

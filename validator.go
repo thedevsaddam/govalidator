@@ -84,16 +84,16 @@ func (v *Validator) Validate() url.Values {
 	v.keepRequiredField()
 
 	for field, rules := range v.Opts.Rules {
-		reqVal := strings.TrimSpace(v.Opts.Request.Form.Get(field))
 		for _, rule := range rules {
 			if !isRuleExist(rule) {
 				panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
 			}
 			msg := v.getCustomMessage(field, rule)
-			// validate if custom rules exist
-			validateCustomRules(field, rule, msg, reqVal, errsBag)
 			// validate file
 			validateFiles(v.Opts.Request, field, rule, msg, errsBag)
+			// validate if custom rules exist
+			reqVal := strings.TrimSpace(v.Opts.Request.Form.Get(field))
+			validateCustomRules(field, rule, msg, reqVal, errsBag)
 		}
 	}
 
@@ -104,7 +104,7 @@ func (v *Validator) Validate() url.Values {
 // and if the input data is empty for this field
 func (v *Validator) keepRequiredField() {
 	v.Opts.Request.ParseMultipartForm(defaultFormSize)
-	if v.Opts.FormSize == 0 {
+	if v.Opts.FormSize > 0 {
 		v.Opts.Request.ParseMultipartForm(v.Opts.FormSize)
 	}
 	//r.ParseForm()
