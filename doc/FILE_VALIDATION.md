@@ -1,7 +1,7 @@
 
 ### Validate File
 
-When validation `multipart/form-data` use `file:` prefix to _field_ name.
+For `multipart/form-data` validation, use `file:` prefix to _field_ name which contains the file.
 
 ```go
 package main
