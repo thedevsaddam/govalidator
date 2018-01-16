@@ -1,7 +1,7 @@
 
 ### Validate File
 
-When validation `multipart/form-data` using `Validate` method you must use a `required` tag rule for file validation.
+When validation `multipart/form-data` use `file:` prefix to _field_ name.
 
 ```go
 package main
@@ -16,7 +16,7 @@ import (
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	rules := govalidator.MapData{
-		"file": []string{"ext:jpg,pdf", "size:10", "mime:application/pdf", "required"},
+		"file:photo": []string{"ext:jpg,pdf", "size:10000", "mime:jpg,png", "required"},
 	}
 
 	opts := govalidator.Options{
@@ -41,10 +41,20 @@ func main() {
 ```json
 {
     "validationError": {
-        "file": [
-            "The file field file extension doc is invalid",
-            "The file field size is can not be greater than 10 bytes",
-            "The file field file mime application/octet-stream is invalid"
+        "photo": [
+            "The photo field is required"
+        ]
+    }
+}
+
+or
+
+{
+    "validationError": {
+        "photo": [
+            "The photo field file extension sql is invalid",
+            "The photo field size is can not be greater than 10000 bytes",
+            "The photo field file mime text/plain is invalid"
         ]
     }
 }

@@ -10,10 +10,7 @@ import (
 
 // validateFiles validate file size, mimes, extension etc
 func validateFiles(r *http.Request, field, rule, msg string, errsBag url.Values) {
-	fExist, fn, ext, mime, size, fErr := getFileInfo(r, field)
-	if fExist {
-		r.Form.Add(field, "$^__file__exist__&#")
-	}
+	_, _, ext, mime, size, fErr := getFileInfo(r, field)
 	// check size
 	if strings.HasPrefix(rule, "size:") {
 		l, err := strconv.ParseInt(strings.TrimPrefix(rule, "size:"), 10, 64)
@@ -28,7 +25,7 @@ func validateFiles(r *http.Request, field, rule, msg string, errsBag url.Values)
 			}
 		}
 		if fErr != nil {
-			errsBag.Add(field, fmt.Sprintf("The %s field file %s failed to read", field, fn))
+			errsBag.Add(field, fmt.Sprintf("The %s field failed to read file when fetching size", field))
 		}
 	}
 
@@ -49,7 +46,7 @@ func validateFiles(r *http.Request, field, rule, msg string, errsBag url.Values)
 			}
 		}
 		if fErr != nil {
-			errsBag.Add(field, fmt.Sprintf("The %s field file %s failed to read", field, fn))
+			errsBag.Add(field, fmt.Sprintf("The %s field failed to read file when fetching extension", field))
 		}
 	}
 
@@ -70,7 +67,7 @@ func validateFiles(r *http.Request, field, rule, msg string, errsBag url.Values)
 			}
 		}
 		if fErr != nil {
-			errsBag.Add(field, fmt.Sprintf("The %s field file %s failed to read", field, fn))
+			errsBag.Add(field, fmt.Sprintf("The %s field failed to read file when fetching mime", field))
 		}
 	}
 }

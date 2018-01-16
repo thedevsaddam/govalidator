@@ -90,10 +90,21 @@ func (v *Validator) Validate() url.Values {
 			}
 			msg := v.getCustomMessage(field, rule)
 			// validate file
-			validateFiles(v.Opts.Request, field, rule, msg, errsBag)
-			// validate if custom rules exist
-			reqVal := strings.TrimSpace(v.Opts.Request.Form.Get(field))
-			validateCustomRules(field, rule, msg, reqVal, errsBag)
+			if strings.HasPrefix(field, "file:") {
+				fld := strings.TrimPrefix(field, "file:")
+				file, _, _ := v.Opts.Request.FormFile(fld)
+				if file == nil {
+					if isContainRequiredField(rules) {
+						validateCustomRules(fld, rule, msg, "", errsBag)
+					}
+				} else {
+					validateFiles(v.Opts.Request, fld, rule, msg, errsBag)
+				}
+			} else {
+				// validate if custom rules exist
+				reqVal := strings.TrimSpace(v.Opts.Request.Form.Get(field))
+				validateCustomRules(field, rule, msg, reqVal, errsBag)
+			}
 		}
 	}
 
@@ -107,11 +118,12 @@ func (v *Validator) keepRequiredField() {
 	if v.Opts.FormSize > 0 {
 		v.Opts.Request.ParseMultipartForm(v.Opts.FormSize)
 	}
-	//r.ParseForm()
+
 	inputs := v.Opts.Request.Form
 	if !v.Opts.RequiredDefault {
 		for k, r := range v.Opts.Rules {
-			if _, ok := inputs[k]; !ok {
+			isFile := strings.HasPrefix(k, "file:")
+			if _, ok := inputs[k]; !ok && !isFile {
 				if !isContainRequiredField(r) {
 					delete(v.Opts.Rules, k)
 				}
