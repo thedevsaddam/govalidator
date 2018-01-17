@@ -23,7 +23,7 @@ func buildMocFormReq() (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = io.Copy(part, file)
+	io.Copy(part, file)
 	file.Close()
 	err = writer.Close()
 	if err != nil {
@@ -44,7 +44,7 @@ func Test_validateFiles(t *testing.T) {
 		t.Error("request failed", err)
 	}
 	rules := MapData{
-		"file": []string{"ext:jpg,pdf", "size:10", "mime:application/pdf", "required"},
+		"file:file": []string{"ext:jpg,pdf", "size:10", "mime:application/pdf", "required"},
 	}
 
 	opts := Options{
@@ -65,11 +65,11 @@ func Test_validateFiles_message(t *testing.T) {
 		t.Error("request failed", err)
 	}
 	rules := MapData{
-		"file": []string{"ext:jpg,pdf", "size:10", "mime:application/pdf", "required"},
+		"file:file": []string{"ext:jpg,pdf", "size:10", "mime:application/pdf", "required"},
 	}
 
 	msgs := MapData{
-		"file": []string{"ext:custom_message"},
+		"file:file": []string{"ext:custom_message"},
 	}
 
 	opts := Options{
