@@ -88,3 +88,31 @@ func Test_validateFiles_message(t *testing.T) {
 		t.Error("failed custom message for file validation")
 	}
 }
+
+func Test_validateFiles_Issue18(t *testing.T) {
+	req, err := buildMocFormReq()
+	if err != nil {
+		t.Error("request failed", err)
+	}
+
+	customRulesWasExecuted := false
+	AddCustomRule("customRule", func(field string, rule string, message string, value interface{}) error {
+		customRulesWasExecuted = true
+		return nil
+	})
+
+	rules := MapData{
+		"file:file": []string{"ext:jpg,pdf", "size:10", "mime:application/pdf", "customRule"},
+	}
+
+	opts := Options{
+		Request: req,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	vd.Validate()
+	if !customRulesWasExecuted {
+		t.Error("file validation performed without custom rule!")
+	}
+}
