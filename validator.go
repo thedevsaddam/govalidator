@@ -95,11 +95,9 @@ func (v *Validator) Validate() url.Values {
 				file, _, _ := v.Opts.Request.FormFile(fld)
 				if file != nil {
 					validateFiles(v.Opts.Request, fld, rule, msg, errsBag)
-					if rule != "required" {
-						validateCustomRules(fld, rule, msg, file, errsBag)
-					}
-				} else if isContainRequiredField(rules) {
-					validateCustomRules(fld, rule, msg, "", errsBag)
+					validateCustomRules(fld, rule, msg, file, errsBag)
+				} else {
+					validateCustomRules(fld, rule, msg, nil, errsBag)
 				}
 			} else {
 				// validate if custom rules exist

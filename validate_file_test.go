@@ -89,20 +89,31 @@ func Test_validateFiles_message(t *testing.T) {
 	}
 }
 
-func Test_validateFiles_Issue18(t *testing.T) {
+func Test_validateFiles_CustomRule(t *testing.T) {
 	req, err := buildMocFormReq()
 	if err != nil {
 		t.Error("request failed", err)
 	}
 
-	customRulesWasExecuted := false
-	AddCustomRule("customRule", func(field string, rule string, message string, value interface{}) error {
-		customRulesWasExecuted = true
+	customRule1WasExecuted := false
+	isMultipartFile := false
+	AddCustomRule("customRule1", func(field string, rule string, message string, value interface{}) error {
+		customRule1WasExecuted = true
+		_, isMultipartFile = value.(multipart.File)
+		return nil
+	})
+
+	customRule2WasExecuted := false
+	isValueNil := false
+	AddCustomRule("customRule2", func(field string, rule string, message string, value interface{}) error {
+		customRule2WasExecuted = true
+		isValueNil = value == nil
 		return nil
 	})
 
 	rules := MapData{
-		"file:file": []string{"ext:jpg,pdf", "size:10", "mime:application/pdf", "customRule"},
+		"file:file": []string{"customRule1"},
+		"file:avatar": []string{"customRule2"},
 	}
 
 	opts := Options{
@@ -112,7 +123,19 @@ func Test_validateFiles_Issue18(t *testing.T) {
 
 	vd := New(opts)
 	vd.Validate()
-	if !customRulesWasExecuted {
+	if !customRule1WasExecuted {
 		t.Error("file validation performed without custom rule!")
+	}
+
+	if !isMultipartFile {
+		t.Error("passed to custom rule value is not file!")
+	}
+
+	if !customRule2WasExecuted {
+		t.Error("file validation performed without custom rule!")
+	}
+
+	if !isValueNil {
+		t.Error("passed to custom rule value is not nil!")
 	}
 }

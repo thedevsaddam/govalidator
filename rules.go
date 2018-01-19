@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"mime/multipart"
 )
 
 var rulesFuncMap = make(map[string]func(string, string, string, interface{}) error)
@@ -46,6 +47,9 @@ func init() {
 		}
 		if value == nil {
 			return err
+		}
+		if _, ok := value.(multipart.File); ok {
+			return nil
 		}
 		rv := reflect.ValueOf(value)
 		switch rv.Kind() {
