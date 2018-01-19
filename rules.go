@@ -3,11 +3,11 @@ package govalidator
 import (
 	"errors"
 	"fmt"
+	"mime/multipart"
 	"net/url"
 	"reflect"
 	"strconv"
 	"strings"
-	"mime/multipart"
 )
 
 var rulesFuncMap = make(map[string]func(string, string, string, interface{}) error)
