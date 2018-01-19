@@ -112,7 +112,7 @@ func Test_validateFiles_CustomRule(t *testing.T) {
 	})
 
 	rules := MapData{
-		"file:file": []string{"customRule1"},
+		"file:file":   []string{"customRule1"},
 		"file:avatar": []string{"customRule2"},
 	}
 
