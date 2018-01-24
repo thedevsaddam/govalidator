@@ -93,11 +93,12 @@ func (v *Validator) Validate() url.Values {
 			if strings.HasPrefix(field, "file:") {
 				fld := strings.TrimPrefix(field, "file:")
 				file, _, _ := v.Opts.Request.FormFile(fld)
-				if file != nil {
-					validateFiles(v.Opts.Request, fld, rule, msg, errsBag)
-					validateCustomRules(fld, rule, msg, file, errsBag)
+				if file == nil {
+					if isContainRequiredField(rules) {
+						validateCustomRules(fld, rule, msg, "", errsBag)
+					}
 				} else {
-					validateCustomRules(fld, rule, msg, nil, errsBag)
+					validateFiles(v.Opts.Request, fld, rule, msg, errsBag)
 				}
 			} else {
 				// validate if custom rules exist
