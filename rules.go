@@ -3,6 +3,7 @@ package govalidator
 import (
 	"errors"
 	"fmt"
+	"mime/multipart"
 	"net/url"
 	"reflect"
 	"strconv"
@@ -46,6 +47,9 @@ func init() {
 		}
 		if value == nil {
 			return err
+		}
+		if _, ok := value.(multipart.File); ok {
+			return nil
 		}
 		rv := reflect.ValueOf(value)
 		switch rv.Kind() {
