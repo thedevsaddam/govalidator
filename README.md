@@ -112,13 +112,17 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 ```
 
 ### More examples
+
+***Validate file***
+
+* [Validate file](doc/FILE_VALIDATION.md)
+
 ***Validate `application/json` or `text/plain` as raw body***
 
 * [Validate JSON to simple struct](doc/SIMPLE_STRUCT_VALIDATION.md)
 * [Validate JSON to map](doc/MAP_VALIDATION.md)
 * [Validate JSON to nested struct](doc/NESTED_STRUCT.md)
 * [Validate using custom rule](doc/CUSTOM_RULE.md)
-* [Validate file](doc/FILE_VALIDATION.md)
 
 ### Validation Rules
 * `alpha` The field under validation must be entirely alphabetic characters.
@@ -207,13 +211,13 @@ opts := govalidator.Options{
 ```
 
 ### Contribution
-If you are interested to make the package better please send pull requests or create issue so that others can fix.
+If you are interested to make the package better please send pull requests or create an issue so that others can fix.
 [Read the contribution guide here](CONTRIBUTING.md)
 
 ### See all [contributors](https://github.com/thedevsaddam/govalidator/graphs/contributors)
 
 ### See [benchmarks](doc/BENCHMARK.md)
-### Read [API doc](https://godoc.org/github.com/thedevsaddam/govalidator)
+### Read [API documentation](https://godoc.org/github.com/thedevsaddam/govalidator)
 
 ### **License**
 The **govalidator** is an open-source software licensed under the [MIT License](LICENSE.md).
