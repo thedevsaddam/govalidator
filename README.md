@@ -68,7 +68,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	v := govalidator.New(opts)
 	e := v.Validate()
 	err := map[string]interface{}{"validationError": e}
-	w.Header().Set("Content-type", "applciation/json")
+	w.Header().Set("Content-type", "application/json")
 	json.NewEncoder(w).Encode(err)
 }
 
@@ -153,7 +153,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * `json` The field under validation must be a valid JSON string.
 * `lat` The field under validation must be a valid latitude.
 * `lon` The field under validation must be a valid longitude.
-* `regex:regurlar expression` The field under validation validate against the regex. e.g: `regex:^[a-zA-Z]+$` validate the letters.
+* `regex:regular expression` The field under validation validate against the regex. e.g: `regex:^[a-zA-Z]+$` validate the letters.
 * `required` The field under validation must be present in the input data and not empty. A field is considered "empty" if one of the following conditions are true: 1) The value is null. 2)The value is an empty string. 3) Zero length of map, slice. 4) Zero value for integer or float
 * `size:integer` The field under validation validate a file size only in form-data ([see example](doc/FILE_VALIDATION.md))
 * `ext:jpg,png` The field under validation validate a file extension ([see example](doc/FILE_VALIDATION.md))
