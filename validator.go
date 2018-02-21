@@ -92,8 +92,8 @@ func (v *Validator) Validate() url.Values {
 			// validate file
 			if strings.HasPrefix(field, "file:") {
 				fld := strings.TrimPrefix(field, "file:")
-				file, _, _ := v.Opts.Request.FormFile(fld)
-				if file != nil {
+				file, fh, _ := v.Opts.Request.FormFile(fld)
+				if file != nil && fh.Filename != "" {
 					validateFiles(v.Opts.Request, fld, rule, msg, errsBag)
 					validateCustomRules(fld, rule, msg, file, errsBag)
 				} else {
@@ -163,7 +163,7 @@ func (v *Validator) ValidateJSON() url.Values {
 		value, _ := r.getFlatVal(field)
 		for _, rule := range rules {
 			if !isRuleExist(rule) {
-				panic(fmt.Errorf("validator: %s is not a valid rule", rule))
+				panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
 			}
 			msg := v.getCustomMessage(field, rule)
 			validateCustomRules(field, rule, msg, value, errsBag)

@@ -19,7 +19,7 @@ var rulesFuncMap = make(map[string]func(string, string, string, interface{}) err
 // see example in readme: https://github.com/thedevsaddam/govalidator#add-custom-rules
 func AddCustomRule(name string, fn func(field string, rule string, message string, value interface{}) error) {
 	if isRuleExist(name) {
-		panic(fmt.Errorf("validator: %s is already defined in rules", name))
+		panic(fmt.Errorf("govalidator: %s is already defined in rules", name))
 	}
 	rulesFuncMap[name] = fn
 }
