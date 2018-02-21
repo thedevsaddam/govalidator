@@ -1,7 +1,7 @@
 Package govalidator
 =========================
 [![Build Status](https://travis-ci.org/thedevsaddam/govalidator.svg?branch=master)](https://travis-ci.org/thedevsaddam/govalidator)
-[![Project status](https://img.shields.io/badge/version-1.8-green.svg)](https://github.com/thedevsaddam/govalidator/releases)
+[![Project status](https://img.shields.io/badge/version-1.9-green.svg)](https://github.com/thedevsaddam/govalidator/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/thedevsaddam/govalidator)](https://goreportcard.com/report/github.com/thedevsaddam/govalidator)
 [![Coverage Status](https://coveralls.io/repos/github/thedevsaddam/govalidator/badge.svg?branch=master)](https://coveralls.io/github/thedevsaddam/govalidator?branch=master)
 [![GoDoc](https://godoc.org/github.com/thedevsaddam/govalidator?status.svg)](https://godoc.org/github.com/thedevsaddam/govalidator)
@@ -213,6 +213,14 @@ opts := govalidator.Options{
 ### Contribution
 If you are interested to make the package better please send pull requests or create an issue so that others can fix.
 [Read the contribution guide here](CONTRIBUTING.md)
+
+### Contributors
+
+- [Steve HIll](https://github.com/stevehill1981)
+- [ErickSkrauch](https://github.com/erickskrauch)
+- [Sakib Sami](https://github.com/s4kibs4mi)
+- [Rip](https://github.com/ripbandit)
+- [Jose Nazario](https://github.com/paralax)
 
 ### See all [contributors](https://github.com/thedevsaddam/govalidator/graphs/contributors)
 
