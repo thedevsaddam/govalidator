@@ -129,6 +129,46 @@ func TestValidator_ValidateJSON(t *testing.T) {
 	}
 }
 
+func TestValidator_ValidateJSON_NULLValue(t *testing.T) {
+	type User struct {
+		Name   string `json:"name"`
+		Count  Int    `json:"count"`
+		Option Int    `json:"option"`
+		Active Bool   `json:"active"`
+	}
+
+	rules := MapData{
+		"name":   []string{"required"},
+		"count":  []string{"required"},
+		"option": []string{"required"},
+		"active": []string{"required"},
+	}
+
+	postUser := map[string]interface{}{
+		"name":   "John Doe",
+		"count":  0,
+		"option": nil,
+		"active": nil,
+	}
+
+	var user User
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	opts := Options{
+		Request: req,
+		Data:    &user,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	vd.SetTagIdentifier("json")
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 2 {
+		t.Error("ValidateJSON failed")
+	}
+}
+
 func TestValidator_ValidateJSON_panic(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {

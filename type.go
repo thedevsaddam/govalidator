@@ -1,6 +1,7 @@
 package govalidator
 
 import (
+	"bytes"
 	"encoding/json"
 )
 
@@ -10,8 +11,13 @@ type Int struct {
 	IsSet bool `json:"isSet"`
 }
 
+var null = []byte("null")
+
 // UnmarshalJSON ...
 func (i *Int) UnmarshalJSON(data []byte) error {
+	if bytes.Compare(data, null) == 0 {
+		return nil
+	}
 	i.IsSet = true
 	var temp int
 	if err := json.Unmarshal(data, &temp); err != nil {
@@ -34,6 +40,9 @@ type Int64 struct {
 
 // UnmarshalJSON ...
 func (i *Int64) UnmarshalJSON(data []byte) error {
+	if bytes.Compare(data, null) == 0 {
+		return nil
+	}
 	i.IsSet = true
 	var temp int64
 	if err := json.Unmarshal(data, &temp); err != nil {
@@ -56,6 +65,9 @@ type Float32 struct {
 
 // UnmarshalJSON ...
 func (i *Float32) UnmarshalJSON(data []byte) error {
+	if bytes.Compare(data, null) == 0 {
+		return nil
+	}
 	i.IsSet = true
 	var temp float32
 	if err := json.Unmarshal(data, &temp); err != nil {
@@ -78,6 +90,9 @@ type Float64 struct {
 
 // UnmarshalJSON ...
 func (i *Float64) UnmarshalJSON(data []byte) error {
+	if bytes.Compare(data, null) == 0 {
+		return nil
+	}
 	i.IsSet = true
 	var temp float64
 	if err := json.Unmarshal(data, &temp); err != nil {
@@ -100,6 +115,9 @@ type Bool struct {
 
 // UnmarshalJSON ...
 func (i *Bool) UnmarshalJSON(data []byte) error {
+	if bytes.Compare(data, null) == 0 {
+		return nil
+	}
 	i.IsSet = true
 	var temp bool
 	if err := json.Unmarshal(data, &temp); err != nil {
