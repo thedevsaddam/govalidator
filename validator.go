@@ -80,10 +80,13 @@ func (v *Validator) Validate() url.Values {
 	}
 	errsBag := url.Values{}
 
-	// clean rules
-	v.keepRequiredField()
+	// get non required rules
+	nr := v.getNonRequiredFields()
 
 	for field, rules := range v.Opts.Rules {
+		if _, ok := nr[field]; ok {
+			continue
+		}
 		for _, rule := range rules {
 			if !isRuleExist(rule) {
 				panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
@@ -110,25 +113,28 @@ func (v *Validator) Validate() url.Values {
 	return errsBag
 }
 
-// keepRequiredField remove non required rules field from rules if requiredDefault field is false
+// getNonRequiredFields remove non required rules fields from rules if requiredDefault field is false
 // and if the input data is empty for this field
-func (v *Validator) keepRequiredField() {
-	v.Opts.Request.ParseMultipartForm(defaultFormSize)
+func (v *Validator) getNonRequiredFields() map[string]struct{} {
 	if v.Opts.FormSize > 0 {
 		v.Opts.Request.ParseMultipartForm(v.Opts.FormSize)
+	} else {
+		v.Opts.Request.ParseMultipartForm(defaultFormSize)
 	}
 
 	inputs := v.Opts.Request.Form
+	nr := make(map[string]struct{})
 	if !v.Opts.RequiredDefault {
 		for k, r := range v.Opts.Rules {
 			isFile := strings.HasPrefix(k, "file:")
 			if _, ok := inputs[k]; !ok && !isFile {
 				if !isContainRequiredField(r) {
-					delete(v.Opts.Rules, k)
+					nr[k] = struct{}{}
 				}
 			}
 		}
 	}
+	return nr
 }
 
 // ValidateJSON validate request data from JSON body to Go struct
@@ -157,9 +163,12 @@ func (v *Validator) ValidateJSON() url.Values {
 	r.start(v.Opts.Data)
 
 	//clean if the key is not exist or value is empty or zero value
-	v.keepJSONRequiredField(r.getFlatMap())
+	nr := v.getNonRequiredJSONFields(r.getFlatMap())
 
 	for field, rules := range v.Opts.Rules {
+		if _, ok := nr[field]; ok {
+			continue
+		}
 		value, _ := r.getFlatVal(field)
 		for _, rule := range rules {
 			if !isRuleExist(rule) {
@@ -173,16 +182,18 @@ func (v *Validator) ValidateJSON() url.Values {
 	return errsBag
 }
 
-// keepJSONRequiredField remove non required rules field from rules if requiredDefault field is false
+// getNonRequiredJSONFields get non required rules fields from rules if requiredDefault field is false
 // and if the input data is empty for this field
-func (v *Validator) keepJSONRequiredField(inputs map[string]interface{}) {
+func (v *Validator) getNonRequiredJSONFields(inputs map[string]interface{}) map[string]struct{} {
+	nr := make(map[string]struct{})
 	if !v.Opts.RequiredDefault {
 		for k, r := range v.Opts.Rules {
 			if val := inputs[k]; isEmpty(val) {
 				if !isContainRequiredField(r) {
-					delete(v.Opts.Rules, k)
+					nr[k] = struct{}{}
 				}
 			}
 		}
 	}
+	return nr
 }
