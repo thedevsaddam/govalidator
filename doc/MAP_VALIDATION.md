@@ -45,7 +45,7 @@ func main() {
 
 ```
 
-***Resposne***
+***Response***
 ```json
 {
     "validationError": {
