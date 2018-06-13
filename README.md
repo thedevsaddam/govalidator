@@ -216,6 +216,7 @@ If you are interested to make the package better please send pull requests or cr
 
 ### Contributors
 
+- [Jun Kimura](https://github.com/bluele)
 - [Steve HIll](https://github.com/stevehill1981)
 - [ErickSkrauch](https://github.com/erickskrauch)
 - [Sakib Sami](https://github.com/s4kibs4mi)
