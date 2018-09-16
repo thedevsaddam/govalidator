@@ -42,7 +42,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	e := v.ValidateJSON()
 	fmt.Println(user) // your incoming JSON data in Go data struct
 	err := map[string]interface{}{"validationError": e}
-	w.Header().Set("Content-type", "applciation/json")
+	w.Header().Set("Content-type", "application/json")
 	json.NewEncoder(w).Encode(err)
 }
 
@@ -53,7 +53,7 @@ func main() {
 }
 
 ```
-***Resposne***
+***Response***
 ```json
 {
     "validationError": {
