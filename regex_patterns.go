@@ -8,7 +8,7 @@ const (
 	// Alpha represents regular expression for alpha characters
 	Alpha string = "^[a-zA-Z]+$"
 	// AlphaDash represents regular expression for alpha characters with underscore and ash
-	AlphaDash string = "^[a-zA-Z0-9_-]+$"
+	AlphaDash  string = "^[a-zA-Z0-9_-]+$"
 	AlphaSpace string = "^[-a-zA-Z0-9_ ]+$"
 	// AlphaNumeric represents regular expression for alpha numeric characters
 	AlphaNumeric string = "^[a-zA-Z0-9]+$"
@@ -53,7 +53,7 @@ const (
 var (
 	regexAlpha        = regexp.MustCompile(Alpha)
 	regexAlphaDash    = regexp.MustCompile(AlphaDash)
-	regexAlphaSpace    = regexp.MustCompile(AlphaSpace)
+	regexAlphaSpace   = regexp.MustCompile(AlphaSpace)
 	regexAlphaNumeric = regexp.MustCompile(AlphaNumeric)
 	regexCreditCard   = regexp.MustCompile(CreditCard)
 	regexCoordinate   = regexp.MustCompile(Coordinate)

@@ -260,7 +260,7 @@ func Test_AlphaSpace(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-    t.Log(len(validationErr))
+	t.Log(len(validationErr))
 	if len(validationErr) != 1 {
 		t.Log(validationErr)
 		t.Error("alpha_space validation failed!")
