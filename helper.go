@@ -15,6 +15,11 @@ func isAlphaDash(str string) bool {
 	return regexAlphaDash.MatchString(str)
 }
 
+// isAlphaSpace check the input is letters, number with dash and underscore
+func isAlphaSpace(str string) bool {
+	return regexAlphaSpace.MatchString(str)
+}
+
 // isAlphaNumeric check the input is alpha numeric or not
 func isAlphaNumeric(str string) bool {
 	return regexAlphaNumeric.MatchString(str)

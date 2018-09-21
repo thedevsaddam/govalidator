@@ -5,11 +5,12 @@ import (
 )
 
 const (
-	// Alpha represents regular expression for alpha chartacters
+	// Alpha represents regular expression for alpha characters
 	Alpha string = "^[a-zA-Z]+$"
-	// AlphaDash represents regular expression for alpha chartacters with underscore and ash
-	AlphaDash string = "^[a-zA-Z0-9_-]+$"
-	// AlphaNumeric represents regular expression for alpha numeric chartacters
+	// AlphaDash represents regular expression for alpha characters with underscore and ash
+	AlphaDash  string = "^[a-zA-Z0-9_-]+$"
+	AlphaSpace string = "^[-a-zA-Z0-9_ ]+$"
+	// AlphaNumeric represents regular expression for alpha numeric characters
 	AlphaNumeric string = "^[a-zA-Z0-9]+$"
 	// CreditCard represents regular expression for credit cards like (Visa, MasterCard, American Express, Diners Club, Discover, and JCB cards). Ref: https://stackoverflow.com/questions/9315647/regex-credit-card-number-tests
 	CreditCard string = "^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\\d{3})\\d{11})$"
@@ -23,7 +24,7 @@ const (
 	DateDDMMYY string = "^(0?[1-9]|[12][0-9]|3[01])[\\/\\-](0?[1-9]|1[012])[\\/\\-]\\d{4}$"
 	// Email represents regular expression for email
 	Email string = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
-	// Float represents regular expression for finding fload number
+	// Float represents regular expression for finding float number
 	Float string = "^[+-]?([0-9]*[.])?[0-9]+$"
 	// IP represents regular expression for ip address
 	IP string = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
@@ -52,6 +53,7 @@ const (
 var (
 	regexAlpha        = regexp.MustCompile(Alpha)
 	regexAlphaDash    = regexp.MustCompile(AlphaDash)
+	regexAlphaSpace   = regexp.MustCompile(AlphaSpace)
 	regexAlphaNumeric = regexp.MustCompile(AlphaNumeric)
 	regexCreditCard   = regexp.MustCompile(CreditCard)
 	regexCoordinate   = regexp.MustCompile(Coordinate)
