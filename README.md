@@ -127,6 +127,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 ### Validation Rules
 * `alpha` The field under validation must be entirely alphabetic characters.
 * `alpha_dash` The field under validation may have alpha-numeric characters, as well as dashes and underscores.
+* `alpha_space` The field under validation may have alpha-numeric characters, as well as dashes, underscores and space.
 * `alpha_num` The field under validation must be entirely alpha-numeric characters.
 * `between:numeric,numeric` The field under validation check the length of characters/ length of array, slice, map/ range between two integer or float number etc.
 * `numeric` The field under validation must be entirely numeric characters.

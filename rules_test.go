@@ -232,6 +232,45 @@ func Test_AlphaDash(t *testing.T) {
 	}
 }
 
+func Test_AlphaSpace(t *testing.T) {
+	type user struct {
+		Name string `json:"name"`
+	}
+
+	postUser := user{Name: "999$"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	messages := MapData{
+		"name": []string{"alpha_space:custom_message"},
+	}
+
+	rules := MapData{
+		"name": []string{"alpha_space"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+    t.Log(len(validationErr))
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("alpha_space validation failed!")
+	}
+
+	if validationErr.Get("name") != "custom_message" {
+		t.Error("alpha space custom message failed!")
+	}
+}
+
 func Test_AlphaNumeric(t *testing.T) {
 	type user struct {
 		Name string `json:"name"`
