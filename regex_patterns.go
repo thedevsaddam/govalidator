@@ -7,7 +7,7 @@ import (
 const (
 	// Alpha represents regular expression for alpha characters
 	Alpha string = "^[a-zA-Z]+$"
-	// AlphaDash represents regular expression for alpha characters with underscore and ash
+	// AlphaDash represents regular expression for alpha characters with underscore and dash
 	AlphaDash  string = "^[a-zA-Z0-9_-]+$"
 	AlphaSpace string = "^[-a-zA-Z0-9_ ]+$"
 	// AlphaNumeric represents regular expression for alpha numeric characters
