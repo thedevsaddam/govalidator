@@ -127,6 +127,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 ### Validation Rules
 * `alpha` The field under validation must be entirely alphabetic characters.
 * `alpha_dash` The field under validation may have alpha-numeric characters, as well as dashes and underscores.
+* `alpha_space` The field under validation may have alpha-numeric characters, as well as dashes, underscores and space.
 * `alpha_num` The field under validation must be entirely alpha-numeric characters.
 * `between:numeric,numeric` The field under validation check the length of characters/ length of array, slice, map/ range between two integer or float number etc.
 * `numeric` The field under validation must be entirely numeric characters.
@@ -145,7 +146,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * `not_in:foo,bar` The field under validation must have one value except foo,bar. e.g: `not_in:admin,manager,user` must not contain the values (admin or manager or user)
 * `email` The field under validation must have a valid email.
 * `float` The field under validation must have a valid float number.
-* `max:numeric` The field under validation must have a min length of characters for string, items length for slice/map, value for integer or float.
+* `min:numeric` The field under validation must have a min length of characters for string, items length for slice/map, value for integer or float.
    e.g: `min:3` may contains characters minimum length of 3 like `"john", "jane", "jane321"` but not `"mr", "xy"`
 * `max:numeric` The field under validation must have a max length of characters for string, items length for slice/map, value for integer or float.
    e.g: `max:6` may contains characters maximum length of 6 like `"john doe", "jane doe"` but not `"john", "jane"`
