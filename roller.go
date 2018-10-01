@@ -180,9 +180,9 @@ func (r *roller) traverseMap(iface interface{}) {
 		ift = ift.Elem()
 	}
 
-	switch iface.(type) {
+	switch t := iface.(type) {
 	case map[string]interface{}:
-		for k, v := range iface.(map[string]interface{}) {
+		for k, v := range t {
 			switch reflect.TypeOf(v).Kind() {
 			case reflect.Struct:
 				r.typeName = k // set the map key as name
@@ -195,39 +195,39 @@ func (r *roller) traverseMap(iface interface{}) {
 				case reflect.Struct:
 					r.traverseStruct(v)
 				case reflect.Map:
-					switch v.(type) {
+					switch mapType := v.(type) {
 					case *map[string]interface{}:
-						r.traverseMap(*v.(*map[string]interface{}))
+						r.traverseMap(*mapType)
 					case *map[string]string:
-						r.traverseMap(*v.(*map[string]string))
+						r.traverseMap(*mapType)
 					case *map[string]bool:
-						r.traverseMap(*v.(*map[string]bool))
+						r.traverseMap(*mapType)
 					case *map[string]int:
-						r.traverseMap(*v.(*map[string]int))
+						r.traverseMap(*mapType)
 					case *map[string]int8:
-						r.traverseMap(*v.(*map[string]int8))
+						r.traverseMap(*mapType)
 					case *map[string]int16:
-						r.traverseMap(*v.(*map[string]int16))
+						r.traverseMap(*mapType)
 					case *map[string]int32:
-						r.traverseMap(*v.(*map[string]int32))
+						r.traverseMap(*mapType)
 					case *map[string]int64:
-						r.traverseMap(*v.(*map[string]int64))
+						r.traverseMap(*mapType)
 					case *map[string]float32:
-						r.traverseMap(*v.(*map[string]float32))
+						r.traverseMap(*mapType)
 					case *map[string]float64:
-						r.traverseMap(*v.(*map[string]float64))
+						r.traverseMap(*mapType)
 					case *map[string]uint:
-						r.traverseMap(*v.(*map[string]uint))
+						r.traverseMap(*mapType)
 					case *map[string]uint8:
-						r.traverseMap(*v.(*map[string]uint8))
+						r.traverseMap(*mapType)
 					case *map[string]uint16:
-						r.traverseMap(*v.(*map[string]uint16))
+						r.traverseMap(*mapType)
 					case *map[string]uint32:
-						r.traverseMap(*v.(*map[string]uint32))
+						r.traverseMap(*mapType)
 					case *map[string]uint64:
-						r.traverseMap(*v.(*map[string]uint64))
+						r.traverseMap(*mapType)
 					case *map[string]uintptr:
-						r.traverseMap(*v.(*map[string]uintptr))
+						r.traverseMap(*mapType)
 					}
 				default:
 					r.push(k, v.(interface{}))
@@ -237,63 +237,63 @@ func (r *roller) traverseMap(iface interface{}) {
 			}
 		}
 	case map[string]string:
-		for k, v := range iface.(map[string]string) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]bool:
-		for k, v := range iface.(map[string]bool) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]int:
-		for k, v := range iface.(map[string]int) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]int8:
-		for k, v := range iface.(map[string]int8) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]int16:
-		for k, v := range iface.(map[string]int16) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]int32:
-		for k, v := range iface.(map[string]int32) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]int64:
-		for k, v := range iface.(map[string]int64) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]float32:
-		for k, v := range iface.(map[string]float32) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]float64:
-		for k, v := range iface.(map[string]float64) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]uint:
-		for k, v := range iface.(map[string]uint) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]uint8:
-		for k, v := range iface.(map[string]uint8) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]uint16:
-		for k, v := range iface.(map[string]uint16) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]uint32:
-		for k, v := range iface.(map[string]uint32) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]uint64:
-		for k, v := range iface.(map[string]uint64) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	case map[string]uintptr:
-		for k, v := range iface.(map[string]uintptr) {
+		for k, v := range t {
 			r.push(k, v)
 		}
 	}
