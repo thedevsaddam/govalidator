@@ -227,66 +227,55 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		switch value.(type) {
+		switch t := value.(type) {
 		case bool:
 			//if value is boolean then pass
 		case string:
-			if !isBoolean(value.(string)) {
+			if !isBoolean(t) {
 				return err
 			}
 		case int:
-			v := value.(int)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		case int8:
-			v := value.(int8)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		case int16:
-			v := value.(int16)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		case int32:
-			v := value.(int32)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		case int64:
-			v := value.(int64)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		case uint:
-			v := value.(uint)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		case uint8:
-			v := value.(uint8)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		case uint16:
-			v := value.(uint16)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		case uint32:
-			v := value.(uint32)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		case uint64:
-			v := value.(uint64)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		case uintptr:
-			v := value.(uintptr)
-			if v != 0 && v != 1 {
+			if t != 0 && t != 1 {
 				return err
 			}
 		}
