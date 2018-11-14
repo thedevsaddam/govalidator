@@ -65,7 +65,7 @@ func Test_Required(t *testing.T) {
 		Fpoint32  Float32     `json:"float32"`
 		Fpoint64  Float64     `json:"float64"`
 		Boolean   Bool        `json:"boolean"`
-		Arbitary  interface{} `json:"arbitary"`
+		Arbitrary interface{} `json:"arbitrary"`
 	}
 
 	rules := MapData{
@@ -88,7 +88,7 @@ func Test_Required(t *testing.T) {
 		"float32":   []string{"required"},
 		"float64":   []string{"required"},
 		"boolean":   []string{"required"},
-		"arbitary":  []string{"required"},
+		"arbitrary": []string{"required"},
 	}
 
 	postRequired := map[string]string{}
