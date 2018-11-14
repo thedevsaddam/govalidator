@@ -8,7 +8,8 @@ const (
 	// Alpha represents regular expression for alpha characters
 	Alpha string = "^[a-zA-Z]+$"
 	// AlphaDash represents regular expression for alpha characters with underscore and dash
-	AlphaDash  string = "^[a-zA-Z0-9_-]+$"
+	AlphaDash string = "^[a-zA-Z0-9_-]+$"
+	// AlphaSpace represents regular expression for alpha characters with underscore, space and dash
 	AlphaSpace string = "^[-a-zA-Z0-9_ ]+$"
 	// AlphaNumeric represents regular expression for alpha numeric characters
 	AlphaNumeric string = "^[a-zA-Z0-9]+$"
@@ -25,7 +26,7 @@ const (
 	// Email represents regular expression for email
 	Email string = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
 	// Float represents regular expression for finding float number
-	Float string = "^[+-]?([0-9]*[.])?[0-9]+$"
+	Float string = "^(?:[-+]?(?:[0-9]+))?(?:\\.[0-9]*)?(?:[eE][\\+\\-]?(?:[0-9]+))?$"
 	// IP represents regular expression for ip address
 	IP string = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 	// IPV4 represents regular expression for ip address version 4

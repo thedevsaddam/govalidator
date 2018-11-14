@@ -1,6 +1,8 @@
 package govalidator
 
-import "testing"
+import (
+	"testing"
+)
 
 type inputs map[string]bool
 
@@ -75,11 +77,11 @@ var (
 		"janeahoo.com":           false,
 		"janea@.com":             false,
 	}
-	_floatList         = inputs{"123": true, "12.50": true, "33.07": true, "abc": false, "o0.45": false}
+	_floatList         = inputs{"123": true, "12.50": true, "33.07": true, "abc": false, "o0.45": false, "100000000000000": true, "100000000000000.189": true}
 	_roleList          = []string{"admin", "manager", "supervisor"}
 	_validJSONString   = `{"FirstName": "Bob", "LastName": "Smith"}`
 	_invalidJSONString = `{"invalid json"}`
-	_numericStringList = inputs{"12": true, "09": true, "878": true, "100": true, "a": false, "xyz": false}
+	_numericStringList = inputs{"12": true, "09": true, "878": true, "100": true, "a": false, "xyz": false, "1000000000000": true}
 	_latList           = inputs{"30.297018": true, "40.044438": true, "a": false, "xyz": false}
 	_lonList           = inputs{"-78.486328": true, "-104.0625": true, "a": false, "xyz": false}
 	_ipList            = inputs{"10.255.255.255": true, "172.31.255.255": true, "192.168.255.255": true, "a92.168.255.255": false, "172.31.255.25b": false}
