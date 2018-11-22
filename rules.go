@@ -439,8 +439,18 @@ func init() {
 		if message != "" {
 			err = errors.New(message)
 		}
-		str := toString(value)
-		if len(str) != l || !isNumeric(str) {
+		var str string
+		switch v := value.(type) {
+		case string:
+			str = v
+		case float64:
+			str = toString(int64(v))
+		case float32:
+			str = toString(int64(v))
+		default:
+			str = toString(v)
+		}
+		if len(str) != l || !regexDigits.MatchString(str) {
 			return err
 		}
 

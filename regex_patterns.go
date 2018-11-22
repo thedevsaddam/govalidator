@@ -23,6 +23,8 @@ const (
 	Date string = "^(((19|20)([2468][048]|[13579][26]|0[48])|2000)[/-]02[/-]29|((19|20)[0-9]{2}[/-](0[469]|11)[/-](0[1-9]|[12][0-9]|30)|(19|20)[0-9]{2}[/-](0[13578]|1[02])[/-](0[1-9]|[12][0-9]|3[01])|(19|20)[0-9]{2}[/-]02[/-](0[1-9]|1[0-9]|2[0-8])))$"
 	// DateDDMMYY represents regular expression for valid date of format dd/mm/yyyy , dd-mm-yyyy etc.Ref: http://regexr.com/346hf
 	DateDDMMYY string = "^(0?[1-9]|[12][0-9]|3[01])[\\/\\-](0?[1-9]|1[012])[\\/\\-]\\d{4}$"
+	// Digits represents regular epxression for validating digits
+	Digits string = "^[+-]?([0-9]*\\.?[0-9]+|[0-9]+\\.?[0-9]*)([eE][+-]?[0-9]+)?$"
 	// Email represents regular expression for email
 	Email string = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$"
 	// Float represents regular expression for finding float number
@@ -61,6 +63,7 @@ var (
 	regexCSSColor     = regexp.MustCompile(CSSColor)
 	regexDate         = regexp.MustCompile(Date)
 	regexDateDDMMYY   = regexp.MustCompile(DateDDMMYY)
+	regexDigits       = regexp.MustCompile(Digits)
 	regexEmail        = regexp.MustCompile(Email)
 	regexFloat        = regexp.MustCompile(Float)
 	regexNumeric      = regexp.MustCompile(Numeric)
