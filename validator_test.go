@@ -40,6 +40,7 @@ func TestValidator_Validate(t *testing.T) {
 	v := New(opts)
 	validationError := v.Validate()
 	if len(validationError) > 0 {
+		t.Log(validationError)
 		t.Error("Validate failed to validate correct inputs!")
 	}
 

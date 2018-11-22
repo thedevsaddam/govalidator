@@ -558,19 +558,37 @@ func Test_CSSColor(t *testing.T) {
 
 func Test_Digits(t *testing.T) {
 	type user struct {
-		Zip   string `json:"zip"`
-		Level string `json:"level"`
+		Zip          string  `json:"zip"`
+		Level        string  `json:"level"`
+		EpochInt     int     `json:"epoch_int"`
+		EpochInt64   int64   `json:"epoch_int_64"`
+		EpochFloat32 float32 `json:"epoch_float_32"`
+		EpochFloat64 float64 `json:"epoch_float_64"`
+		EpochString  string  `json:"epoch_string"`
 	}
 
-	postUser := user{Zip: "8322", Level: "10"}
+	postUser := user{
+		Zip:          "8322",
+		Level:        "10",
+		EpochInt:     1541689,
+		EpochInt64:   15416890380008,
+		EpochFloat32: 15416890380008,
+		EpochFloat64: 15416890380008,
+		EpochString:  "15416890380008",
+	}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
 	rules := MapData{
-		"zip":   []string{"digits:5"},
-		"level": []string{"digits:1"},
+		"zip":            []string{"digits:5"},
+		"level":          []string{"digits:1"},
+		"epoch_int":      []string{"digits:13"},
+		"epoch_int_64":   []string{"digits:13"},
+		"epoch_float_32": []string{"digits:13"},
+		"epoch_float_64": []string{"digits:13"},
+		"epoch_string":   []string{"digits:13"},
 	}
 
 	opts := Options{
@@ -581,7 +599,8 @@ func Test_Digits(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if len(validationErr) != 2 {
+	if len(validationErr) != 7 {
+		t.Log(validationErr)
 		t.Error("Digits validation failed!")
 	}
 }
