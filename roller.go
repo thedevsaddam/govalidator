@@ -183,6 +183,10 @@ func (r *roller) traverseMap(iface interface{}) {
 	switch t := iface.(type) {
 	case map[string]interface{}:
 		for k, v := range t {
+			// drop null values in json to prevent panic caused by reflect.TypeOf(nil)
+			if v == nil {
+				continue
+			}
 			switch reflect.TypeOf(v).Kind() {
 			case reflect.Struct:
 				r.typeName = k // set the map key as name

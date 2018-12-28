@@ -83,6 +83,7 @@ func init() {
 	m["person"] = "John Doe"
 	m["iface"] = map[string]string{"another_person": "does it change root!"}
 	m["array"] = [5]int{1, 4, 5, 6, 7}
+	m["null"] = nil
 }
 
 func TestRoller_push(t *testing.T) {
