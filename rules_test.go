@@ -1409,23 +1409,27 @@ func Test_Numeric_valid(t *testing.T) {
 
 func Test_NumericBetween(t *testing.T) {
 	type user struct {
-		Age   int    `json:"age"`
-		CGPA  string `json:"cgpa"`
-		NAge  int    `json:"nage"`
-		NCGPA string `json:"ncgpa"`
+		Age    int    `json:"age"`
+		CGPA   string `json:"cgpa"`
+		NAge   int    `json:"nage"`
+		NCGPA  string `json:"ncgpa"`
+		Height int    `json:"height"`
+		Weight string `json:"weight"`
 	}
 
-	postUser := user{Age: 77, CGPA: "2.90", NAge: -55, NCGPA: "-2.90"}
+	postUser := user{Age: 77, CGPA: "2.90", NAge: -55, NCGPA: "-2.90", Height: 5, Weight: "-200.0"}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
 	rules := MapData{
-		"age":   []string{"numeric_between:18,60"},
-		"cgpa":  []string{"numeric_between:3.5,4.9"},
-		"nage":  []string{"numeric_between:-60,-18"},
-		"ncgpa": []string{"numeric_between:-4.9,-3.5"},
+		"age":    []string{"numeric_between:18,60"},
+		"cgpa":   []string{"numeric_between:3.5,4.9"},
+		"nage":   []string{"numeric_between:-60,-18"},
+		"ncgpa":  []string{"numeric_between:-4.9,-3.5"},
+		"height": []string{"numeric_between:6,"},
+		"weight": []string{"numeric_between:,-2000.0"},
 	}
 
 	messages := MapData{
@@ -1445,7 +1449,7 @@ func Test_NumericBetween(t *testing.T) {
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
 
-	if len(validationErr) != 3 {
+	if len(validationErr) != 5 {
 		t.Error("numeric_between validation failed!")
 	}
 

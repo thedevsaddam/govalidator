@@ -3,6 +3,7 @@ package govalidator
 import (
 	"errors"
 	"fmt"
+	"math"
 	"mime/multipart"
 	"net/url"
 	"reflect"
@@ -866,22 +867,31 @@ func init() {
 
 	// NumericBetween check if the value field numeric value range
 	// e.g: numeric_between:18, 65 means number value must be in between a numeric value 18 & 65
+	// Both of the bounds can be omited turning it into a min only (`10,`) or a max only (`,10`)
 	AddCustomRule("numeric_between", func(field string, rule string, message string, value interface{}) error {
 		rng := strings.Split(strings.TrimPrefix(rule, "numeric_between:"), ",")
 		if len(rng) != 2 {
 			panic(errInvalidArgument)
 		}
 		// check for integer value
-		_min, err := strconv.ParseFloat(rng[0], 64)
-		if err != nil {
-			panic(errStringToInt)
+		min := math.MinInt64
+		if rng[0] != "" {
+			_min, err := strconv.ParseFloat(rng[0], 64)
+			if err != nil {
+				panic(errStringToInt)
+			}
+			min = int(_min)
 		}
-		min := int(_min)
-		_max, err := strconv.ParseFloat(rng[1], 64)
-		if err != nil {
-			panic(errStringToInt)
+
+		max := math.MaxInt64
+		if rng[1] != "" {
+			_max, err := strconv.ParseFloat(rng[1], 64)
+			if err != nil {
+				panic(errStringToInt)
+			}
+			max = int(_max)
 		}
-		max := int(_max)
+
 		errMsg := fmt.Errorf("The %s field must be numeric value between %d and %d", field, min, max)
 		if message != "" {
 			errMsg = errors.New(message)
@@ -899,14 +909,23 @@ func init() {
 			}
 		}
 		// check for float value
-		minFloat, err := strconv.ParseFloat(rng[0], 64)
-		if err != nil {
-			panic(errStringToFloat)
+		var err error
+		minFloat := -math.MaxFloat64
+		if rng[0] != "" {
+			minFloat, err = strconv.ParseFloat(rng[0], 64)
+			if err != nil {
+				panic(errStringToFloat)
+			}
 		}
-		maxFloat, err := strconv.ParseFloat(rng[1], 64)
-		if err != nil {
-			panic(errStringToFloat)
+
+		maxFloat := math.MaxFloat64
+		if rng[1] != "" {
+			maxFloat, err = strconv.ParseFloat(rng[1], 64)
+			if err != nil {
+				panic(errStringToFloat)
+			}
 		}
+
 		errMsg = fmt.Errorf("The %s field must be numeric value between %f and %f", field, minFloat, maxFloat)
 		if message != "" {
 			errMsg = errors.New(message)
