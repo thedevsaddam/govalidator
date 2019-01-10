@@ -40,7 +40,7 @@ const (
 	// Longitude represents longitude regular expression
 	Longitude string = "^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$"
 	// Numeric represents regular expression for numeric
-	Numeric string = "^[0-9]+$"
+	Numeric string = "^-?[0-9]+$"
 	// URL represents regular expression for url
 	URL string = "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$" // Ref: https://stackoverflow.com/questions/136505/searching-for-uuids-in-text-with-regex
 	// UUID represents regular expression for UUID
