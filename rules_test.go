@@ -1372,21 +1372,24 @@ func Test_Numeric(t *testing.T) {
 
 func Test_Numeric_valid(t *testing.T) {
 	type user struct {
-		NID string `json:"nid"`
+		NID  string `json:"nid"`
+		NNID string `json:"nnid"`
 	}
 
-	postUser := user{NID: "109922"}
+	postUser := user{NID: "109922", NNID: "-109922"}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
 	rules := MapData{
-		"nid": []string{"numeric"},
+		"nid":  []string{"numeric"},
+		"nnid": []string{"numeric"},
 	}
 
 	messages := MapData{
-		"nid": []string{"numeric:custom_message"},
+		"nid":  []string{"numeric:custom_message"},
+		"nnid": []string{"numeric:custom_message"},
 	}
 
 	opts := Options{
@@ -1406,24 +1409,30 @@ func Test_Numeric_valid(t *testing.T) {
 
 func Test_NumericBetween(t *testing.T) {
 	type user struct {
-		Age  int    `json:"age"`
-		CGPA string `json:"cgpa"`
+		Age   int    `json:"age"`
+		CGPA  string `json:"cgpa"`
+		NAge  int    `json:"nage"`
+		NCGPA string `json:"ncgpa"`
 	}
 
-	postUser := user{Age: 77, CGPA: "2.90"}
+	postUser := user{Age: 77, CGPA: "2.90", NAge: -55, NCGPA: "-2.90"}
 	var userObj user
 
 	body, _ := json.Marshal(postUser)
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
 	rules := MapData{
-		"age":  []string{"numeric_between:18,60"},
-		"cgpa": []string{"numeric_between:3.5,4.9"},
+		"age":   []string{"numeric_between:18,60"},
+		"cgpa":  []string{"numeric_between:3.5,4.9"},
+		"nage":  []string{"numeric_between:-60,-18"},
+		"ncgpa": []string{"numeric_between:-4.9,-3.5"},
 	}
 
 	messages := MapData{
-		"age":  []string{"numeric_between:custom_message"},
-		"cgpa": []string{"numeric_between:custom_message"},
+		"age":   []string{"numeric_between:custom_message"},
+		"cgpa":  []string{"numeric_between:custom_message"},
+		"nage":  []string{"numeric_between:custom_message"},
+		"ncgpa": []string{"numeric_between:custom_message"},
 	}
 
 	opts := Options{
@@ -1435,12 +1444,14 @@ func Test_NumericBetween(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if len(validationErr) != 2 {
+
+	if len(validationErr) != 3 {
 		t.Error("numeric_between validation failed!")
 	}
 
 	if validationErr.Get("age") != "custom_message" ||
-		validationErr.Get("cgpa") != "custom_message" {
+		validationErr.Get("cgpa") != "custom_message" ||
+		validationErr.Get("ncgpa") != "custom_message" {
 		t.Error("numeric_between custom message failed!")
 	}
 }
@@ -1573,39 +1584,53 @@ func Test_UUIDS(t *testing.T) {
 
 func Test_min(t *testing.T) {
 	type Body struct {
-		Str     string   `json:"_str"`
-		Slice   []string `json:"_slice"`
-		Int     int      `json:"_int"`
-		Int8    int8     `json:"_int8"`
-		Int16   int16    `json:"_int16"`
-		Int32   int32    `json:"_int32"`
-		Int64   int64    `json:"_int64"`
-		Uint    uint     `json:"_uint"`
-		Uint8   uint8    `json:"_uint8"`
-		Uint16  uint16   `json:"_uint16"`
-		Uint32  uint32   `json:"_uint32"`
-		Uint64  uint64   `json:"_uint64"`
-		Uintptr uintptr  `json:"_uintptr"`
-		Float32 float32  `json:"_float32"`
-		Float64 float64  `json:"_float64"`
+		Str      string   `json:"_str"`
+		Slice    []string `json:"_slice"`
+		Int      int      `json:"_int"`
+		Int8     int8     `json:"_int8"`
+		Int16    int16    `json:"_int16"`
+		Int32    int32    `json:"_int32"`
+		Int64    int64    `json:"_int64"`
+		Uint     uint     `json:"_uint"`
+		Uint8    uint8    `json:"_uint8"`
+		Uint16   uint16   `json:"_uint16"`
+		Uint32   uint32   `json:"_uint32"`
+		Uint64   uint64   `json:"_uint64"`
+		Uintptr  uintptr  `json:"_uintptr"`
+		Float32  float32  `json:"_float32"`
+		Float64  float64  `json:"_float64"`
+		NInt     int      `json:"_nint"`
+		NInt8    int8     `json:"_nint8"`
+		NInt16   int16    `json:"_nint16"`
+		NInt32   int32    `json:"_nint32"`
+		NInt64   int64    `json:"_nint64"`
+		NFloat32 float32  `json:"_nfloat32"`
+		NFloat64 float64  `json:"_nfloat64"`
 	}
 
 	postBody := Body{
-		Str:     "xyz",
-		Slice:   []string{"x", "y"},
-		Int:     2,
-		Int8:    2,
-		Int16:   2,
-		Int32:   2,
-		Int64:   2,
-		Uint:    2,
-		Uint8:   2,
-		Uint16:  2,
-		Uint32:  2,
-		Uint64:  2,
-		Uintptr: 2,
-		Float32: 2.4,
-		Float64: 3.2,
+		Str:      "xyz",
+		Slice:    []string{"x", "y"},
+		Int:      2,
+		Int8:     2,
+		Int16:    2,
+		Int32:    2,
+		Int64:    2,
+		Uint:     2,
+		Uint8:    2,
+		Uint16:   2,
+		Uint32:   2,
+		Uint64:   2,
+		Uintptr:  2,
+		Float32:  2.4,
+		Float64:  3.2,
+		NInt:     -2,
+		NInt8:    -2,
+		NInt16:   -2,
+		NInt32:   -2,
+		NInt64:   -2,
+		NFloat32: -2.4,
+		NFloat64: -3.2,
 	}
 
 	var bodyObj Body
@@ -1614,21 +1639,28 @@ func Test_min(t *testing.T) {
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
 	rules := MapData{
-		"_str":     []string{"min:5"},
-		"_slice":   []string{"min:5"},
-		"_int":     []string{"min:5"},
-		"_int8":    []string{"min:5"},
-		"_int16":   []string{"min:5"},
-		"_int32":   []string{"min:5"},
-		"_int64":   []string{"min:5"},
-		"_uint":    []string{"min:5"},
-		"_uint8":   []string{"min:5"},
-		"_uint16":  []string{"min:5"},
-		"_uint32":  []string{"min:5"},
-		"_uint64":  []string{"min:5"},
-		"_uintptr": []string{"min:5"},
-		"_float32": []string{"min:5"},
-		"_float64": []string{"min:5"},
+		"_str":      []string{"min:5"},
+		"_slice":    []string{"min:5"},
+		"_int":      []string{"min:5"},
+		"_int8":     []string{"min:5"},
+		"_int16":    []string{"min:5"},
+		"_int32":    []string{"min:5"},
+		"_int64":    []string{"min:5"},
+		"_uint":     []string{"min:5"},
+		"_uint8":    []string{"min:5"},
+		"_uint16":   []string{"min:5"},
+		"_uint32":   []string{"min:5"},
+		"_uint64":   []string{"min:5"},
+		"_uintptr":  []string{"min:5"},
+		"_float32":  []string{"min:5"},
+		"_float64":  []string{"min:5"},
+		"_nint":     []string{"min:-1"},
+		"_nint8":    []string{"min:-1"},
+		"_nint16":   []string{"min:-1"},
+		"_nint32":   []string{"min:-1"},
+		"_nint64":   []string{"min:-1"},
+		"_nfloat32": []string{"min:-1"},
+		"_nfloat64": []string{"min:-1"},
 	}
 
 	messages := MapData{
@@ -1648,7 +1680,7 @@ func Test_min(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if len(validationErr) != 15 {
+	if len(validationErr) != 22 {
 		t.Error("min validation failed!")
 	}
 
@@ -1663,39 +1695,53 @@ func Test_min(t *testing.T) {
 
 func Test_max(t *testing.T) {
 	type Body struct {
-		Str     string   `json:"_str"`
-		Slice   []string `json:"_slice"`
-		Int     int      `json:"_int"`
-		Int8    int8     `json:"_int8"`
-		Int16   int16    `json:"_int16"`
-		Int32   int32    `json:"_int32"`
-		Int64   int64    `json:"_int64"`
-		Uint    uint     `json:"_uint"`
-		Uint8   uint8    `json:"_uint8"`
-		Uint16  uint16   `json:"_uint16"`
-		Uint32  uint32   `json:"_uint32"`
-		Uint64  uint64   `json:"_uint64"`
-		Uintptr uintptr  `json:"_uintptr"`
-		Float32 float32  `json:"_float32"`
-		Float64 float64  `json:"_float64"`
+		Str      string   `json:"_str"`
+		Slice    []string `json:"_slice"`
+		Int      int      `json:"_int"`
+		Int8     int8     `json:"_int8"`
+		Int16    int16    `json:"_int16"`
+		Int32    int32    `json:"_int32"`
+		Int64    int64    `json:"_int64"`
+		Uint     uint     `json:"_uint"`
+		Uint8    uint8    `json:"_uint8"`
+		Uint16   uint16   `json:"_uint16"`
+		Uint32   uint32   `json:"_uint32"`
+		Uint64   uint64   `json:"_uint64"`
+		Uintptr  uintptr  `json:"_uintptr"`
+		Float32  float32  `json:"_float32"`
+		Float64  float64  `json:"_float64"`
+		NInt     int      `json:"_nint"`
+		NInt8    int8     `json:"_nint8"`
+		NInt16   int16    `json:"_nint16"`
+		NInt32   int32    `json:"_nint32"`
+		NInt64   int64    `json:"_nint64"`
+		NFloat32 float32  `json:"_nfloat32"`
+		NFloat64 float64  `json:"_nfloat64"`
 	}
 
 	postBody := Body{
-		Str:     "xyzabc",
-		Slice:   []string{"x", "y", "z"},
-		Int:     20,
-		Int8:    20,
-		Int16:   20,
-		Int32:   20,
-		Int64:   20,
-		Uint:    20,
-		Uint8:   20,
-		Uint16:  20,
-		Uint32:  20,
-		Uint64:  20,
-		Uintptr: 20,
-		Float32: 20.4,
-		Float64: 30.2,
+		Str:      "xyzabc",
+		Slice:    []string{"x", "y", "z"},
+		Int:      20,
+		Int8:     20,
+		Int16:    20,
+		Int32:    20,
+		Int64:    20,
+		Uint:     20,
+		Uint8:    20,
+		Uint16:   20,
+		Uint32:   20,
+		Uint64:   20,
+		Uintptr:  20,
+		Float32:  20.4,
+		Float64:  30.2,
+		NInt:     -20,
+		NInt8:    -20,
+		NInt16:   -20,
+		NInt32:   -20,
+		NInt64:   -20,
+		NFloat32: -20.4,
+		NFloat64: -30.2,
 	}
 
 	var bodyObj Body
@@ -1704,21 +1750,28 @@ func Test_max(t *testing.T) {
 	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
 
 	rules := MapData{
-		"_str":     []string{"max:5"},
-		"_slice":   []string{"max:2"},
-		"_int":     []string{"max:5"},
-		"_int8":    []string{"max:5"},
-		"_int16":   []string{"max:5"},
-		"_int32":   []string{"max:5"},
-		"_int64":   []string{"max:5"},
-		"_uint":    []string{"max:5"},
-		"_uint8":   []string{"max:5"},
-		"_uint16":  []string{"max:5"},
-		"_uint32":  []string{"max:5"},
-		"_uint64":  []string{"max:5"},
-		"_uintptr": []string{"max:5"},
-		"_float32": []string{"max:5"},
-		"_float64": []string{"max:5"},
+		"_str":      []string{"max:5"},
+		"_slice":    []string{"max:2"},
+		"_int":      []string{"max:5"},
+		"_int8":     []string{"max:5"},
+		"_int16":    []string{"max:5"},
+		"_int32":    []string{"max:5"},
+		"_int64":    []string{"max:5"},
+		"_uint":     []string{"max:5"},
+		"_uint8":    []string{"max:5"},
+		"_uint16":   []string{"max:5"},
+		"_uint32":   []string{"max:5"},
+		"_uint64":   []string{"max:5"},
+		"_uintptr":  []string{"max:5"},
+		"_float32":  []string{"max:5"},
+		"_float64":  []string{"max:5"},
+		"_nint":     []string{"max:-50"},
+		"_nint8":    []string{"max:-50"},
+		"_nint16":   []string{"max:-50"},
+		"_nint32":   []string{"max:-50"},
+		"_nint64":   []string{"max:-50"},
+		"_nfloat32": []string{"max:-50"},
+		"_nfloat64": []string{"max:-50"},
 	}
 
 	messages := MapData{
@@ -1738,7 +1791,7 @@ func Test_max(t *testing.T) {
 
 	vd := New(opts)
 	validationErr := vd.ValidateJSON()
-	if len(validationErr) != 15 {
+	if len(validationErr) != 22 {
 		t.Error(validationErr)
 		t.Error("max validation failed!")
 	}
