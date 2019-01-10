@@ -132,7 +132,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * `between:numeric,numeric` The field under validation check the length of characters/ length of array, slice, map/ range between two integer or float number etc.
 * `numeric` The field under validation must be entirely numeric characters.
 * `numeric_between:numeric,numeric` The field under validation must be a numeric value between the range.
-   e.g: `numeric_between:18,65` may contains numeric value like `35`, `55` . You can also pass float value to check
+   e.g: `numeric_between:18,65` may contains numeric value like `35`, `55` . You can also pass float value to check. Moreover, both bounds can be omitted to create an unbounded minimum (e.g: `numeric_between:,65`) or an unbounded maximum (e.g: `numeric_between:-1,`).
 * `bool` The field under validation must be able to be cast as a boolean. Accepted input are `true, false, 1, 0, "1" and "0"`.
 * `credit_card` The field under validation must have a valid credit card number. Accepted cards are `Visa, MasterCard, American Express, Diners Club, Discover and JCB card`
 * `coordinate` The field under validation must have a value of valid coordinate.
