@@ -873,6 +873,11 @@ func init() {
 		if len(rng) != 2 {
 			panic(errInvalidArgument)
 		}
+
+		if rng[0] == "" && rng[1] == "" {
+			panic(errInvalidArgument)
+		}
+
 		// check for integer value
 		min := math.MinInt64
 		if rng[0] != "" {
@@ -892,7 +897,16 @@ func init() {
 			max = int(_max)
 		}
 
-		errMsg := fmt.Errorf("The %s field must be numeric value between %d and %d", field, min, max)
+		var errMsg error
+		switch {
+		case rng[0] == "":
+			errMsg = fmt.Errorf("The %s field value can not be greater than %d", field, max)
+		case rng[1] == "":
+			errMsg = fmt.Errorf("The %s field value can not be less than %d", field, min)
+		default:
+			errMsg = fmt.Errorf("The %s field must be numeric value between %d and %d", field, min, max)
+		}
+
 		if message != "" {
 			errMsg = errors.New(message)
 		}
@@ -926,7 +940,15 @@ func init() {
 			}
 		}
 
-		errMsg = fmt.Errorf("The %s field must be numeric value between %f and %f", field, minFloat, maxFloat)
+		switch {
+		case rng[0] == "":
+			errMsg = fmt.Errorf("The %s field value can not be greater than %f", field, maxFloat)
+		case rng[1] == "":
+			errMsg = fmt.Errorf("The %s field value can not be less than %f", field, minFloat)
+		default:
+			errMsg = fmt.Errorf("The %s field must be numeric value between %f and %f", field, minFloat, maxFloat)
+		}
+
 		if message != "" {
 			errMsg = errors.New(message)
 		}
