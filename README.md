@@ -1,5 +1,5 @@
-Package govalidator
-=========================
+![govalidator](govalidator.png)
+
 [![Build Status](https://travis-ci.org/thedevsaddam/govalidator.svg?branch=master)](https://travis-ci.org/thedevsaddam/govalidator)
 [![Project status](https://img.shields.io/badge/version-1.9-green.svg)](https://github.com/thedevsaddam/govalidator/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/thedevsaddam/govalidator)](https://goreportcard.com/report/github.com/thedevsaddam/govalidator)
