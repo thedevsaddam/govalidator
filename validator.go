@@ -146,14 +146,39 @@ func (v *Validator) ValidateJSON() url.Values {
 	if reflect.TypeOf(v.Opts.Data).Kind() != reflect.Ptr {
 		panic(errRequirePtr)
 	}
+
+	return v.internalValidateStruct()
+}
+
+func (v *Validator) ValidateStruct() url.Values {
+	if len(v.Opts.Rules) == 0 {
+		panic(errRequireRules)
+	}
+	if v.Opts.Request != nil {
+		panic(errRequestNotAccepted)
+	}
+	if v.Opts.Data != nil && reflect.TypeOf(v.Opts.Data).Kind() != reflect.Ptr {
+		panic(errRequirePtr)
+	}
+	if v.Opts.Data == nil {
+		panic(errRequireData)
+	}
+
+	return v.internalValidateStruct()
+}
+
+func (v *Validator) internalValidateStruct() url.Values {
 	errsBag := url.Values{}
 
-	defer v.Opts.Request.Body.Close()
-	err := json.NewDecoder(v.Opts.Request.Body).Decode(v.Opts.Data)
-	if err != nil {
-		errsBag.Add("_error", err.Error())
-		return errsBag
+	if v.Opts.Request != nil {
+		defer v.Opts.Request.Body.Close()
+		err := json.NewDecoder(v.Opts.Request.Body).Decode(v.Opts.Data)
+		if err != nil {
+			errsBag.Add("_error", err.Error())
+			return errsBag
+		}
 	}
+
 	r := roller{}
 	r.setTagIdentifier(tagIdentifier)
 	if v.Opts.TagIdentifier != "" {
