@@ -170,18 +170,122 @@ func TestValidator_ValidateJSON_NULLValue(t *testing.T) {
 	}
 }
 
-func TestValidator_ValidateJSON_panic(t *testing.T) {
-	defer func() {
-		if r := recover(); r == nil {
-			t.Errorf("ValidateJSON did not panic")
-		}
-	}()
+func TestValidator_ValidateStruct(t *testing.T) {
+	type User struct {
+		Name    string `json:"name"`
+		Email   string `json:"email"`
+		Address string `json:"address"`
+		Age     int    `json:"age"`
+		Zip     string `json:"zip"`
+		Color   int    `json:"color"`
+	}
 
-	opts := Options{}
+	postUser := User{
+		Name:    "",
+		Email:   "inalid email",
+		Address: "",
+		Age:     1,
+		Zip:     "122",
+		Color:   5,
+	}
+
+	rules := MapData{
+		"name":    []string{"required"},
+		"email":   []string{"email"},
+		"address": []string{"required", "between:3,5"},
+		"age":     []string{"bool"},
+		"zip":     []string{"len:4"},
+		"color":   []string{"min:10"},
+	}
+
+	opts := Options{
+		Data:  &postUser,
+		Rules: rules,
+	}
 
 	vd := New(opts)
-	validationErr := vd.ValidateJSON()
+	vd.SetTagIdentifier("json")
+	validationErr := vd.ValidateStruct()
 	if len(validationErr) != 5 {
-		t.Error("ValidateJSON failed")
+		t.Error("ValidateStruct failed")
 	}
+}
+
+func TestValidator_ValidateJSON_NoRules_panic(t *testing.T) {
+	opts := Options{}
+
+	assertPanicWith(t, errValidateArgsMismatch, func() {
+		New(opts).ValidateJSON()
+	})
+}
+
+func TestValidator_ValidateJSON_NonPointer_panic(t *testing.T) {
+	req, _ := http.NewRequest("POST", "/", nil)
+
+	type User struct {
+	}
+
+	var user User
+	opts := Options{
+		Request: req,
+		Data:    user,
+		Rules: MapData{
+			"name": []string{"required"},
+		},
+	}
+
+	assertPanicWith(t, errRequirePtr, func() {
+		New(opts).ValidateJSON()
+	})
+}
+
+func TestValidator_ValidateStruct_NoRules_panic(t *testing.T) {
+	opts := Options{}
+
+	assertPanicWith(t, errRequireRules, func() {
+		New(opts).ValidateStruct()
+	})
+}
+
+func TestValidator_ValidateStruct_RequestProvided_panic(t *testing.T) {
+	req, _ := http.NewRequest("POST", "/", nil)
+	opts := Options{
+		Request: req,
+		Rules: MapData{
+			"name": []string{"required"},
+		},
+	}
+
+	assertPanicWith(t, errRequestNotAccepted, func() {
+		New(opts).ValidateStruct()
+	})
+}
+
+func TestValidator_ValidateStruct_NonPointer_panic(t *testing.T) {
+	type User struct {
+	}
+
+	var user User
+	opts := Options{
+		Data: user,
+		Rules: MapData{
+			"name": []string{"required"},
+		},
+	}
+
+	assertPanicWith(t, errRequirePtr, func() {
+		New(opts).ValidateStruct()
+	})
+}
+
+func TestValidator_ValidateStruct_DataNil_panic(t *testing.T) {
+	opts := Options{
+		Rules: MapData{
+			"name": []string{"required"},
+		},
+	}
+
+	assertPanicWith(t, errRequireData, func() {
+		New(opts).ValidateStruct()
+	})
 }

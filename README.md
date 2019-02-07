@@ -124,6 +124,10 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * [Validate JSON to nested struct](doc/NESTED_STRUCT.md)
 * [Validate using custom rule](doc/CUSTOM_RULE.md)
 
+***Validate struct directly***
+
+* [Validate Struct](doc/STRUCT_VALIDATION.md)
+
 ### Validation Rules
 * `alpha` The field under validation must be entirely alphabetic characters.
 * `alpha_dash` The field under validation may have alpha-numeric characters, as well as dashes and underscores.
