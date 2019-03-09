@@ -33,7 +33,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	e := vd.ValidateJSON()
 	fmt.Println(data)
 	err := map[string]interface{}{"validation error": e}
-	w.Header().Set("Content-type", "applciation/json")
+	w.Header().Set("Content-type", "application/json")
 	json.NewEncoder(w).Encode(err)
 }
 
