@@ -103,14 +103,15 @@ func (r *roller) traverseStruct(iface interface{}) {
 		switch v.Kind() {
 		case reflect.Struct:
 			var typeName string
-			if len(rfv.Tag.Get(r.tagIdentifier)) > 0 {
-				tags := strings.Split(rfv.Tag.Get(r.tagIdentifier), r.tagSeparator)
+			if tag := rfv.Tag.Get(r.tagIdentifier); len(tag) > 0 {
+				tags := strings.Split(tag, r.tagSeparator)
 				if tags[0] != "-" {
 					typeName = tags[0]
 				}
 			} else {
 				typeName = rfv.Name
 			}
+
 			if v.CanInterface() {
 				switch v.Type().String() {
 				case "govalidator.Int":
@@ -148,8 +149,8 @@ func (r *roller) traverseStruct(iface interface{}) {
 				}
 			}
 		default:
-			if len(rfv.Tag.Get(r.tagIdentifier)) > 0 {
-				tags := strings.Split(rfv.Tag.Get(r.tagIdentifier), r.tagSeparator)
+			if tag := rfv.Tag.Get(r.tagIdentifier); len(tag) > 0 {
+				tags := strings.Split(tag, r.tagSeparator)
 				// add if first tag is not hyphen
 				if tags[0] != "-" {
 					if v.CanInterface() {

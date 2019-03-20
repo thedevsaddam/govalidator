@@ -126,7 +126,7 @@ func TestValidator_ValidateJSON(t *testing.T) {
 	vd.SetTagIdentifier("json")
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 5 {
-		t.Error("ValidateJSON failed")
+		t.Errorf("ValidateJSON failed: %v", validationErr)
 	}
 }
 
@@ -166,7 +166,7 @@ func TestValidator_ValidateJSON_NULLValue(t *testing.T) {
 	vd.SetTagIdentifier("json")
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 2 {
-		t.Error("ValidateJSON failed")
+		t.Errorf("ValidateJSON failed: %v", validationErr)
 	}
 }
 
@@ -207,7 +207,58 @@ func TestValidator_ValidateStruct(t *testing.T) {
 	vd.SetTagIdentifier("json")
 	validationErr := vd.ValidateStruct()
 	if len(validationErr) != 5 {
-		t.Error("ValidateStruct failed")
+		t.Errorf("ValidateStruct failed: %v", validationErr)
+	}
+}
+
+func TestValidator_ValidateStruct_CustomTagIdentifier(t *testing.T) {
+	type User struct {
+		Random string `schema:"name"`
+	}
+
+	postUser := User{
+		Random: "",
+	}
+
+	rules := MapData{
+		"name": []string{"required"},
+	}
+
+	opts := Options{
+		Data:          &postUser,
+		Rules:         rules,
+		TagIdentifier: "schema",
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateStruct()
+	if len(validationErr) != 1 {
+		t.Errorf("ValidateStruct failed: %v", validationErr)
+	}
+}
+
+func TestValidator_ValidateStruct_NoTag(t *testing.T) {
+	type User struct {
+		Random string
+	}
+
+	postUser := User{
+		Random: "",
+	}
+
+	rules := MapData{
+		"Random": []string{"required"},
+	}
+
+	opts := Options{
+		Data:  &postUser,
+		Rules: rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateStruct()
+	if len(validationErr) != 0 {
+		t.Errorf("ValidateStruct failed: %v", validationErr)
 	}
 }
 
