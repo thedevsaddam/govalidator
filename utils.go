@@ -37,7 +37,7 @@ func isRuleExist(rule string) bool {
 func toString(v interface{}) string {
 	str, ok := v.(string)
 	if !ok {
-		str = fmt.Sprintf("%#v", v)
+		str = fmt.Sprintf("%v", v)
 	}
 	return str
 }
