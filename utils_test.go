@@ -22,16 +22,6 @@ func Benchmark_isContainRequiredField(b *testing.B) {
 	}
 }
 
-type person struct{}
-
-func (person) Details() string {
-	return "John Doe"
-}
-
-func (person) Age(age string) string {
-	return "Age: " + age
-}
-
 func Test_isRuleExist(t *testing.T) {
 	if !isRuleExist("required") {
 		t.Error("isRuleExist failed for valid rule")
