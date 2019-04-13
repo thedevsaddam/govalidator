@@ -15,7 +15,7 @@ var null = []byte("null")
 
 // UnmarshalJSON ...
 func (i *Int) UnmarshalJSON(data []byte) error {
-	if bytes.Compare(data, null) == 0 {
+	if bytes.Equal(data, null) {
 		return nil
 	}
 	i.IsSet = true
@@ -40,7 +40,7 @@ type Int64 struct {
 
 // UnmarshalJSON ...
 func (i *Int64) UnmarshalJSON(data []byte) error {
-	if bytes.Compare(data, null) == 0 {
+	if bytes.Equal(data, null) {
 		return nil
 	}
 	i.IsSet = true
@@ -65,7 +65,7 @@ type Float32 struct {
 
 // UnmarshalJSON ...
 func (i *Float32) UnmarshalJSON(data []byte) error {
-	if bytes.Compare(data, null) == 0 {
+	if bytes.Equal(data, null) {
 		return nil
 	}
 	i.IsSet = true
@@ -90,7 +90,7 @@ type Float64 struct {
 
 // UnmarshalJSON ...
 func (i *Float64) UnmarshalJSON(data []byte) error {
-	if bytes.Compare(data, null) == 0 {
+	if bytes.Equal(data, null) {
 		return nil
 	}
 	i.IsSet = true
@@ -115,7 +115,7 @@ type Bool struct {
 
 // UnmarshalJSON ...
 func (i *Bool) UnmarshalJSON(data []byte) error {
-	if bytes.Compare(data, null) == 0 {
+	if bytes.Equal(data, null) {
 		return nil
 	}
 	i.IsSet = true

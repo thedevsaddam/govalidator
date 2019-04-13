@@ -67,7 +67,7 @@ func (r *roller) getFlatMap() map[string]interface{} {
 	return r.root
 }
 
-// getFlatVal return interfac{} value if exist
+// getFlatVal return interface{} value if exist
 func (r *roller) getFlatVal(key string) (interface{}, bool) {
 	var val interface{}
 	var ok bool
@@ -173,13 +173,6 @@ func (r *roller) traverseStruct(iface interface{}) {
 
 // traverseMap through all the map and add it to root
 func (r *roller) traverseMap(iface interface{}) {
-	ifv := reflect.ValueOf(iface)
-	ift := reflect.TypeOf(iface)
-	if ift.Kind() == reflect.Ptr {
-		ifv = ifv.Elem()
-		ift = ift.Elem()
-	}
-
 	switch t := iface.(type) {
 	case map[string]interface{}:
 		for k, v := range t {
