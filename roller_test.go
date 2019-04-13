@@ -1,6 +1,7 @@
 package govalidator
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -117,7 +118,7 @@ func BenchmarkRoller_Start(b *testing.B) {
 
 func Test_Roller_Start_empty_map(t *testing.T) {
 	r := roller{}
-	emap := make(map[string]interface{}, 0)
+	emap := make(map[string]interface{})
 	r.setTagIdentifier("validate")
 	r.setTagSeparator("|")
 	r.start(emap)
@@ -242,7 +243,7 @@ func TestRoller_GetFlatVal(t *testing.T) {
 
 	//check struct field with array
 	intArrOf5, _ := r.getFlatVal("array")
-	if len(intArrOf5.([5]int)) != 5 {
+	if reflect.ValueOf(intArrOf5).Len() != 5 && reflect.TypeOf(intArrOf5).Kind() == reflect.Array {
 		t.Error("GetFlatVal failed for struct array of [5]int field!")
 	}
 
