@@ -1348,7 +1348,7 @@ func Test_MacAddress(t *testing.T) {
 	}
 
 	messages := MapData{
-		"web": []string{"mac_address:custom_message"},
+		"mac_address": []string{"mac_address:custom_message"},
 	}
 
 	opts := Options{
@@ -1364,6 +1364,40 @@ func Test_MacAddress(t *testing.T) {
 		t.Error("Valid Mac Address validation failed!")
 	}
 }
+
+func Test_MacAddress_message(t *testing.T) {
+	type user struct {
+		MacAddress string `json:"mac_address"`
+	}
+
+	postUser := user{MacAddress: "invalid_mac_address"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"mac_address": []string{"mac_address"},
+	}
+
+	messages := MapData{
+		"mac_address": []string{"mac_address:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if validationErr.Get("mac_address") != "custom_message" {
+		t.Error("Mac Address custom message failed!")
+	}
+}
+
 
 func Test_Numeric(t *testing.T) {
 	type user struct {
