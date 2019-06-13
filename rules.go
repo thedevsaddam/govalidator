@@ -853,6 +853,19 @@ func init() {
 	})
 
 	// Numeric check if the value of the field is Numeric
+	AddCustomRule("mac_address", func(field string, rule string, message string, value interface{}) error {
+		str := toString(value)
+		err := fmt.Errorf("The %s field must be a valid Mac Adress", field)
+		if message != "" {
+			err = errors.New(message)
+		}
+		if !isMacAddress(str) {
+			return err
+		}
+		return nil
+	})
+
+	// Numeric check if the value of the field is Numeric
 	AddCustomRule("numeric", func(field string, rule string, message string, value interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be numeric", field)

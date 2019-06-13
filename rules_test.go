@@ -1332,6 +1332,39 @@ func Test_Len_message(t *testing.T) {
 	}
 }
 
+func Test_MacAddress(t *testing.T) {
+	type user struct {
+		MacAddress string `json:"mac_address"`
+	}
+
+	postUser := user{MacAddress: "e4:2b:e8:d3:41:0f"}
+	var userObj user
+
+	body, _ := json.Marshal(postUser)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"mac_address": []string{"mac_address"},
+	}
+
+	messages := MapData{
+		"web": []string{"mac_address:custom_message"},
+	}
+
+	opts := Options{
+		Request:  req,
+		Data:     &userObj,
+		Rules:    rules,
+		Messages: messages,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != 0 {
+		t.Error("Valid Mac Address validation failed!")
+	}
+}
+
 func Test_Numeric(t *testing.T) {
 	type user struct {
 		NID string `json:"nid"`

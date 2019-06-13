@@ -81,6 +81,13 @@ var (
 	_roleList          = []string{"admin", "manager", "supervisor"}
 	_validJSONString   = `{"FirstName": "Bob", "LastName": "Smith"}`
 	_invalidJSONString = `{"invalid json"}`
+	_macadressList = inputs{
+		"fc:40:2e:f1:d3:6f": true,
+		"87:7a:45:f6:8b:ed": true,
+		"a5:91:91:80:d2:fd": true,
+		"1f:ce:44:46:24:b4": true,
+		"00:02:x2:34:72:a5": false,
+	}
 	_numericStringList = inputs{"12": true, "09": true, "878": true, "100": true, "a": false, "xyz": false, "1000000000000": true}
 	_latList           = inputs{"30.297018": true, "40.044438": true, "a": false, "xyz": false}
 	_lonList           = inputs{"-78.486328": true, "-104.0625": true, "a": false, "xyz": false}
@@ -298,6 +305,20 @@ func Test_IsJSON(t *testing.T) {
 func Benchmark_IsJSON(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		isJSON(_validJSONString)
+	}
+}
+
+func Test_IsMacAddress(t *testing.T) {
+	for n, s := range _macadressList {
+		if isMacAddress(n) != s {
+			t.Error("IsMacAddress failed!")
+		}
+	}
+}
+
+func Benchmark_IsMacAddress(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		isMacAddress("00:02:02:34:72:a5")
 	}
 }
 
