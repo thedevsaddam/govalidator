@@ -97,6 +97,11 @@ func isNumeric(str string) bool {
 	return regexNumeric.MatchString(str)
 }
 
+// isMacAddres check the provided string is valid Mac Address or not
+func isMacAddress(str string) bool {
+	return regexMacAddress.MatchString(str)
+}
+
 // isLatitude check the provided input string is a valid latitude or not
 func isLatitude(str string) bool {
 	return regexLatitude.MatchString(str)
