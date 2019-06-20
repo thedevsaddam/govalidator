@@ -488,20 +488,24 @@ func init() {
 	// Date check the provided field is valid Date
 	AddCustomRule("date", func(field string, rule string, message string, value interface{}) error {
 		str := toString(value)
-		if rule == "date:dd-mm-yyyy" {
+
+		switch rule {
+		case "date:dd-mm-yyyy":
 			if !isDateDDMMYY(str) {
 				if message != "" {
 					return errors.New(message)
 				}
 				return fmt.Errorf("The %s field must be a valid date format. e.g: dd-mm-yyyy, dd/mm/yyyy etc", field)
 			}
-		}
-		if !isDate(str) {
-			if message != "" {
-				return errors.New(message)
+		default:
+			if !isDate(str) {
+				if message != "" {
+					return errors.New(message)
+				}
+				return fmt.Errorf("The %s field must be a valid date format. e.g: yyyy-mm-dd, yyyy/mm/dd etc", field)
 			}
-			return fmt.Errorf("The %s field must be a valid date format. e.g: yyyy-mm-dd, yyyy/mm/dd etc", field)
 		}
+
 		return nil
 	})
 
