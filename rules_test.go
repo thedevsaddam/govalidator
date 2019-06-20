@@ -1398,7 +1398,6 @@ func Test_MacAddress_message(t *testing.T) {
 	}
 }
 
-
 func Test_Numeric(t *testing.T) {
 	type user struct {
 		NID string `json:"nid"`
