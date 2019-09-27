@@ -411,3 +411,31 @@ func TestRoller_StartCustomType(t *testing.T) {
 		t.Error("failed to push custom type")
 	}
 }
+
+type structWithPointers struct {
+	Name        *string `json:"name"`
+	Integer     *int    `json:"integer"`
+	AnotherName string  `json:"another_name"`
+	Boolean     *bool   `json:"boolean"`
+}
+
+func TestRoller_StartPointerType(t *testing.T) {
+	r := roller{}
+	testStr := "John Doe"
+	testBool := true
+	data := structWithPointers{
+		Name:        &testStr,
+		Integer:     new(int),
+		AnotherName: "John Doe2",
+		Boolean:     &testBool,
+	}
+
+	r.setTagIdentifier("json")
+	r.setTagSeparator("|")
+	r.start(&data)
+
+	v := r.getFlatMap()
+	if len(v) != 4 {
+		t.Error("failed to push pointer types")
+	}
+}
