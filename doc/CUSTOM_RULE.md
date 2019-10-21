@@ -20,7 +20,7 @@ import (
 func init() {
 	// custom rules to take fixed length word.
 	// e.g: max_word:5 will throw error if the field contains more than 5 words
-	govalidator.AddCustomRule("max_word", func(field string, rule string, message string, value interface{}) error {
+	govalidator.AddCustomRule("max_word", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		valSlice := strings.Fields(value.(string))
 		l, _ := strconv.Atoi(strings.TrimPrefix(rule, "max_word:")) //handle other error
 		if len(valSlice) > l {

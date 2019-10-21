@@ -70,6 +70,14 @@ func (v *Validator) SetTagIdentifier(identifier string) {
 	v.Opts.TagIdentifier = identifier
 }
 
+func generateFlatMap(values url.Values) map[string]interface{} {
+	var flatMap map[string]interface{} = make(map[string]interface{})
+	for field, value := range values {
+		flatMap[field] = value[0]
+	}
+	return flatMap
+}
+
 // Validate validate request data like form-data, x-www-form-urlencoded and query params
 // see example in README.md file
 // ref: https://github.com/thedevsaddam/govalidator#example
@@ -82,6 +90,7 @@ func (v *Validator) Validate() url.Values {
 
 	// get non required rules
 	nr := v.getNonRequiredFields()
+	flatMap := generateFlatMap(v.Opts.Request.Form)
 
 	for field, rules := range v.Opts.Rules {
 		if _, ok := nr[field]; ok {
@@ -98,14 +107,14 @@ func (v *Validator) Validate() url.Values {
 				file, fh, _ := v.Opts.Request.FormFile(fld)
 				if file != nil && fh.Filename != "" {
 					validateFiles(v.Opts.Request, fld, rule, msg, errsBag)
-					validateCustomRules(fld, rule, msg, file, errsBag)
+					validateCustomRules(fld, rule, msg, file, nil, errsBag)
 				} else {
-					validateCustomRules(fld, rule, msg, nil, errsBag)
+					validateCustomRules(fld, rule, msg, nil, nil, errsBag)
 				}
 			} else {
 				// validate if custom rules exist
 				reqVal := strings.TrimSpace(v.Opts.Request.Form.Get(field))
-				validateCustomRules(field, rule, msg, reqVal, errsBag)
+				validateCustomRules(field, rule, msg, reqVal, flatMap, errsBag)
 			}
 		}
 	}
@@ -188,7 +197,8 @@ func (v *Validator) internalValidateStruct() url.Values {
 	r.start(v.Opts.Data)
 
 	//clean if the key is not exist or value is empty or zero value
-	nr := v.getNonRequiredJSONFields(r.getFlatMap())
+	flatMap := r.getFlatMap()
+	nr := v.getNonRequiredJSONFields(flatMap)
 
 	for field, rules := range v.Opts.Rules {
 		if _, ok := nr[field]; ok {
@@ -200,7 +210,7 @@ func (v *Validator) internalValidateStruct() url.Values {
 				panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
 			}
 			msg := v.getCustomMessage(field, rule)
-			validateCustomRules(field, rule, msg, value, errsBag)
+			validateCustomRules(field, rule, msg, value, flatMap, errsBag)
 		}
 	}
 

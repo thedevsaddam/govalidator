@@ -11,14 +11,14 @@ import (
 	"strings"
 )
 
-var rulesFuncMap = make(map[string]func(string, string, string, interface{}) error)
+var rulesFuncMap = make(map[string]func(string, string, string, interface{}, map[string]interface{}) error)
 
 // AddCustomRule help to add custom rules for validator
 // First argument it takes the rule name and second arg a func
 // Second arg must have this signature below
 // fn func(name string, fn func(field string, rule string, message string, value interface{}) error
 // see example in readme: https://github.com/thedevsaddam/govalidator#add-custom-rules
-func AddCustomRule(name string, fn func(field string, rule string, message string, value interface{}) error) {
+func AddCustomRule(name string, fn func(field string, rule string, message string, value interface{}, form map[string]interface{}) error) {
 	if isRuleExist(name) {
 		panic(fmt.Errorf("govalidator: %s is already defined in rules", name))
 	}
@@ -26,10 +26,10 @@ func AddCustomRule(name string, fn func(field string, rule string, message strin
 }
 
 // validateCustomRules validate custom rules
-func validateCustomRules(field string, rule string, message string, value interface{}, errsBag url.Values) {
+func validateCustomRules(field string, rule string, message string, value interface{}, form map[string]interface{}, errsBag url.Values) {
 	for k, v := range rulesFuncMap {
 		if k == rule || strings.HasPrefix(rule, k+":") {
-			err := v(field, rule, message, value)
+			err := v(field, rule, message, value, form)
 			if err != nil {
 				errsBag.Add(field, err.Error())
 			}
@@ -41,7 +41,7 @@ func validateCustomRules(field string, rule string, message string, value interf
 func init() {
 
 	// Required check the Required fields
-	AddCustomRule("required", func(field, rule, message string, value interface{}) error {
+	AddCustomRule("required", func(field, rule, message string, value interface{}, form map[string]interface{}) error {
 		err := fmt.Errorf("The %s field is required", field)
 		if message != "" {
 			err = errors.New(message)
@@ -156,7 +156,7 @@ func init() {
 
 	// Regex check the custom Regex rules
 	// Regex:^[a-zA-Z]+$ means this field can only contain alphabet (a-z and A-Z)
-	AddCustomRule("regex", func(field, rule, message string, value interface{}) error {
+	AddCustomRule("regex", func(field, rule, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field format is invalid", field)
 		if message != "" {
@@ -170,7 +170,7 @@ func init() {
 	})
 
 	// Alpha check if provided field contains valid letters
-	AddCustomRule("alpha", func(field string, vlaue string, message string, value interface{}) error {
+	AddCustomRule("alpha", func(field string, vlaue string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s may only contain letters", field)
 		if message != "" {
@@ -183,7 +183,7 @@ func init() {
 	})
 
 	// AlphaDash check if provided field contains valid letters, numbers, underscore and dash
-	AddCustomRule("alpha_dash", func(field string, vlaue string, message string, value interface{}) error {
+	AddCustomRule("alpha_dash", func(field string, vlaue string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s may only contain letters, numbers, and dashes", field)
 		if message != "" {
@@ -196,7 +196,7 @@ func init() {
 	})
 
 	// AlphaDash check if provided field contains valid letters, numbers, underscore and dash
-	AddCustomRule("alpha_space", func(field string, vlaue string, message string, value interface{}) error {
+	AddCustomRule("alpha_space", func(field string, vlaue string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s may only contain letters, numbers, dashes, space", field)
 		if message != "" {
@@ -209,7 +209,7 @@ func init() {
 	})
 
 	// AlphaNumeric check if provided field contains valid letters and numbers
-	AddCustomRule("alpha_num", func(field string, vlaue string, message string, value interface{}) error {
+	AddCustomRule("alpha_num", func(field string, vlaue string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s may only contain letters and numbers", field)
 		if message != "" {
@@ -223,7 +223,7 @@ func init() {
 
 	// Boolean check if provided field contains Boolean
 	// in this case: "0", "1", 0, 1, "true", "false", true, false etc
-	AddCustomRule("bool", func(field string, vlaue string, message string, value interface{}) error {
+	AddCustomRule("bool", func(field string, vlaue string, message string, value interface{}, form map[string]interface{}) error {
 		err := fmt.Errorf("The %s may only contain boolean value, string or int 0, 1", field)
 		if message != "" {
 			err = errors.New(message)
@@ -286,7 +286,7 @@ func init() {
 	// Between check the fields character length range
 	// if the field is array, map, slice then the valdiation rule will be the length of the data
 	// if the value is int or float then the valdiation rule will be the value comparison
-	AddCustomRule("between", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("between", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		rng := strings.Split(strings.TrimPrefix(rule, "between:"), ",")
 		if len(rng) != 2 {
 			panic(errInvalidArgument)
@@ -387,7 +387,7 @@ func init() {
 
 	// CreditCard check if provided field contains valid credit card number
 	// Accepted cards are Visa, MasterCard, American Express, Diners Club, Discover and JCB card
-	AddCustomRule("credit_card", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("credit_card", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be a valid credit card number", field)
 		if message != "" {
@@ -400,7 +400,7 @@ func init() {
 	})
 
 	// Coordinate check if provided field contains valid Coordinate
-	AddCustomRule("coordinate", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("coordinate", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be a valid coordinate", field)
 		if message != "" {
@@ -413,7 +413,7 @@ func init() {
 	})
 
 	// ValidateCSSColor check if provided field contains a valid CSS color code
-	AddCustomRule("css_color", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("css_color", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be a valid CSS color code", field)
 		if message != "" {
@@ -428,7 +428,7 @@ func init() {
 	// Digits check the exact matching length of digit (0,9)
 	// Digits:5 means the field must have 5 digit of length.
 	// e.g: 12345 or 98997 etc
-	AddCustomRule("digits", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("digits", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		l, err := strconv.Atoi(strings.TrimPrefix(rule, "digits:"))
 		if err != nil {
 			panic(errStringToInt)
@@ -460,7 +460,7 @@ func init() {
 
 	// DigitsBetween check if the field contains only digit and length between provided range
 	// e.g: digits_between:4,5 means the field can have value like: 8887 or 12345 etc
-	AddCustomRule("digits_between", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("digits_between", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		rng := strings.Split(strings.TrimPrefix(rule, "digits_between:"), ",")
 		if len(rng) != 2 {
 			panic(errInvalidArgument)
@@ -486,7 +486,7 @@ func init() {
 	})
 
 	// Date check the provided field is valid Date
-	AddCustomRule("date", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("date", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 
 		switch rule {
@@ -510,7 +510,7 @@ func init() {
 	})
 
 	// Email check the provided field is valid Email
-	AddCustomRule("email", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("email", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be a valid email address", field)
 		if message != "" {
@@ -523,7 +523,7 @@ func init() {
 	})
 
 	// validFloat check the provided field is valid float number
-	AddCustomRule("float", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("float", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be a float number", field)
 		if message != "" {
@@ -536,7 +536,7 @@ func init() {
 	})
 
 	// IP check if provided field is valid IP address
-	AddCustomRule("ip", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("ip", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be a valid IP address", field)
 		if message != "" {
@@ -549,7 +549,7 @@ func init() {
 	})
 
 	// IP check if provided field is valid IP v4 address
-	AddCustomRule("ip_v4", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("ip_v4", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be a valid IPv4 address", field)
 		if message != "" {
@@ -562,7 +562,7 @@ func init() {
 	})
 
 	// IP check if provided field is valid IP v6 address
-	AddCustomRule("ip_v6", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("ip_v6", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be a valid IPv6 address", field)
 		if message != "" {
@@ -575,7 +575,7 @@ func init() {
 	})
 
 	// ValidateJSON check if provided field contains valid json string
-	AddCustomRule("json", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("json", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must contain valid JSON string", field)
 		if message != "" {
@@ -588,7 +588,7 @@ func init() {
 	})
 
 	/// Latitude check if provided field contains valid Latitude
-	AddCustomRule("lat", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("lat", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must contain valid latitude", field)
 		if message != "" {
@@ -601,7 +601,7 @@ func init() {
 	})
 
 	// Longitude check if provided field contains valid Longitude
-	AddCustomRule("lon", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("lon", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must contain valid longitude", field)
 		if message != "" {
@@ -614,7 +614,7 @@ func init() {
 	})
 
 	// Length check the field's character Length
-	AddCustomRule("len", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("len", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		l, err := strconv.Atoi(strings.TrimPrefix(rule, "len:"))
 		if err != nil {
 			panic(errStringToInt)
@@ -641,7 +641,7 @@ func init() {
 	})
 
 	// Min check the field's minimum character length for string, value for int, float and size for array, map, slice
-	AddCustomRule("min", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("min", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		mustLen := strings.TrimPrefix(rule, "min:")
 		lenInt, err := strconv.Atoi(mustLen)
 		if err != nil {
@@ -749,7 +749,7 @@ func init() {
 	})
 
 	// Max check the field's maximum character length for string, value for int, float and size for array, map, slice
-	AddCustomRule("max", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("max", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		mustLen := strings.TrimPrefix(rule, "max:")
 		lenInt, err := strconv.Atoi(mustLen)
 		if err != nil {
@@ -857,7 +857,7 @@ func init() {
 	})
 
 	// Numeric check if the value of the field is Numeric
-	AddCustomRule("mac_address", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("mac_address", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be a valid Mac Address", field)
 		if message != "" {
@@ -870,7 +870,7 @@ func init() {
 	})
 
 	// Numeric check if the value of the field is Numeric
-	AddCustomRule("numeric", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("numeric", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must be numeric", field)
 		if message != "" {
@@ -885,7 +885,7 @@ func init() {
 	// NumericBetween check if the value field numeric value range
 	// e.g: numeric_between:18, 65 means number value must be in between a numeric value 18 & 65
 	// Both of the bounds can be omited turning it into a min only (`10,`) or a max only (`,10`)
-	AddCustomRule("numeric_between", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("numeric_between", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		rng := strings.Split(strings.TrimPrefix(rule, "numeric_between:"), ",")
 		if len(rng) != 2 {
 			panic(errInvalidArgument)
@@ -981,7 +981,7 @@ func init() {
 	})
 
 	// ValidateURL check if provided field is valid URL
-	AddCustomRule("url", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("url", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field format is invalid", field)
 		if message != "" {
@@ -994,7 +994,7 @@ func init() {
 	})
 
 	// UUID check if provided field contains valid UUID
-	AddCustomRule("uuid", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("uuid", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must contain valid UUID", field)
 		if message != "" {
@@ -1007,7 +1007,7 @@ func init() {
 	})
 
 	// UUID3 check if provided field contains valid UUID of version 3
-	AddCustomRule("uuid_v3", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("uuid_v3", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must contain valid UUID V3", field)
 		if message != "" {
@@ -1020,7 +1020,7 @@ func init() {
 	})
 
 	// UUID4 check if provided field contains valid UUID of version 4
-	AddCustomRule("uuid_v4", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("uuid_v4", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must contain valid UUID V4", field)
 		if message != "" {
@@ -1033,7 +1033,7 @@ func init() {
 	})
 
 	// UUID5 check if provided field contains valid UUID of version 5
-	AddCustomRule("uuid_v5", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("uuid_v5", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		str := toString(value)
 		err := fmt.Errorf("The %s field must contain valid UUID V5", field)
 		if message != "" {
@@ -1046,7 +1046,7 @@ func init() {
 	})
 
 	// In check if provided field equals one of the values specified in the rule
-	AddCustomRule("in", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("in", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		rng := strings.Split(strings.TrimPrefix(rule, "in:"), ",")
 		if len(rng) == 0 {
 			panic(errInvalidArgument)
@@ -1063,7 +1063,7 @@ func init() {
 	})
 
 	// In check if provided field equals one of the values specified in the rule
-	AddCustomRule("not_in", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("not_in", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		rng := strings.Split(strings.TrimPrefix(rule, "not_in:"), ",")
 		if len(rng) == 0 {
 			panic(errInvalidArgument)

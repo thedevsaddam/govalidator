@@ -97,7 +97,7 @@ func Test_validateFiles_CustomRule(t *testing.T) {
 
 	customRule1WasExecuted := false
 	isMultipartFile := false
-	AddCustomRule("customRule1", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("customRule1", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		customRule1WasExecuted = true
 		_, isMultipartFile = value.(multipart.File)
 		return nil
@@ -105,7 +105,7 @@ func Test_validateFiles_CustomRule(t *testing.T) {
 
 	customRule2WasExecuted := false
 	isValueNil := false
-	AddCustomRule("customRule2", func(field string, rule string, message string, value interface{}) error {
+	AddCustomRule("customRule2", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		customRule2WasExecuted = true
 		isValueNil = value == nil
 		return nil
