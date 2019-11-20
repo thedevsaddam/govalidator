@@ -783,7 +783,7 @@ func init() {
 				if message != "" {
 					return errors.New(message)
 				}
-				return fmt.Errorf("The %s field must be minimum %d in size", field, lenInt)
+				return fmt.Errorf("The %s field must be maximum %d in size", field, lenInt)
 			}
 		case reflect.Int:
 			in := value.(int)
