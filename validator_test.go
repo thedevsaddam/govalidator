@@ -170,6 +170,38 @@ func TestValidator_ValidateJSON_NULLValue(t *testing.T) {
 	}
 }
 
+func TestValidator_ValidateJSON_NoBody(t *testing.T) {
+	type User struct {
+		Name   string `json:"name"`
+		Count  Int    `json:"count"`
+		Option Int    `json:"option"`
+		Active Bool   `json:"active"`
+	}
+
+	rules := MapData{
+		"name":   []string{"required"},
+		"count":  []string{"required"},
+		"option": []string{"required"},
+		"active": []string{"required"},
+	}
+
+	var user User
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(nil))
+
+	opts := Options{
+		Request: req,
+		Data:    &user,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	vd.SetTagIdentifier("json")
+	validationErr := vd.ValidateJSON()
+	if len(validationErr) != len(rules) {
+		t.Error("ValidateJSON with empty request body failed")
+	}
+}
+
 func TestValidator_ValidateStruct(t *testing.T) {
 	type User struct {
 		Name    string `json:"name"`
