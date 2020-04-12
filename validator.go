@@ -170,7 +170,7 @@ func (v *Validator) ValidateStruct() url.Values {
 func (v *Validator) internalValidateStruct() url.Values {
 	errsBag := url.Values{}
 
-	if v.Opts.Request != nil {
+	if v.Opts.Request != nil && v.Opts.Request.Body != http.NoBody {
 		defer v.Opts.Request.Body.Close()
 		err := json.NewDecoder(v.Opts.Request.Body).Decode(v.Opts.Data)
 		if err != nil {
