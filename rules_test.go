@@ -3,14 +3,18 @@ package govalidator
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
+	"strconv"
+	"strings"
 	"testing"
 )
 
 func Test_AddCustomRule(t *testing.T) {
-	AddCustomRule("__x__", func(f string, rule string, message string, v interface{}) error {
+	AddCustomRule("__x__", func(f string, rule string, message string, v interface{}, form map[string]interface{}) error {
 		if v.(string) != "xyz" {
 			return fmt.Errorf("The %s field must be xyz", f)
 		}
@@ -27,7 +31,7 @@ func Test_AddCustomRule_panic(t *testing.T) {
 			t.Errorf("AddCustomRule failed to panic")
 		}
 	}()
-	AddCustomRule("__x__", func(f string, rule string, message string, v interface{}) error {
+	AddCustomRule("__x__", func(f string, rule string, message string, v interface{}, form map[string]interface{}) error {
 		if v.(string) != "xyz" {
 			return fmt.Errorf("The %s field must be xyz", f)
 		}
@@ -37,7 +41,7 @@ func Test_AddCustomRule_panic(t *testing.T) {
 
 func Test_validateExtraRules(t *testing.T) {
 	errsBag := url.Values{}
-	validateCustomRules("f_field", "__x__", "a", "", errsBag)
+	validateCustomRules("f_field", "__x__", "a", "", nil, errsBag)
 	if len(errsBag) != 1 {
 		t.Error("validateExtraRules failed")
 	}
@@ -2189,5 +2193,118 @@ func Test_NotIn_string_valid(t *testing.T) {
 	validationErr := vd.ValidateJSON()
 	if len(validationErr) != 0 {
 		t.Error("not_in validation was triggered when valid!")
+	}
+}
+
+func ruleGreaterThan(f string, rule string, message string, v interface{}, form map[string]interface{}) error {
+	if form == nil { // All comparison rules should check if the form is provided
+		panic(errors.New("No form provided for comparison rule"))
+	}
+
+	compareToKey := strings.TrimPrefix(rule, "__gt__:")
+	err := fmt.Errorf("The %s field must be greater than the %s field", f, compareToKey)
+	compareToField := form[compareToKey]
+
+	if compareToField == nil { // Field to compare to doesn't exist or is empty
+		return err
+	}
+
+	var compareToValue int
+	rv := reflect.ValueOf(compareToField)
+	switch rv.Kind() {
+	case reflect.String:
+		v, atoiErr := strconv.Atoi(compareToField.(string))
+		if atoiErr != nil {
+			panic(errStringToInt)
+		}
+		compareToValue = v
+	case reflect.Int:
+		compareToValue = compareToField.(int)
+	}
+
+	rv2 := reflect.ValueOf(v)
+	switch rv2.Kind() { // Simple int-only case here since we are just testing that we have access to other fields
+	case reflect.Int:
+		if v.(int) <= compareToValue {
+			return err
+		}
+	case reflect.String:
+		vInt, atoiErr := strconv.Atoi(v.(string))
+		if atoiErr != nil {
+			panic(errStringToInt)
+		}
+		if vInt <= compareToValue {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func Test_Comparison_JSON(t *testing.T) {
+	if rulesFuncMap["__gt__"] != nil {
+		delete(rulesFuncMap, "__gt__")
+	}
+	AddCustomRule("__gt__", ruleGreaterThan)
+
+	type numbers struct {
+		Number      int `json:"number"`
+		OtherNumber int `json:"other_number"`
+	}
+
+	postNumbers := numbers{Number: 8, OtherNumber: 10}
+	var numbersObj numbers
+
+	body, _ := json.Marshal(postNumbers)
+	req, _ := http.NewRequest("POST", "http://www.example.com", bytes.NewReader(body))
+
+	rules := MapData{
+		"number": []string{"__gt__:other_number"},
+	}
+
+	opts := Options{
+		Request: req,
+		Data:    &numbersObj,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.ValidateJSON()
+
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("comparison validation failed!")
+	}
+}
+
+func Test_Comparison_URL_Encoded(t *testing.T) {
+	if rulesFuncMap["__gt__"] != nil {
+		delete(rulesFuncMap, "__gt__")
+	}
+	AddCustomRule("__gt__", ruleGreaterThan)
+
+	var URL *url.URL
+	URL, _ = url.Parse("http://www.example.com")
+	params := url.Values{}
+	params.Add("number", "8")
+	params.Add("other_number", "10")
+	req, _ := http.NewRequest("POST", URL.String(), strings.NewReader(params.Encode()))
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	rules := MapData{
+		"number": []string{"__gt__:other_number"},
+	}
+
+	opts := Options{
+		Request: req,
+		Rules:   rules,
+	}
+
+	vd := New(opts)
+	validationErr := vd.Validate()
+
+	if len(validationErr) != 1 {
+		t.Log(validationErr)
+		t.Error("comparison validation failed!")
 	}
 }

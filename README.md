@@ -179,7 +179,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 ```go
 func init() {
 	// simple example
-	govalidator.AddCustomRule("must_john", func(field string, rule string, message string, value interface{}) error {
+	govalidator.AddCustomRule("must_john", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		val := value.(string)
 		if val != "john" || val != "John" {
 			return fmt.Errorf("The %s field must be John or john", field)
@@ -189,7 +189,7 @@ func init() {
 
 	// custom rules to take fixed length word.
 	// e.g: word:5 will throw error if the field does not contain exact 5 word
-	govalidator.AddCustomRule("word", func(field string, rule string, message string, value interface{}) error {
+	govalidator.AddCustomRule("word", func(field string, rule string, message string, value interface{}, form map[string]interface{}) error {
 		valSlice := strings.Fields(value.(string))
 		l, _ := strconv.Atoi(strings.TrimPrefix(rule, "word:")) //handle other error
 		if len(valSlice) != l {
@@ -201,6 +201,60 @@ func init() {
 }
 ```
 Note: Array, map, slice can be validated by adding custom rules.
+
+You can use the `form` parameter to compare one field with another.
+```go
+govalidator.AddCustomRule("greater_than", (f string, rule string, message string, v interface{}, form map[string]interface{}) error {
+	if form == nil { // All comparison rules should check if the form is provided
+		panic(errors.New("No form provided for comparison rule"))
+	}
+
+	compareToKey := strings.TrimPrefix(rule, "greater_than:")
+	err := fmt.Errorf("The %s field must be greater than the %s field", f, compareToKey)
+	compareToField := form[compareToKey]
+
+	if compareToField == nil { // Field to compare to doesn't exist or is empty
+		return err
+	}
+
+	// Get the value of the field we want to compare to
+	var compareToValue int
+	rv := reflect.ValueOf(compareToField)
+	switch rv.Kind() {
+	case reflect.String:
+		v, atoiErr := strconv.Atoi(compareToField.(string))
+		if atoiErr != nil {
+			panic(errStringToInt)
+		}
+		compareToValue = v
+	case reflect.Int:
+		compareToValue = compareToField.(int)
+	//...
+	// Handle other types such as float
+	}
+
+	// Do the comparison
+	rv2 := reflect.ValueOf(v)
+	switch rv2.Kind() {
+	case reflect.Int:
+		if v.(int) <= compareToValue {
+			return err
+		}
+	case reflect.String:
+		vInt, atoiErr := strconv.Atoi(v.(string))
+		if atoiErr != nil {
+			panic(errStringToInt)
+		}
+		if vInt <= compareToValue {
+			return err
+		}
+	//...
+	// Handle other types
+	}
+
+	return nil
+})
+```
 
 ### Custom Message/ Localization
 If you need to translate validation message you can pass messages as options.
