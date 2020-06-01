@@ -1,7 +1,7 @@
 
 ### Validate with custom rule
 
-You can register custom validation rules. This rule will work for both `Validate` and `ValidateJSON` method. You will get all the information you need to validate an input.
+You can register custom validation rules. This rule will work for the `Validate`, `ValidateStruct` and `ValidateJSON` methods. You will get all the information you need to validate an input.
 
 ```go
 package main
