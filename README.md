@@ -173,6 +173,7 @@ Send request to the server using curl or postman: `curl GET "http://localhost:90
 * `uuid_v3` The field under validation must be a valid UUID V3.
 * `uuid_v4` The field under validation must be a valid UUID V4.
 * `uuid_v5` The field under validation must be a valid UUID V5.
+* `list:email` The field under validation must be a list of valid emails.
 
 ### Add Custom Rules
 

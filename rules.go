@@ -38,8 +38,19 @@ func validateCustomRules(field string, rule string, message string, value interf
 	}
 }
 
-func init() {
+func emailRule(field, rule, message string, value interface{}) error {
+	str := toString(value)
+	err := fmt.Errorf("The %s field must be a valid email address", field)
+	if message != "" {
+		err = errors.New(message)
+	}
+	if !isEmail(str) {
+		return err
+	}
+	return nil
+}
 
+func init() {
 	// Required check the Required fields
 	AddCustomRule("required", func(field, rule, message string, value interface{}) error {
 		err := fmt.Errorf("The %s field is required", field)
@@ -510,17 +521,7 @@ func init() {
 	})
 
 	// Email check the provided field is valid Email
-	AddCustomRule("email", func(field string, rule string, message string, value interface{}) error {
-		str := toString(value)
-		err := fmt.Errorf("The %s field must be a valid email address", field)
-		if message != "" {
-			err = errors.New(message)
-		}
-		if !isEmail(str) {
-			return err
-		}
-		return nil
-	})
+	AddCustomRule("email", emailRule)
 
 	// validFloat check the provided field is valid float number
 	AddCustomRule("float", func(field string, rule string, message string, value interface{}) error {
@@ -1076,6 +1077,24 @@ func init() {
 		if isIn(rng, str) {
 			return err
 		}
+		return nil
+	})
+
+	AddCustomRule("list", func(field string, rule string, message string, value interface{}) error {
+		var subRule string
+		if strings.Contains(rule, ":") {
+			subRule = strings.Split(rule, ":")[1]
+		}
+		switch subRule {
+		case "email":
+			for _, email := range value.([]string) {
+				if err := emailRule(field, rule, message, email); err != nil {
+					return err
+				}
+			}
+			break
+		}
+
 		return nil
 	})
 }
