@@ -44,7 +44,7 @@ const (
 	// Numeric represents regular expression for numeric
 	Numeric string = "^-?[0-9]+$"
 	// URL represents regular expression for url
-	URL string = "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$" // Ref: https://stackoverflow.com/questions/136505/searching-for-uuids-in-text-with-regex
+	URL string = "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.%]+$" // Ref: https://stackoverflow.com/questions/136505/searching-for-uuids-in-text-with-regex
 	// UUID represents regular expression for UUID
 	UUID string = "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}$"
 	// UUID3 represents regular expression for UUID version 3
