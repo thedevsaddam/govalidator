@@ -28,7 +28,7 @@ func validate(user *user) {
 	}
 
 	opts := govalidator.Options{
-		Data:  &user,
+		Data:  user,
 		Rules: rules,
 	}
 
