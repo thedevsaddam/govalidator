@@ -89,10 +89,12 @@ var (
 		"00:02:x2:34:72:a5": false,
 	}
 	_numericStringList = inputs{"12": true, "09": true, "878": true, "100": true, "a": false, "xyz": false, "1000000000000": true}
-	_latList           = inputs{"30.297018": true, "40.044438": true, "a": false, "xyz": false}
-	_lonList           = inputs{"-78.486328": true, "-104.0625": true, "a": false, "xyz": false}
-	_ipList            = inputs{"10.255.255.255": true, "172.31.255.255": true, "192.168.255.255": true, "a92.168.255.255": false, "172.31.255.25b": false}
-	_ipV6List          = inputs{
+	_latList           = inputs{"30.297018": true, "40.044438": true, "-90": true, "+90.0": true,
+		"51.50975743908446": true, "123.323223": false, "a": false, "xyz": false}
+	_lonList  = inputs{"-78.486328": true, "-104.0625": true, "-0.09299784755596675": true, "-180.000": true, "+180":true,
+	 	"179.3": true, "180.00001": false, "-190": false, "a": false, "xyz": false}
+	_ipList   = inputs{"10.255.255.255": true, "172.31.255.255": true, "192.168.255.255": true, "a92.168.255.255": false, "172.31.255.25b": false}
+	_ipV6List = inputs{
 		"1200:0000:AB00:1234:0000:2552:7777:1313": true,
 		"21DA:D3:0:2F3B:2AA:FF:FE28:9C5A":         true,
 		"10.255.255.255":                          false,
