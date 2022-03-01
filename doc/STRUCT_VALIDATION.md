@@ -15,9 +15,9 @@ import (
 )
 
 type user struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Web      string `json:"web"`
+	Username string `json:"username" valid:"username"`
+	Email    string `json:"email" valid:"email"`
+	Web      string `json:"web" valid:"web"`
 }
 
 func validate(user *user) {
@@ -28,8 +28,9 @@ func validate(user *user) {
 	}
 
 	opts := govalidator.Options{
-		Data:  &user,
-		Rules: rules,
+		Data:          user,
+		Rules:         rules,
+		TagIdentifier: "valid",
 	}
 
 	v := govalidator.New(opts)
@@ -50,12 +51,8 @@ func main() {
 ***Prints***
 ```json
 {
-  "email": [
-    "The email field is required",
-    "The email field must be a valid email address"
-  ],
-  "username": [
-    "The username field is required"
-  ]
+	"email": [
+	"The email field must be a valid email address"
+	]
 }
 ```
