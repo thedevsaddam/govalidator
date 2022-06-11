@@ -896,18 +896,18 @@ func init() {
 		}
 
 		// check for integer value
-		min := math.MinInt64
+		min := math.MinInt
 		if rng[0] != "" {
-			_min, err := strconv.ParseFloat(rng[0], 64)
+			_min, err := strconv.ParseFloat(rng[0], strconv.IntSize)
 			if err != nil {
 				panic(errStringToInt)
 			}
 			min = int(_min)
 		}
 
-		max := math.MaxInt64
+		max := math.MaxInt
 		if rng[1] != "" {
-			_max, err := strconv.ParseFloat(rng[1], 64)
+			_max, err := strconv.ParseFloat(rng[1], strconv.IntSize)
 			if err != nil {
 				panic(errStringToInt)
 			}
