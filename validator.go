@@ -7,6 +7,9 @@ import (
 	"net/url"
 	"reflect"
 	"strings"
+
+	"github.com/valyala/fasthttp"
+	"github.com/valyala/fasthttp/fasthttpadaptor"
 )
 
 const (
@@ -39,6 +42,14 @@ type (
 // New return a new validator object using provided options
 func New(opts Options) *Validator {
 	return &Validator{Opts: opts}
+}
+
+//this function will help you to convert fasthttp and gofiber context to a http/net request
+//so that fasthttp and gofiber users can also utilize this package
+func ConvertFastHttpRequest(ctx *fasthttp.RequestCtx) *http.Request {
+	req := &http.Request{}
+	fasthttpadaptor.ConvertRequest(ctx, req, false)
+	return req
 }
 
 // getMessage return if a custom message exist against the field name and rule
