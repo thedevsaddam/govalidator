@@ -16,7 +16,7 @@ import (
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	rules := govalidator.MapData{
-		"file:photo": []string{"ext:jpg,png", "size:10000", "mime:jpg,png", "required"},
+		"file:photo": []string{"ext:jpg,png", "size:10000", "mime:image/jpg,image/png", "required"},
 	}
 
 	messages := govalidator.MapData{
