@@ -157,11 +157,11 @@ func (v *Validator) ValidateStruct() url.Values {
 	if v.Opts.Request != nil {
 		panic(errRequestNotAccepted)
 	}
-	if v.Opts.Data != nil && reflect.TypeOf(v.Opts.Data).Kind() != reflect.Ptr {
-		panic(errRequirePtr)
-	}
 	if v.Opts.Data == nil {
 		panic(errRequireData)
+	}
+	if reflect.TypeOf(v.Opts.Data).Kind() != reflect.Ptr {
+		panic(errRequirePtr)
 	}
 
 	return v.internalValidateStruct()

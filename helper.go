@@ -63,6 +63,10 @@ func isDateDDMMYY(date string) bool {
 	return regexDateDDMMYY.MatchString(date)
 }
 
+func isDateTimeIso8601(date string) bool {
+	return regexDateTimeIso8601.MatchString(date)
+}
+
 // isEmail check a email is valid or not
 func isEmail(email string) bool {
 	return regexEmail.MatchString(email)

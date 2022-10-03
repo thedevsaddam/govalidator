@@ -509,6 +509,19 @@ func init() {
 		return nil
 	})
 
+	AddCustomRule("datetime_iso8601", func(field string, rule string, message string, value interface{}) error {
+		str := toString(value)
+
+		if !isDateTimeIso8601(str) {
+			if message != "" {
+				return errors.New(message)
+			}
+			return fmt.Errorf("The %s field must be a valid datetime ISO-8601 format. e.g: yyyy-mm-ddThh:mm:ss-0500 etc", field)
+		}
+
+		return nil
+	})
+
 	// Email check the provided field is valid Email
 	AddCustomRule("email", func(field string, rule string, message string, value interface{}) error {
 		str := toString(value)

@@ -70,6 +70,49 @@ var (
 		"2012/11/30": false,
 		"201/11/30":  false,
 	}
+
+	_dateTimeIso8601 = inputs{
+		"2016-07-08T12:30:00Z":         true,
+		"2016-07-08T12:30:00+0100":     true,
+		"2020-09-10T12:30:00-0100":     true,
+		"1990-10-04T23:40:01Z":         true,
+		"2020-04-20T09:32:28+00:00":    true,
+		"2020-04-20T09:32:28-12:45":    true,
+		"2020-04-20T09:32:28+12:45":    true,
+		"2020-04-20T18:30:00+00:00":    true,
+		"2020-04-20T18:30:00Z":         true,
+		"2020-04-20T22:30:00+0400":     true,
+		"2020-04-20T11:30:00-07:00":    true,
+		"2020-04-20T15:00:00-0330":     true,
+		"2020-04-20T15:00:59-0330":     true,
+		"9019-07-08T12:30:00Z":         true,
+		"1212-12-12T12:12:12+1212":     true,
+		"9999-09-09T09:09:09-0909":     true,
+		"2000-01-03T12:30:01.99999Z":   true,
+		"2000-01-03T12:30:01.999Z":     true,
+		"2000-01-03T12:30:01.0Z":       true,
+		"2099-02-02T12:30:02.000+0100": true,
+		"2050-03-01T12:30:03.123-0100": true,
+		"2022-09-30":                   false,
+		"20200420T093228Z":             false,
+		"2016-07-08T12:30:00":          false,
+		"2016-07-0812:30:00Z":          false,
+		"201607-08T12:30:00Z":          false,
+		"2016-0708T12:30:00+0100":      false,
+		"2020-09-1012:30:00-0100":      false,
+		"1990-10-04T2340:01Z":          false,
+		"2020-04-20T09:3228+00:00":     false,
+		"2020-04-20T09:32:2812:45":     false,
+		"200-04-20T09:32:28+1245":      false,
+		"2020-04-20T18:30:0000:00":     false,
+		"2020-4-20T18:30:00+00:00":     false,
+		"2020-04-2T18:30:00Z":          false,
+		"2020-04-20T2:30:00+0400":      false,
+		"2020-04-20T11:3:00-07:00":     false,
+		"2020-04-20T15:00:0-0330":      false,
+		"2000-01-03T12:30:01999Z":      false,
+		"2000-01-03T12:30:01.Z":        false,
+	}
 	_emailList = inputs{
 		"john@example.com":       true,
 		"thedevsaddam@gmail.com": true,
@@ -243,6 +286,14 @@ func Test_IsDateDDMMYY(t *testing.T) {
 	for d, s := range _dateDDMMYYList {
 		if isDateDDMMYY(d) != s {
 			t.Error("IsDateDDMMYY failed to determine date!")
+		}
+	}
+}
+
+func Test_IsDateTimeIso8601(t *testing.T) {
+	for d, s := range _dateTimeIso8601 {
+		if isDateTimeIso8601(d) != s {
+			t.Error("isDateTimeIso8806 failed to determine date!")
 		}
 	}
 }
