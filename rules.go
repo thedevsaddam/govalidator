@@ -185,7 +185,7 @@ func init() {
 	// AlphaDash check if provided field contains valid letters, numbers, underscore and dash
 	AddCustomRule("alpha_dash", func(field string, vlaue string, message string, value interface{}) error {
 		str := toString(value)
-		err := fmt.Errorf("The %s may only contain letters, numbers, and dashes", field)
+		err := fmt.Errorf("The %s may only contain letters, numbers, underscores, and dashes", field)
 		if message != "" {
 			err = errors.New(message)
 		}
@@ -195,10 +195,10 @@ func init() {
 		return nil
 	})
 
-	// AlphaDash check if provided field contains valid letters, numbers, underscore and dash
+	// AlphaSpace check if provided field contains valid letters, numbers, underscores, dashes and space
 	AddCustomRule("alpha_space", func(field string, vlaue string, message string, value interface{}) error {
 		str := toString(value)
-		err := fmt.Errorf("The %s may only contain letters, numbers, dashes, space", field)
+		err := fmt.Errorf("The %s may only contain letters, numbers, underscores, dashes, and space", field)
 		if message != "" {
 			err = errors.New(message)
 		}
