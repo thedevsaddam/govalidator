@@ -184,9 +184,11 @@ func (r *roller) traverseMap(iface interface{}) {
 			case reflect.Struct:
 				r.typeName = k // set the map key as name
 				r.traverseStruct(v)
+				//r.push(k, v)
 			case reflect.Map:
 				r.typeName = k // set the map key as name
 				r.traverseMap(v)
+				//r.push(k, v)
 			case reflect.Ptr: // if the field inside map is Ptr then get the type and underlying values as interface{}
 				switch reflect.TypeOf(v).Elem().Kind() {
 				case reflect.Struct:
@@ -228,10 +230,13 @@ func (r *roller) traverseMap(iface interface{}) {
 					}
 				default:
 					r.push(k, v.(interface{}))
+					continue
 				}
 			default:
 				r.push(k, v)
+				continue
 			}
+			r.push(k, v)
 		}
 	case map[string]string:
 		for k, v := range t {

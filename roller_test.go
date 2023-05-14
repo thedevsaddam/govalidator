@@ -173,7 +173,7 @@ func TestRoller_StartMap(t *testing.T) {
 	r.setTagIdentifier("validate")
 	r.setTagSeparator("|")
 	r.start(m)
-	if len(r.getFlatMap()) != 20 {
+	if len(r.getFlatMap()) != 24 {
 		t.Error("StartMap failed!")
 	}
 }
@@ -297,7 +297,8 @@ func TestRoller_PremitiveDataType(t *testing.T) {
 	r.setTagIdentifier("validate")
 	r.setTagSeparator("|")
 	r.start(mComplex)
-	itemsLen := len(mComplex) * 3
+	//itemsLen := len(mComplex) * 3
+	itemsLen := len(mComplex)*3 + len(mComplex)
 	if len(r.getFlatMap()) != itemsLen {
 		t.Error("PremitiveDataType failed!")
 	}
