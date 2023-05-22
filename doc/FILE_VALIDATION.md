@@ -31,7 +31,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	v := govalidator.New(opts)
 	e := v.Validate()
 	err := map[string]interface{}{"validationError": e}
-	w.Header().Set("Content-type", "applciation/json")
+	w.Header().Set("Content-type", "application/json")
 	json.NewEncoder(w).Encode(err)
 }
 
