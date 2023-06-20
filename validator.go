@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -186,7 +187,6 @@ func (v *Validator) internalValidateStruct() url.Values {
 	}
 	r.setTagSeparator(tagSeparator)
 	r.start(v.Opts.Data)
-
 	//clean if the key is not exist or value is empty or zero value
 	nr := v.getNonRequiredJSONFields(r.getFlatMap())
 
@@ -195,12 +195,26 @@ func (v *Validator) internalValidateStruct() url.Values {
 			continue
 		}
 		value, _ := r.getFlatVal(field)
-		for _, rule := range rules {
-			if !isRuleExist(rule) {
-				panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
+		if strings.ContainsAny(field, "[]") {
+			arrayField := strings.ReplaceAll(field, "[]", "")
+			newValue, _ := r.getFlatVal(arrayField)
+			for i, ve := range newValue.([]interface{}) {
+				for _, rule := range rules {
+					if !isRuleExist(rule) {
+						panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
+					}
+					msg := v.getCustomMessage(field, rule)
+					validateCustomRules(arrayField+"."+strconv.Itoa(i), rule, msg, ve, errsBag)
+				}
 			}
-			msg := v.getCustomMessage(field, rule)
-			validateCustomRules(field, rule, msg, value, errsBag)
+		} else {
+			for _, rule := range rules {
+				if !isRuleExist(rule) {
+					panic(fmt.Errorf("govalidator: %s is not a valid rule", rule))
+				}
+				msg := v.getCustomMessage(field, rule)
+				validateCustomRules(field, rule, msg, value, errsBag)
+			}
 		}
 	}
 
