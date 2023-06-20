@@ -198,7 +198,6 @@ func (v *Validator) internalValidateStruct() url.Values {
 		if strings.ContainsAny(field, "[]") {
 			arrayField := strings.ReplaceAll(field, "[]", "")
 			newValue, _ := r.getFlatVal(arrayField)
-			fmt.Println(newValue)
 			for i, ve := range newValue.([]interface{}) {
 				for _, rule := range rules {
 					if !isRuleExist(rule) {
