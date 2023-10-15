@@ -52,6 +52,8 @@ func isEmpty(x interface{}) bool {
 	switch rv.Kind() {
 	case reflect.Array, reflect.Map, reflect.Slice:
 		return rv.Len() == 0
+	case reflect.Bool:
+		return false
 	}
 	return reflect.DeepEqual(x, reflect.Zero(rt).Interface())
 }
