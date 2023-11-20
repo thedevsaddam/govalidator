@@ -186,7 +186,10 @@ func (v *Validator) internalValidateStruct() url.Values {
 		r.setTagIdentifier(v.Opts.TagIdentifier)
 	}
 	r.setTagSeparator(tagSeparator)
-	r.start(v.Opts.Data)
+	//get value from validator to ruler
+	data, _ := json.Marshal(v.Opts.Data)
+	json.Unmarshal(data, &r.root)
+	//r.start(v.Opts.Data)
 	//clean if the key is not exist or value is empty or zero value
 	nr := v.getNonRequiredJSONFields(r.getFlatMap())
 
