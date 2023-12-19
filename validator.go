@@ -194,12 +194,12 @@ func (v *Validator) internalValidateStruct() url.Values {
 	nr := v.getNonRequiredJSONFields(r.getFlatMap())
 
 	for field, rules := range v.Opts.Rules {
-		if _, ok := nr[field]; ok {
+		arrayField := strings.ReplaceAll(field, "[]", "")
+		if _, ok := nr[arrayField]; ok {
 			continue
 		}
 		value, _ := r.getFlatVal(field)
 		if strings.ContainsAny(field, "[]") {
-			arrayField := strings.ReplaceAll(field, "[]", "")
 			newValue, _ := r.getFlatVal(arrayField)
 			for i, ve := range newValue.([]interface{}) {
 				for _, rule := range rules {
