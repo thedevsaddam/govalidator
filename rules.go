@@ -648,12 +648,17 @@ func init() {
 	AddCustomRule("min", func(field string, rule string, message string, value interface{}) error {
 		mustLen := strings.TrimPrefix(rule, "min:")
 		lenInt, err := strconv.Atoi(mustLen)
+		rv := reflect.ValueOf(value)
 		if err != nil {
-			panic(errStringToInt)
+			switch rv.Kind() {
+			case reflect.Float32, reflect.Float64:
+			default:
+				return fmt.Errorf("cant convert this value %s to int ", mustLen)
+			}
 		}
 		lenFloat, err := strconv.ParseFloat(mustLen, 64)
 		if err != nil {
-			panic(errStringToFloat)
+			return fmt.Errorf("cant convert this value %s to float ", mustLen)
 		}
 		errMsg := fmt.Errorf("The %s field value can not be less than %d", field, lenInt)
 		if message != "" {
@@ -663,7 +668,6 @@ func init() {
 		if message != "" {
 			errMsgFloat = errors.New(message)
 		}
-		rv := reflect.ValueOf(value)
 		switch rv.Kind() {
 		case reflect.String:
 			inLen := rv.Len()
@@ -756,12 +760,17 @@ func init() {
 	AddCustomRule("max", func(field string, rule string, message string, value interface{}) error {
 		mustLen := strings.TrimPrefix(rule, "max:")
 		lenInt, err := strconv.Atoi(mustLen)
+		rv := reflect.ValueOf(value)
 		if err != nil {
-			panic(errStringToInt)
+			switch rv.Kind() {
+			case reflect.Float32, reflect.Float64:
+			default:
+				return fmt.Errorf("cant convert this value %s to int ", mustLen)
+			}
 		}
 		lenFloat, err := strconv.ParseFloat(mustLen, 64)
 		if err != nil {
-			panic(errStringToFloat)
+			return fmt.Errorf("cant convert this value %s to float ", mustLen)
 		}
 		errMsg := fmt.Errorf("The %s field value can not be greater than %d", field, lenInt)
 		if message != "" {
@@ -771,7 +780,6 @@ func init() {
 		if message != "" {
 			errMsgFloat = errors.New(message)
 		}
-		rv := reflect.ValueOf(value)
 		switch rv.Kind() {
 		case reflect.String:
 			inLen := rv.Len()
