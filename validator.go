@@ -200,7 +200,10 @@ func (v *Validator) internalValidateStruct() url.Values {
 		}
 		value, _ := r.getFlatVal(field)
 		if strings.ContainsAny(field, "[]") {
-			newValue, _ := r.getFlatVal(arrayField)
+			newValue, check := r.getFlatVal(arrayField)
+			if !check {
+				continue
+			}
 			for i, ve := range newValue.([]interface{}) {
 				for _, rule := range rules {
 					if !isRuleExist(rule) {
@@ -233,6 +236,12 @@ func (v *Validator) getNonRequiredJSONFields(inputs map[string]interface{}) map[
 			if val := inputs[k]; isEmpty(val) {
 				if !isContainRequiredField(r) {
 					nr[k] = struct{}{}
+				}
+			}
+			kValue := strings.ReplaceAll(k, "[]", "")
+			if val := inputs[kValue]; isEmpty(val) {
+				if !isContainRequiredField(r) {
+					nr[kValue] = struct{}{}
 				}
 			}
 		}
