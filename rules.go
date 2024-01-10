@@ -53,6 +53,15 @@ func init() {
 			return nil
 		}
 		rv := reflect.ValueOf(value)
+		//todo need approve from faruq
+		switch rv.Kind() {
+		case reflect.String, reflect.Array, reflect.Slice, reflect.Map, reflect.Struct, reflect.Bool:
+		default:
+			_, errParse := strconv.ParseFloat(fmt.Sprint(value), 64)
+			if errParse == nil {
+				return nil
+			}
+		}
 		switch rv.Kind() {
 		case reflect.String, reflect.Array, reflect.Slice, reflect.Map:
 			if rv.Len() == 0 {
@@ -148,9 +157,7 @@ func init() {
 				}
 			default:
 				panic("govalidator: invalid custom type for required rule")
-
 			}
-
 		default:
 			panic("govalidator: invalid type for required rule")
 
